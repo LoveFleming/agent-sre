@@ -6,7 +6,9 @@
   "main": "server/index.mjs",
   "scripts": {
     "start": "node server/index.mjs",
-    "dev": "node --watch server/index.mjs"
+    "dev": "node --watch server/index.mjs",
+    "ui:dev": "cd ui && npx vite",
+    "ui:build": "cd ui && npx vite build"
   },
   "engines": {
     "node": ">=20"
