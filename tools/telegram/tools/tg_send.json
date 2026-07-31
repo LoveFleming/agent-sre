@@ -1,0 +1,27 @@
+{
+  "name": "tg_send",
+  "description": "發送 Telegram 訊息。支援文字、markdown、HTML 格式。可指定 chat_id 或使用預設聊天。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "chat_id": {
+        "type": "string",
+        "description": "目標聊天 ID（個人或群組）。不指定則用 config 的 default_chat_id。"
+      },
+      "text": {
+        "type": "string",
+        "description": "訊息內容"
+      },
+      "parse_mode": {
+        "type": "string",
+        "enum": ["Markdown", "MarkdownV2", "HTML", ""],
+        "description": "格式。預設純文字。"
+      },
+      "reply_to_message_id": {
+        "type": "number",
+        "description": "回覆指定訊息 ID"
+      }
+    },
+    "required": ["text"]
+  }
+}

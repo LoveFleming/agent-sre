@@ -1,0 +1,22 @@
+{
+  "name": "tg_read_history",
+  "description": "讀取聊天的歷史訊息。回傳最近的訊息列表，包含 sender、文字、時間。可指定數量和偏移。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "chat_id": {
+        "type": "string",
+        "description": "聊天 ID。不指定則用 config 的 default_chat_id。"
+      },
+      "limit": {
+        "type": "number",
+        "description": "讀取幾則訊息（預設 20，最多 100）"
+      },
+      "offset": {
+        "type": "number",
+        "description": "偏移量（從最新往回數）。預設 0。"
+      }
+    },
+    "required": []
+  }
+}

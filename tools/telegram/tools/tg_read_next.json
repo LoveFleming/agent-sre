@@ -1,0 +1,18 @@
+{
+  "name": "tg_read_next",
+  "description": "讀取下一則未讀訊息。使用 getUpdates 取得最新的傳入訊息。適合 agent 輪詢或依序讀取新訊息。回傳 sender、文字、時間、chat 資訊。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "offset": {
+        "type": "number",
+        "description": "update offset（上次讀取的 update_id + 1）。不指定則讀取最新一則。"
+      },
+      "timeout": {
+        "type": "number",
+        "description": "long polling 逾時秒數（0-50）。預設 0（不等待）。"
+      }
+    },
+    "required": []
+  }
+}
