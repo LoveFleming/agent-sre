@@ -19,16 +19,31 @@ interface ToolEntry {
   definition: { function: { name: string; description: string; parameters: any } };
   source?: string;
 }
+interface ChatTab {
+  crewId: string;
+  title: string;
+  emoji: string;
+  messages: ChatMsg[];
+}
 
 const API = "";
+
+const MODELS = [
+  { id: "", label: "Default" },
+  { id: "glm-5.1", label: "GLM 5.1" },
+  { id: "deepseek/deepseek-v4-flash", label: "DeepSeek V4 Flash" },
+  { id: "gpt-4o-mini", label: "GPT-4o mini" },
+  { id: "claude-3.5-sonnet", label: "Claude 3.5 Sonnet" },
+];
 
 export default function App() {
   const [tab, setTab] = useState<"chat" | "tools">("chat");
   const [crews, setCrews] = useState<Crew[]>([]);
-  const [activeCrew, setActiveCrew] = useState<Crew | null>(null);
-  const [messages, setMessages] = useState<ChatMsg[]>([]);
+  const [chatTabs, setChatTabs] = useState<ChatTab[]>([]);
+  const [activeTabIdx, setActiveTabIdx] = useState(-1);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [model, setModel] = useState("");
   const [tools, setTools] = useState<ToolEntry[]>([]);
   const composingRef = useRef(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -39,64 +54,112 @@ export default function App() {
     fetch(`${API}/api/tools`).then(r => r.json()).then(d => setTools(d.tools || []));
   }, []);
 
-  // ── Select crew ──
-  const selectCrew = useCallback(async (crew: Crew) => {
-    setActiveCrew(crew);
+  const activeTab = activeTabIdx >= 0 ? chatTabs[activeTabIdx] : null;
+
+  // ── Open crew as tab ──
+  const openCrew = useCallback(async (crew: Crew) => {
+    // Check if tab already open
+    const existing = chatTabs.findIndex(t => t.crewId === crew.id);
+    if (existing >= 0) {
+      setActiveTabIdx(existing);
+      return;
+    }
+
+    // Load conversation
+    let msgs: ChatMsg[] = [];
     try {
       const res = await fetch(`${API}/api/conversations/${encodeURIComponent(crew.id)}`);
       const data = await res.json();
-      const msgs = data.messages || [];
-      if (msgs.length === 0 && crew.greeting) {
-        setMessages([{ role: "assistant", content: crew.greeting }]);
-      } else {
-        setMessages(msgs);
-      }
-    } catch { setMessages([]); }
-  }, []);
+      msgs = data.messages || [];
+    } catch {}
+
+    if (msgs.length === 0 && crew.greeting) {
+      msgs = [{ role: "assistant", content: crew.greeting }];
+    }
+
+    const newTab: ChatTab = {
+      crewId: crew.id,
+      title: crew.codename || crew.title,
+      emoji: crew.emoji || "👤",
+      messages: msgs,
+    };
+    setChatTabs(prev => [...prev, newTab]);
+    setActiveTabIdx(chatTabs.length); // will be the new last index
+  }, [chatTabs]);
+
+  // ── Close tab ──
+  const closeTab = (idx: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newTabs = chatTabs.filter((_, i) => i !== idx);
+    setChatTabs(newTabs);
+    if (activeTabIdx === idx) {
+      setActiveTabIdx(Math.max(0, idx - 1));
+    } else if (activeTabIdx > idx) {
+      setActiveTabIdx(activeTabIdx - 1);
+    }
+    if (newTabs.length === 0) setActiveTabIdx(-1);
+  };
 
   // ── Send ──
   const send = useCallback(async () => {
     const text = input.trim();
-    if (!text || !activeCrew || loading) return;
+    if (!text || !activeTab || loading) return;
     setInput("");
     const userMsg: ChatMsg = { role: "user", content: text, ts: new Date().toISOString() };
-    setMessages(prev => [...prev, userMsg]);
+
+    // Update tab messages
+    setChatTabs(prev => prev.map((t, i) =>
+      i === activeTabIdx ? { ...t, messages: [...t.messages, userMsg] } : t
+    ));
     setLoading(true);
     try {
+      const body: any = { crewId: activeTab.crewId, message: text };
+      if (model) body.model = model;
       const res = await fetch(`${API}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ crewId: activeCrew.id, message: text }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { role: "assistant", content: data.content || data.error || "Error", ts: new Date().toISOString() }]);
+      const reply: ChatMsg = { role: "assistant", content: data.content || data.error || "Error", ts: new Date().toISOString() };
+      setChatTabs(prev => prev.map((t, i) =>
+        i === activeTabIdx ? { ...t, messages: [...t.messages, reply] } : t
+      ));
     } catch (err: any) {
-      setMessages(prev => [...prev, { role: "assistant", content: `❌ ${err.message}`, ts: new Date().toISOString() }]);
+      const reply: ChatMsg = { role: "assistant", content: `❌ ${err.message}`, ts: new Date().toISOString() };
+      setChatTabs(prev => prev.map((t, i) =>
+        i === activeTabIdx ? { ...t, messages: [...t.messages, reply] } : t
+      ));
     }
     setLoading(false);
-  }, [input, activeCrew, loading]);
+  }, [input, activeTab, activeTabIdx, loading, model]);
 
   // ── Auto scroll ──
-  useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
+  useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [activeTab?.messages, loading]);
 
   return (
     <div className="flex h-screen bg-stone-100 text-stone-800">
       {/* ── Sidebar ── */}
-      <div className="w-64 bg-white border-r border-stone-200 flex flex-col flex-shrink-0">
+      <div className="w-56 bg-white border-r border-stone-200 flex flex-col flex-shrink-0">
         <div className="p-4 border-b border-stone-200">
           <h1 className="text-base font-bold text-stone-800">🤖 Agent SRE</h1>
           <p className="text-xs text-stone-400">{crews.length} crew · {tools.length} tools</p>
         </div>
-        <div className="flex-1 overflow-y-auto p-2 space-y-1">
+        <div className="px-3 py-2">
+          <div className="text-xs font-semibold text-stone-400 mb-1">Crew</div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-2 space-y-0.5">
           {crews.map(c => (
             <button
               key={c.id}
-              onClick={() => selectCrew(c)}
-              className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-colors ${
-                activeCrew?.id === c.id ? "bg-emerald-100 text-emerald-700 font-semibold" : "hover:bg-stone-100 text-stone-600"
+              onClick={() => openCrew(c)}
+              className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left transition-colors ${
+                activeTab?.crewId === c.id
+                  ? "bg-emerald-100 text-emerald-700 font-semibold"
+                  : "hover:bg-stone-100 text-stone-600"
               }`}
             >
-              <span className="text-xl">{c.emoji || "👤"}</span>
+              <span className="text-lg">{c.emoji || "👤"}</span>
               <div className="min-w-0">
                 <div className="text-sm truncate">{c.codename || c.title}</div>
                 <div className="text-xs text-stone-400 truncate">{c.title}</div>
@@ -108,72 +171,110 @@ export default function App() {
 
       {/* ── Main ── */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Tabs */}
-        <div className="flex border-b border-stone-200 bg-white">
-          <TabBtn active={tab === "chat"} onClick={() => setTab("chat")}>💬 Chat</TabBtn>
-          <TabBtn active={tab === "tools"} onClick={() => setTab("tools")}>
-            🔧 Tools <span className="ml-1 text-xs bg-emerald-500 text-white px-1.5 py-0.5 rounded-full">{tools.length}</span>
-          </TabBtn>
+        {/* Top tabs */}
+        <div className="flex items-center border-b border-stone-200 bg-white">
+          <div className="flex items-center border-r border-stone-200 px-3 h-full">
+            <button
+              onClick={() => setTab("chat")}
+              className={`px-3 py-2.5 text-sm transition-colors ${tab === "chat" ? "text-emerald-600 font-semibold" : "text-stone-400 hover:text-stone-600"}`}
+            >💬</button>
+            <button
+              onClick={() => setTab("tools")}
+              className={`px-3 py-2.5 text-sm transition-colors ${tab === "tools" ? "text-emerald-600 font-semibold" : "text-stone-400 hover:text-stone-600"}`}
+            >
+              🔧 <span className="ml-0.5 text-xs bg-emerald-500 text-white px-1 rounded-full">{tools.length}</span>
+            </button>
+          </div>
+
+          {/* Chat tabs */}
+          {tab === "chat" && (
+            <div className="flex items-center overflow-x-auto flex-1 h-10">
+              {chatTabs.map((t, i) => (
+                <button
+                  key={`${t.crewId}-${i}`}
+                  onClick={() => setActiveTabIdx(i)}
+                  className={`group flex items-center gap-1.5 px-3 py-2 text-xs border-r border-stone-200 transition-colors whitespace-nowrap ${
+                    i === activeTabIdx ? "bg-stone-50 text-stone-800 font-semibold border-b-2 border-b-emerald-500" : "bg-white text-stone-500 hover:bg-stone-50"
+                  }`}
+                >
+                  <span>{t.emoji}</span>
+                  <span>{t.title}</span>
+                  <span
+                    onClick={(e) => closeTab(i, e)}
+                    className="ml-1 w-4 h-4 flex items-center justify-center rounded hover:bg-stone-200 text-stone-400 hover:text-stone-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >✕</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Model selector */}
+          <div className="flex items-center px-3 border-l border-stone-200 h-10">
+            <select
+              value={model}
+              onChange={e => setModel(e.target.value)}
+              className="text-xs border border-stone-300 rounded-lg px-2 py-1 bg-white text-stone-600 outline-none focus:border-emerald-400 cursor-pointer"
+            >
+              {MODELS.map(m => (
+                <option key={m.id} value={m.id}>{m.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        {/* Chat Panel */}
+        {/* Content area */}
         {tab === "chat" && (
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {messages.length === 0 && (
-                <div className="flex flex-col items-center justify-center h-full text-stone-400">
-                  <span className="text-5xl mb-3">{activeCrew?.emoji || "💬"}</span>
-                  <p className="text-sm">{activeCrew ? "開始對話吧" : "選擇一位 SRE Crew 開始"}</p>
-                </div>
-              )}
-              {messages.filter(m => m.role !== "tool").map((m, i) => (
-                <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[75%] px-4 py-2 rounded-xl text-sm leading-relaxed whitespace-pre-wrap break-words ${
-                    m.role === "user"
-                      ? "bg-emerald-500 text-white"
-                      : "bg-white border border-stone-200 text-stone-700"
-                  }`}>
-                    {m.content}
+          activeTab ? (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                {activeTab.messages.filter(m => m.role !== "tool").map((m, i) => (
+                  <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                    <div className={`max-w-[75%] px-4 py-2 rounded-xl text-sm leading-relaxed whitespace-pre-wrap break-words ${
+                      m.role === "user"
+                        ? "bg-emerald-500 text-white"
+                        : "bg-white border border-stone-200 text-stone-700"
+                    }`}>{m.content}</div>
                   </div>
-                </div>
-              ))}
-              {loading && (
-                <div className="flex justify-start">
-                  <div className="bg-white border border-stone-200 rounded-xl px-4 py-3 flex gap-1">
-                    <Dot /> <Dot delay=".2s" /> <Dot delay=".4s" />
+                ))}
+                {loading && (
+                  <div className="flex justify-start">
+                    <div className="bg-white border border-stone-200 rounded-xl px-4 py-3 flex gap-1">
+                      <Dot /> <Dot delay=".2s" /> <Dot delay=".4s" />
+                    </div>
                   </div>
-                </div>
-              )}
-              <div ref={chatEndRef} />
+                )}
+                <div ref={chatEndRef} />
+              </div>
+              <div className="p-3 border-t border-stone-200 bg-white flex gap-2">
+                <textarea
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onCompositionStart={() => { composingRef.current = true; }}
+                  onCompositionEnd={() => { composingRef.current = false; }}
+                  onKeyDown={e => {
+                    if (composingRef.current || e.nativeEvent.isComposing || e.keyCode === 229) return;
+                    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+                  }}
+                  placeholder="輸入訊息... (Enter 送出, Shift+Enter 換行)"
+                  rows={1}
+                  className="flex-1 border border-stone-300 rounded-lg px-3 py-2 text-sm resize-none outline-none focus:border-emerald-400"
+                  style={{ minHeight: "40px", maxHeight: "120px" }}
+                />
+                <button
+                  onClick={send}
+                  disabled={loading || !input.trim()}
+                  className="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 disabled:bg-stone-300 text-white text-sm font-semibold rounded-lg transition-colors"
+                >送出</button>
+              </div>
             </div>
-            <div className="p-3 border-t border-stone-200 bg-white flex gap-2">
-              <textarea
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onCompositionStart={() => { composingRef.current = true; }}
-                onCompositionEnd={() => { composingRef.current = false; }}
-                onKeyDown={e => {
-                  if (composingRef.current || e.nativeEvent.isComposing || e.keyCode === 229) return;
-                  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
-                }}
-                disabled={!activeCrew}
-                placeholder={activeCrew ? "輸入訊息... (Enter 送出)" : "先選擇一位 Crew"}
-                rows={1}
-                className="flex-1 border border-stone-300 rounded-lg px-3 py-2 text-sm resize-none outline-none focus:border-emerald-400 disabled:bg-stone-50 disabled:text-stone-400"
-                style={{ minHeight: "40px", maxHeight: "120px" }}
-              />
-              <button
-                onClick={send}
-                disabled={!activeCrew || loading || !input.trim()}
-                className="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 disabled:bg-stone-300 text-white text-sm font-semibold rounded-lg transition-colors"
-              >
-                送出
-              </button>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-stone-400">
+              <span className="text-5xl mb-3">🎖️</span>
+              <p className="text-sm">從左側選擇一位 SRE Crew 開始對話</p>
             </div>
-          </div>
+          )
         )}
 
-        {/* Tools Panel */}
         {tab === "tools" && (
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {tools.map(t => <ToolCard key={t.name} tool={t} />)}
@@ -185,19 +286,6 @@ export default function App() {
 }
 
 // ── Components ──
-
-function TabBtn({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-5 py-3 text-sm transition-colors border-b-2 ${
-        active ? "text-emerald-600 border-emerald-500 font-semibold" : "text-stone-400 border-transparent hover:text-stone-600"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
 
 function Dot({ delay = "0s" }: { delay?: string }) {
   return (
