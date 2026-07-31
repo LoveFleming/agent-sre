@@ -26,6 +26,16 @@ import { loadAllTools } from "./tool-loader.mjs";
 import { loadAllCrews } from "./crew-loader.mjs";
 import { registerRoutes } from "./routes.mjs";
 import { connectAllMCPServers, disconnectAllMCPClients } from "./mcp-client.mjs";
+import { existsSync, readFileSync } from "fs";
+import { resolve, dirname, extname } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const ROOT = resolve(__dirname, "..");
+
+const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml" 
+};
 
 async function main() {
   console.log("╔══════════════════════════════════════╗");
@@ -63,6 +73,7 @@ async function main() {
     console.log(`   Crews:   GET  /api/crews`);
     console.log(`   Chat:    POST /api/chat`);
     console.log(`   MCP:     node server/mcp-server.mjs (stdio) or --port 4300 (SSE)`);
+    console.log(`   UI:      http://localhost:${PORT}/`);
   });
 
   // ── Graceful shutdown ──

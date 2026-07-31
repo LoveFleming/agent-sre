@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent SRE Console</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-bg: #1e3a5f;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; }
+  
+  /* Sidebar */
+  .sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+  .sidebar-header { padding: 16px; border-bottom: 1px solid var(--border); }
+  .sidebar-header h1 { font-size: 16px; font-weight: 700; }
+  .sidebar-header span { font-size: 11px; color: var(--muted); }
+  .crew-list { flex: 1; overflow-y: auto; padding: 8px; }
+  .crew-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background .15s; }
+  .crew-item:hover { background: var(--accent-bg); }
+  .crew-item.active { background: var(--accent); }
+  .crew-item.active .crew-info span { color: #fff; }
+  .crew-emoji { font-size: 20px; }
+  .crew-info { flex: 1; min-width: 0; }
+  .crew-info .name { font-size: 13px; font-weight: 600; }
+  .crew-info .role { font-size: 11px; color: var(--muted); }
+  
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  
+  /* Tabs */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--panel); }
+  .tab { padding: 10px 20px; cursor: pointer; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; transition: all .15s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab-badge { display: inline-block; background: var(--accent); color: #fff; font-size: 10px; padding: 1px 5px; border-radius: 8px; margin-left: 4px; }
+  
+  /* Chat */
+  .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .msg { max-width: 75%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--accent); color: #fff; }
+  .msg.assistant { align-self: flex-start; background: var(--panel); border: 1px solid var(--border); }
+  .msg.tool { align-self: flex-start; background: #1a2332; border: 1px solid var(--border); font-family: monospace; font-size: 11px; color: var(--muted); }
+  .msg .sender { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .chat-input { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+  .chat-input textarea { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; font-family: inherit; resize: none; outline: none; min-height: 42px; max-height: 120px; }
+  .chat-input textarea:focus { border-color: var(--accent); }
+  .chat-input button { padding: 8px 20px; border: none; border-radius: 8px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .chat-input button:disabled { opacity: .5; cursor: not-allowed; }
+  
+  /* Tools Panel */
+  .tools-panel { flex: 1; overflow-y: auto; padding: 16px; }
+  .tool-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .tool-card .tool-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .tool-card .tool-name { font-size: 14px; font-weight: 600; }
+  .tool-card .tool-source { font-size: 11px; color: var(--muted); background: var(--bg); padding: 2px 6px; border-radius: 4px; }
+  .tool-card .tool-desc { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .tool-card .tool-test { display: flex; gap: 8px; align-items: flex-end; }
+  .tool-card .tool-test textarea { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; color: var(--text); font-size: 12px; font-family: monospace; resize: none; outline: none; min-height: 32px; }
+  .tool-card .tool-test button { padding: 6px 12px; border: none; border-radius: 6px; background: var(--green); color: #000; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .tool-result { margin-top: 8px; padding: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-family: monospace; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+  
+  /* Empty state */
+  .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 12px; color: var(--muted); }
+  .empty .emoji { font-size: 48px; }
+  
+  /* Status bar */
+  .status-bar { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); background: var(--panel); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .status-dot.ok { background: var(--green); }
+  .status-dot.err { background: var(--red); }
+  
+  /* Loading */
+  .typing { display: inline-flex; gap: 4px; padding: 8px 14px; }
+  .typing span { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); animation: bounce 1.4s infinite; }
+  .typing span:nth-child(2) { animation-delay: .2s; }
+  .typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-8px); } }
+  
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h1>🤖 Agent SRE</h1>
+    <span id="serverInfo">Connecting...</span>
+  </div>
+  <div class="crew-list" id="crewList"></div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="tabs">
+    <div class="tab active" data-tab="chat" id="tabChat">💬 Chat</div>
+    <div class="tab" data-tab="tools" id="tabTools">🔧 Tools <span class="tab-badge" id="toolCount">0</span></div>
+  </div>
+  
+  <!-- Chat Tab -->
+  <div class="chat-container" id="chatPanel">
+    <div class="chat-messages" id="chatMessages">
+      <div class="empty">
+        <div class="emoji">🎖️</div>
+        <div>選擇一位 SRE Crew 開始對話</div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <textarea id="chatInput" placeholder="輸入訊息... (Enter 送出, Shift+Enter 換行)" rows="1" disabled></textarea>
+      <button id="sendBtn" disabled>送出</button>
+    </div>
+  </div>
+  
+  <!-- Tools Tab -->
+  <div class="tools-panel hidden" id="toolsPanel"></div>
+  
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Connecting...</span>
+    <span style="margin-left:auto" id="modelInfo"></span>
+  </div>
+</div>
+
+<script>
+const API = window.location.origin;
+let activeCrew = null;
+let messages = [];
+let loading = false;
+let composing = false;
+
+// ── Init ──
+async function init() {
+  try {
+    const health = await fetch(`${API}/api/health`).then(r => r.json());
+    document.getElementById('statusDot').className = 'status-dot ok';
+    document.getElementById('statusText').textContent = `Online · ${health.tools?.length || 0} tools · uptime ${Math.floor(health.uptime/60)}m`;
+    document.getElementById('serverInfo').textContent = `v${health.version || '1.0'} · ${health.tools?.length || 0} tools`;
+  } catch {
+    document.getElementById('statusDot').className = 'status-dot err';
+    document.getElementById('statusText').textContent = 'Offline';
+    return;
+  }
+  
+  // Load crews
+  const { crews } = await fetch(`${API}/api/crews`).then(r => r.json());
+  const list = document.getElementById('crewList');
+  crews.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'crew-item';
+    el.innerHTML = `
+      <span class="crew-emoji">${c.emoji || '👤'}</span>
+      <div class="crew-info">
+        <div class="name">${c.codename || c.title}</div>
+        <div class="role">${c.title}</div>
+      </div>`;
+    el.onclick = () => selectCrew(c, el);
+    list.appendChild(el);
+  });
+  
+  // Load tools count
+  const { tools } = await fetch(`${API}/api/tools`).then(r => r.json());
+  document.getElementById('toolCount').textContent = tools.length;
+}
+
+// ── Crew selection ──
+async function selectCrew(crew, el) {
+  document.querySelectorAll('.crew-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  activeCrew = crew;
+  
+  document.getElementById('chatInput').disabled = false;
+  document.getElementById('sendBtn').disabled = false;
+  
+  // Load conversation
+  try {
+    const data = await fetch(`${API}/api/conversations/${encodeURIComponent(crew.id)}`).then(r => r.json());
+    messages = data.messages || [];
+  } catch { messages = []; }
+  
+  if (messages.length === 0 && crew.greeting) {
+    messages = [{ role: 'assistant', content: crew.greeting, ts: new Date().toISOString() }];
+  }
+  
+  renderMessages();
+}
+
+// ── Render messages ──
+function renderMessages() {
+  const container = document.getElementById('chatMessages');
+  if (messages.length === 0) {
+    container.innerHTML = '<div class="empty"><div class="emoji">💬</div><div>開始對話吧</div></div>';
+    return;
+  }
+  container.innerHTML = messages.map(m => {
+    if (m.role === 'tool') return '';
+    const cls = m.role === 'user' ? 'user' : m.role === 'tool_result' ? 'tool' : 'assistant';
+    const sender = m.role === 'user' ? '你' : (activeCrew?.codename || 'AI');
+    return `<div class="msg ${cls}"><div class="sender">${sender}</div>${escapeHtml(m.content)}</div>`;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Send message ──
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || !activeCrew || loading) return;
+  
+  input.value = '';
+  input.style.height = 'auto';
+  messages.push({ role: 'user', content: text, ts: new Date().toISOString() });
+  renderMessages();
+  
+  loading = true;
+  document.getElementById('sendBtn').disabled = true;
+  
+  // Typing indicator
+  const container = document.getElementById('chatMessages');
+  const typing = document.createElement('div');
+  typing.className = 'msg assistant';
+  typing.id = 'typingIndicator';
+  typing.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  container.appendChild(typing);
+  container.scrollTop = container.scrollHeight;
+  
+  try {
+    const resp = await fetch(`${API}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ crewId: activeCrew.id, message: text, stream: false }),
+    });
+    const data = await resp.json();
+    
+    document.getElementById('typingIndicator')?.remove();
+    
+    if (resp.ok) {
+      messages.push({ role: 'assistant', content: data.content, ts: new Date().toISOString() });
+    } else {
+      messages.push({ role: 'assistant', content: `❌ ${data.error || 'Request failed'}`, ts: new Date().toISOString() });
+    }
+    renderMessages();
+  } catch (err) {
+    document.getElementById('typingIndicator')?.remove();
+    messages.push({ role: 'assistant', content: `❌ Network error: ${err.message}`, ts: new Date().toISOString() });
+    renderMessages();
+  }
+  
+  loading = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+// ── Chat input ──
+const input = document.getElementById('chatInput');
+input.addEventListener('input', () => {
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+});
+input.addEventListener('compositionstart', () => composing = true);
+input.addEventListener('compositionend', () => composing = false);
+input.addEventListener('keydown', (e) => {
+  if (composing || e.nativeEvent?.isComposing || e.keyCode === 229) return;
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+document.getElementById('sendBtn').onclick = sendMessage;
+
+// ── Tabs ──
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.tab;
+    document.getElementById('chatPanel').classList.toggle('hidden', target !== 'chat');
+    document.getElementById('toolsPanel').classList.toggle('hidden', target !== 'tools');
+    if (target === 'tools') loadTools();
+  };
+});
+
+// ── Tools panel ──
+async function loadTools() {
+  const panel = document.getElementById('toolsPanel');
+  panel.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px">Loading...</div>';
+  
+  const { tools } = await fetch(`${API}/api/tools`).then(r => r.json());
+  
+  panel.innerHTML = '';
+  tools.forEach(t => {
+    const fn = t.definition.function;
+    const card = document.createElement('div');
+    card.className = 'tool-card';
+    
+    const params = fn.parameters?.properties || {};
+    const paramHint = Object.entries(params).map(([k,v]) => `"${k}": "${v.description?.slice(0,40) || v.type || ''}"`).join(',\n');
+    
+    card.innerHTML = `
+      <div class="tool-header">
+        <span class="tool-name">🔧 ${fn.name}</span>
+        <span class="tool-source">${t.source || 'built-in'}</span>
+      </div>
+      <div class="tool-desc">${fn.description || ''}</div>
+      <div class="tool-test">
+        <textarea placeholder='{ ${paramHint} }' rows="${Math.min(4, Object.keys(params).length || 1)}">${paramHint ? `{ ${paramHint} }` : '{}'}"></textarea>
+        <button onclick="testTool(this, '${fn.name}')">測試</button>
+      </div>
+      <div class="tool-result hidden"></div>
+    `;
+    panel.appendChild(card);
+  });
+}
+
+window.testTool = async (btn, name) => {
+  const card = btn.closest('.tool-card');
+  const ta = card.querySelector('textarea');
+  const result = card.querySelector('.tool-result');
+  
+  let args = {};
+  try { args = JSON.parse(ta.value); } catch { result.textContent = '❌ Invalid JSON'; result.classList.remove('hidden'); return; }
+  
+  btn.textContent = '執行中...';
+  btn.disabled = true;
+  result.textContent = 'Loading...';
+  result.classList.remove('hidden');
+  
+  try {
+    // Call via MCP tools/call endpoint style — we use the chat API's tool execution
+    // Actually, we need a direct tool test endpoint
+    const resp = await fetch(`${API}/api/tools/${encodeURIComponent(name)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ arguments: args }),
+    });
+    const data = await resp.json();
+    result.textContent = data.text || JSON.stringify(data, null, 2);
+  } catch (err) {
+    result.textContent = `❌ ${err.message}`;
+  }
+  
+  btn.textContent = '測試';
+  btn.disabled = false;
+};
+
+init();
+</script>
+</body>
+</html>

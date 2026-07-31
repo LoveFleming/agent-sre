@@ -6,6 +6,15 @@ import { loadAllCrews, getCrew, listCrews } from "./crew-loader.mjs";
 import { runAgentLoop, runAgentLoopStream } from "./agent-loop.mjs";
 import { toolRegistry } from "./tool-registry.mjs";
 import { loadConversation, saveConversation, archiveConversation, listArchives, loadArchive } from "./conversation.mjs";
+import { existsSync, readFileSync } from "fs";
+import { resolve, dirname, extname } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const ROOT = resolve(__dirname, "..");
+const UI_DIR = resolve(ROOT, "ui");
+const MIME = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml" };
 
 /** Read request body as JSON */
 function readBody(req) {
@@ -135,6 +144,33 @@ export function registerRoutes(server) {
           content: result.content,
           toolCallCount: result.toolCallCount || 0,
         });
+      }
+
+      // ── POST /api/tools/:name — directly execute a tool (for UI testing) ──
+      const toolExecMatch = path.match(/^\/api\/tools\/([^/]+)$/);
+      if (toolExecMatch && method === "POST") {
+        const toolName = decodeURIComponent(toolExecMatch[1]);
+        const body = await readBody(req);
+        const entry = toolRegistry.get(toolName);
+        if (!entry) return json(res, 404, { error: `Tool not found: ${toolName}` });
+        try {
+          const result = await entry.handler(body.arguments || {}, { toolName });
+          return json(res, 200, result);
+        } catch (err) {
+          return json(res, 500, { error: err.message, text: `❌ ${err.message}` });
+        }
+      }
+
+      // ── Static UI files (non-API paths) ──
+      if (!path.startsWith("/api/")) {
+        const filePath = path === "/" ? "/index.html" : path;
+        const fullPath = resolve(UI_DIR, filePath.slice(1));
+        if (fullPath.startsWith(UI_DIR) && existsSync(fullPath)) {
+          const ext = extname(fullPath);
+          res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
+          res.end(readFileSync(fullPath));
+          return;
+        }
       }
 
       // ── 404 ──
