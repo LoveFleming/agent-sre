@@ -25,6 +25,7 @@ import { PORT } from "./config.mjs";
 import { loadAllTools } from "./tool-loader.mjs";
 import { loadAllCrews } from "./crew-loader.mjs";
 import { registerRoutes } from "./routes.mjs";
+import { connectAllMCPServers, disconnectAllMCPClients } from "./mcp-client.mjs";
 
 async function main() {
   console.log("╔══════════════════════════════════════╗");
@@ -40,9 +41,16 @@ async function main() {
 
   // ── Load tool providers ──
   const tools = await loadAllTools();
-  console.log(`\n[tools] Loaded ${tools.length} tools:`);
+  console.log(`\n[tools] Loaded ${tools.length} built-in tools:`);
   for (const t of tools) {
     console.log(`  🔧 ${t}`);
+  }
+
+  // ── Connect MCP servers ──
+  const { clients: mcpClients, registered: mcpTools } = await connectAllMCPServers();
+  if (mcpTools.length > 0) {
+    console.log(`\n[mcp] ${mcpTools.length} MCP tools registered:`);
+    for (const t of mcpTools) console.log(`  🔌 ${t}`);
   }
 
   // ── Start HTTP server ──
@@ -54,6 +62,17 @@ async function main() {
     console.log(`   Health:  GET  /api/health`);
     console.log(`   Crews:   GET  /api/crews`);
     console.log(`   Chat:    POST /api/chat`);
+    console.log(`   MCP:     node server/mcp-server.mjs (stdio) or --port 4300 (SSE)`);
+  });
+
+  // ── Graceful shutdown ──
+  process.on("SIGINT", () => {
+    disconnectAllMCPClients(mcpClients);
+    process.exit(0);
+  });
+  process.on("SIGTERM", () => {
+    disconnectAllMCPClients(mcpClients);
+    process.exit(0);
   });
 }
 

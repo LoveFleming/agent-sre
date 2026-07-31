@@ -103,3 +103,46 @@ agent-sre/
 ## License
 
 Private — LoveFleming
+
+## MCP (Model Context Protocol)
+
+agent-sre supports MCP in both directions:
+
+### As MCP Server (expose tools)
+
+Let external clients (Claude Desktop, Cursor, etc.) use SRE tools:
+
+```json
+// Claude Desktop config: ~/Library/Application Support/Claude/claude_desktop_config.json
+{
+  "mcpServers": {
+    "agent-sre": {
+      "command": "node",
+      "args": ["/path/to/agent-sre/server/mcp-server.mjs"]
+    }
+  }
+}
+```
+
+Or run as HTTP SSE server:
+```bash
+node server/mcp-server.mjs --port 4300
+```
+
+Exposes:
+- **17 tools** (k8s, prometheus, loki, security, shell, docs)
+- **6 resources** (crew member profiles)
+- **6 prompts** (chat with each crew member)
+
+### As MCP Client (consume external tools)
+
+Connect to external MCP servers and use their tools in the agent loop:
+
+```bash
+cp config/mcp-servers.example.json config/mcp-servers.json
+# Edit — add your MCP servers
+npm start
+```
+
+External MCP tools are auto-registered with `mcp.<server>.<tool>` prefix.
+Agents can use them alongside built-in SRE tools.
