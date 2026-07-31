@@ -1,9 +1,9 @@
 /**
- * Telegram Tool Provider Handler
+ * TChat Tool Provider Handler
  *
- * Send messages, read history, read next unread message via Telegram Bot API.
+ * Send messages, read history, read next unread message via TChat Bot API.
  *
- * Config (tools/telegram/config.json):
+ * Config (tools/tchat/config.json):
  *   {
  *     "bot_token": "123456:ABC-DEF...",
  *     "default_chat_id": "123456789",
@@ -24,7 +24,7 @@ let _lastUpdateOffset = 0;
 function getConfig() {
   if (_config) return _config;
   const ROOT = process.env.PAAW_ROOT || process.env.SRE_ROOT || resolve(__dirname, "../..");
-  const configPath = join(ROOT, "tools/telegram/config.json");
+  const configPath = join(ROOT, "tools/tchat/config.json");
   if (existsSync(configPath)) {
     _config = JSON.parse(readFileSync(configPath, "utf-8"));
   } else {
@@ -49,10 +49,10 @@ function checkAuth(chatId) {
   return allowed.includes(String(chatId));
 }
 
-/** Telegram API call */
+/** TChat API call */
 async function tgApi(method, params = {}) {
   const cfg = getConfig();
-  if (!cfg.bot_token) throw new Error("Telegram bot_token not configured. Set tools/telegram/config.json or TG_BOT_TOKEN env var.");
+  if (!cfg.bot_token) throw new Error("TChat bot_token not configured. Set tools/tchat/config.json or TG_BOT_TOKEN env var.");
 
   const resp = await fetch(`${apiBase()}/${method}`, {
     method: "POST",
@@ -60,7 +60,7 @@ async function tgApi(method, params = {}) {
     body: JSON.stringify(params),
   });
   const data = await resp.json();
-  if (!data.ok) throw new Error(`Telegram API error: ${data.description || data.error_code}`);
+  if (!data.ok) throw new Error(`TChat API error: ${data.description || data.error_code}`);
   return data.result;
 }
 
@@ -127,7 +127,7 @@ export default async function handler(args, ctx) {
 
       const limit = Math.min(args.limit || 20, 100);
 
-      // Telegram Bot API doesn't have direct "get chat history".
+      // TChat Bot API doesn't have direct "get chat history".
       // We use getUpdates filtered by chat, or forwardChatMessages trick.
       // Best approach: use getUpdates with offset and filter by chat_id.
 
@@ -144,7 +144,7 @@ export default async function handler(args, ctx) {
         .slice(-limit);
 
       if (messages.length === 0) {
-        return { text: `📭 No messages found in chat ${chatId}.\n\nNote: Telegram Bot API only sees messages sent AFTER the bot started polling. Old messages before bot activation are not accessible via getUpdates.`, data: [] };
+        return { text: `📭 No messages found in chat ${chatId}.\n\nNote: TChat Bot API only sees messages sent AFTER the bot started polling. Old messages before bot activation are not accessible via getUpdates.`, data: [] };
       }
 
       const lines = messages.reverse().map(fmtMessage);
@@ -193,6 +193,6 @@ export default async function handler(args, ctx) {
     }
 
     default:
-      return { text: `Unknown Telegram tool: ${toolName}`, error: true };
+      return { text: `Unknown TChat tool: ${toolName}`, error: true };
   }
 }

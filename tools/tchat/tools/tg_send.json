@@ -1,6 +1,6 @@
 {
   "name": "tg_send",
-  "description": "發送 Telegram 訊息。支援文字、markdown、HTML 格式。可指定 chat_id 或使用預設聊天。",
+  "description": "發送 TChat 訊息。支援文字、markdown、HTML 格式。可指定 chat_id 或使用預設聊天。",
   "parameters": {
     "type": "object",
     "properties": {
