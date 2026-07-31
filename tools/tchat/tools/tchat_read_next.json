@@ -1,5 +1,5 @@
 {
-  "name": "tg_read_next",
+  "name": "tchat_read_next",
   "description": "讀取下一則未讀訊息。使用 getUpdates 取得最新的傳入訊息。適合 agent 輪詢或依序讀取新訊息。回傳 sender、文字、時間、chat 資訊。",
   "parameters": {
     "type": "object",

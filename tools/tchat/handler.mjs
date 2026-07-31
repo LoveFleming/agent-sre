@@ -98,8 +98,8 @@ export default async function handler(args, ctx) {
 
   switch (toolName) {
 
-    // ── tg_send ──
-    case "tg_send": {
+    // ── tchat_send ──
+    case "tchat_send": {
       const chatId = args.chat_id || cfg.default_chat_id;
       if (!chatId) return { text: "❌ No chat_id specified and no default_chat_id configured.", error: true };
       if (!checkAuth(chatId)) return { text: `❌ Chat ${chatId} not in allowed list.`, error: true };
@@ -119,8 +119,8 @@ export default async function handler(args, ctx) {
       };
     }
 
-    // ── tg_read_history ──
-    case "tg_read_history": {
+    // ── tchat_read_history ──
+    case "tchat_read_history": {
       const chatId = args.chat_id || cfg.default_chat_id;
       if (!chatId) return { text: "❌ No chat_id specified and no default_chat_id configured.", error: true };
       if (!checkAuth(chatId)) return { text: `❌ Chat ${chatId} not in allowed list.`, error: true };
@@ -154,8 +154,8 @@ export default async function handler(args, ctx) {
       };
     }
 
-    // ── tg_read_next ──
-    case "tg_read_next": {
+    // ── tchat_read_next ──
+    case "tchat_read_next": {
       const offset = args.offset ?? _lastUpdateOffset;
       const timeout = Math.min(args.timeout || 0, 50);
 

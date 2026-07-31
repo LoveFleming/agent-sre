@@ -1,5 +1,5 @@
 {
-  "name": "tg_read_history",
+  "name": "tchat_read_history",
   "description": "讀取聊天的歷史訊息。回傳最近的訊息列表，包含 sender、文字、時間。可指定數量和偏移。",
   "parameters": {
     "type": "object",
