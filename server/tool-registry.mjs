@@ -1,155 +1,82 @@
 /**
- * Shared Tool Registry — 所有 agent loop 共用的 tool 註冊中心
+ * tool-registry.mjs — Tool registration + execution system
  *
- * OCP 原則：
- * - Registry 本身是 open（隨時可以 register 新 tool）
- * - Agent loop 是 closed（不改 loop 就能用新 tool）
+ * Any module can register tools. The agent loop queries definitions and executes calls.
  *
- * 用法：
- *   import { toolRegistry } from "./tool-registry.mjs";
- *
- *   // 註冊 tool（任何模組都可以註冊）
- *   toolRegistry.register({
- *     name: "my_tool",
- *     definition: { type: "function", function: { name: "my_tool", ... } },
- *     handler: async (args, ctx) => { return "result"; }
- *   });
- *
- *   // 取得所有 tool definitions（餵給 LLM）
- *   const defs = toolRegistry.getDefinitions();
- *
- *   // 執行 tool
- *   const result = await toolRegistry.execute("my_tool", args, ctx);
+ * ToolEntry = {
+ *   name: string
+ *   definition: { type: "function", function: { name, description, parameters } }
+ *   handler: (args, ctx) => Promise<{ text: string, data?: any, error?: boolean }>
+ *   source?: string
+ * }
  */
 
-// ── Types ──
-// ToolEntry = {
-//   name: string
-//   definition: { type: "function", function: { name, description, parameters } }
-//   handler: (args, ctx) => Promise<string | object>
-//   source?: string  // 哪個模組註冊的（debug 用）
-// }
+class ToolRegistry {
+  constructor() {
+    this.tools = new Map();
+  }
 
-const _tools = new Map();
-let _initialized = false;
-
-export const toolRegistry = {
-  /**
-   * 註冊一個 tool。如果同名 tool 已存在，覆蓋並印 warning。
-   */
+  /** Register a tool */
   register(entry) {
-    if (!entry?.name || !entry?.definition || !entry?.handler) {
-      throw new Error(`[ToolRegistry] Invalid tool entry: missing name/definition/handler`);
-    }
-    if (_tools.has(entry.name)) {
-      console.warn(`[ToolRegistry] Overwriting existing tool: ${entry.name}`);
-    }
-    _tools.set(entry.name, {
-      name: entry.name,
-      definition: entry.definition,
-      handler: entry.handler,
-      source: entry.source || "unknown",
-    });
-  },
+    if (!entry?.name) throw new Error("Tool must have a name");
+    this.tools.set(entry.name, entry);
+  }
 
-  /**
-   * 批量註冊。
-   */
-  registerAll(entries, source = "unknown") {
-    for (const entry of entries) {
-      this.register({ ...entry, source: entry.source || source });
-    }
-  },
+  /** Register multiple tools */
+  registerAll(entries) {
+    for (const e of entries) this.register(e);
+  }
 
-  /**
-   * 取得所有 tool definitions（OpenAI function-calling 格式）。
-   * 可選 filter：只回傳指定名稱的 tools。
-   */
-  getDefinitions(filter) {
-    const result = [];
-    for (const [, entry] of _tools) {
-      if (filter && !filter.includes(entry.name)) continue;
-      result.push(entry.definition);
-    }
-    return result;
-  },
+  /** Get all tool definitions (for LLM) */
+  getDefinitions(filterNames) {
+    const tools = filterNames
+      ? [...this.tools.values()].filter(t => filterNames.includes(t.name))
+      : [...this.tools.values()];
+    return tools.map(t => t.definition);
+  }
 
-  /**
-   * 取得所有 tool 名稱。
-   */
-  getNames() {
-    return Array.from(_tools.keys());
-  },
+  /** Get tool by name */
+  get(name) {
+    return this.tools.get(name);
+  }
 
-  /**
-   * 執行一個 tool。
-   * @param name tool name
-   * @param args parsed arguments object
-   * @param ctx { rootDir, agentId, sessionId, cwd, onEvent, ... }
-   * @returns handler return value (string or object)
-   */
-  async execute(name, args, ctx) {
-    const entry = _tools.get(name);
-    if (!entry) {
-      return { error: `Unknown tool: ${name}` };
-    }
-    try {
-      return await entry.handler(args, ctx);
-    } catch (err) {
-      console.error(`[ToolRegistry] Tool "${name}" error:`, err.message);
-      return { error: `Tool "${name}" failed: ${err.message}` };
-    }
-  },
-
-  /**
-   * 檢查 tool 是否存在。
-   */
-  has(name) {
-    return _tools.has(name);
-  },
-
-  /**
-   * 列出所有已註冊 tools（debug 用）。
-   */
+  /** List all registered tool names */
   list() {
-    return Array.from(_tools.values()).map(e => ({
-      name: e.name,
-      source: e.source,
-    }));
-  },
+    return [...this.tools.keys()];
+  }
 
-  /**
-   * 取得單一 tool 的 handler（供外部直接呼叫）。
-   */
-  getHandler(name) {
-    const entry = _tools.get(name);
-    return entry?.handler || null;
-  },
+  /** Execute a tool call from LLM response */
+  async execute(call, ctx = {}) {
+    const name = call.function?.name || call.name;
+    if (!name) return { text: "Invalid tool call: missing name", error: true };
 
-  /**
-   * 取消註冊一個 tool。
-   */
-  unregister(name) {
-    if (_tools.has(name)) {
-      _tools.delete(name);
-      return true;
+    const entry = this.tools.get(name);
+    if (!entry) return { text: `Unknown tool: ${name}`, error: true };
+
+    let args = {};
+    try {
+      args = call.function?.arguments
+        ? JSON.parse(call.function.arguments)
+        : call.arguments || {};
+    } catch {
+      args = {};
     }
-    return false;
-  },
 
-  /**
-   * 清除所有註冊（主要給測試用）。
-   */
+    ctx.toolName = name;
+
+    try {
+      const result = await entry.handler(args, ctx);
+      return result || { text: "(no output)" };
+    } catch (err) {
+      return { text: `Tool "${name}" error: ${err.message}`, error: true };
+    }
+  }
+
+  /** Clear all tools */
   clear() {
-    _tools.clear();
-    _initialized = false;
-  },
+    this.tools.clear();
+  }
+}
 
-  get initialized() {
-    return _initialized;
-  },
-
-  set initialized(v) {
-    _initialized = v;
-  },
-};
+export const toolRegistry = new ToolRegistry();
+export default toolRegistry;
