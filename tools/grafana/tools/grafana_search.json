@@ -1,0 +1,19 @@
+{
+  "name": "grafana_search",
+  "description": "搜尋 Grafana Dashboard、Panel、Alert rule 或 Data source。依關鍵字模糊搜尋。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "搜尋關鍵字（例如 CPU、memory、latency）"
+      },
+      "type": {
+        "type": "string",
+        "enum": ["dash-db", "dash-folder", "alert"],
+        "description": "搜尋類型。預設 dash-db。"
+      }
+    },
+    "required": ["query"]
+  }
+}

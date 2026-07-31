@@ -1,0 +1,23 @@
+{
+  "name": "grafana_list_alerts",
+  "description": "列出 Grafana 目前的 Alert 狀態。可篩選 dashboard UID 或 severity。回傳 alert 名稱、狀態（firing/pending/ok）、labels、value。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "dashboardUID": {
+        "type": "string",
+        "description": "篩選特定 Dashboard 的 alert"
+      },
+      "state": {
+        "type": "string",
+        "enum": ["all", "firing", "pending", "ok"],
+        "description": "篩選 alert 狀態。預設 firing。"
+      },
+      "severity": {
+        "type": "string",
+        "description": "篩選嚴重度（critical、warning、info）"
+      }
+    },
+    "required": []
+  }
+}

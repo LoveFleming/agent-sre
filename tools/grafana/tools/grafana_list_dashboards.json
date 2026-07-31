@@ -1,0 +1,22 @@
+{
+  "name": "grafana_list_dashboards",
+  "description": "列出 Grafana 中的所有 Dashboard。可透過 folderId 或 tag 篩選。回傳 dashboard UID、標題、資料夾、標籤。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "folderId": {
+        "type": "number",
+        "description": "資料夾 ID（General = 0）。不指定則列出全部。"
+      },
+      "tag": {
+        "type": "string",
+        "description": "依標籤篩選（例如 kubernetes、mysql）"
+      },
+      "limit": {
+        "type": "number",
+        "description": "最多回傳數量（預設 100）"
+      }
+    },
+    "required": []
+  }
+}

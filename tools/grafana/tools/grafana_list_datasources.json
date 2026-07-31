@@ -1,0 +1,9 @@
+{
+  "name": "grafana_list_datasources",
+  "description": "列出 Grafana 中所有已設定的 Data source（Prometheus、Loki、MySQL 等）。回傳名稱、類型、URL。",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

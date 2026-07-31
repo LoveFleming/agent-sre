@@ -1,0 +1,14 @@
+{
+  "name": "grafana_get_dashboard",
+  "description": "取得指定 Dashboard 的完整結構，包含所有 Panel 的查詢、目標、視覺化設定。需要 dashboard UID。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "uid": {
+        "type": "string",
+        "description": "Dashboard UID（可從 list_dashboards 取得）"
+      }
+    },
+    "required": ["uid"]
+  }
+}

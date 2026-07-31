@@ -1,0 +1,6 @@
+{
+  "grafana_url": "http://localhost:3000",
+  "grafana_token": "gsk_YOUR_SERVICE_ACCOUNT_TOKEN",
+  "default_datasource": "Prometheus",
+  "default_org_id": 1
+}

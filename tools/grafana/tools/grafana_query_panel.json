@@ -1,0 +1,31 @@
+{
+  "name": "grafana_query_panel",
+  "description": "查詢 Dashboard 中指定 Panel 的資料。根據 Panel 上定義的 datasource 和 queries，向後端發送查詢並回傳結果。支援時間範圍。\n\n使用方式：先 get_dashboard 取得 panelId，再用此 tool 查資料。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "uid": {
+        "type": "string",
+        "description": "Dashboard UID"
+      },
+      "panelId": {
+        "type": "number",
+        "description": "Panel ID（從 get_dashboard 結果中取得）"
+      },
+      "from": {
+        "type": "string",
+        "description": "開始時間。支援 Grafana 時間格式：相對（now-1h、now-24h）或絕對 epoch ms（1690000000000）。預設 now-1h。"
+      },
+      "to": {
+        "type": "string",
+        "description": "結束時間。預設 now。"
+      },
+      "format": {
+        "type": "string",
+        "enum": ["table", "json", "raw"],
+        "description": "回傳格式。table = 整理成易讀表格；json = 原始 JSON；raw = 未處理。預設 table。"
+      }
+    },
+    "required": ["uid", "panelId"]
+  }
+}
