@@ -137,57 +137,63 @@ export async function runAgentLoopStream({ crew, message, history = [], model, r
     res.write(`data: ${JSON.stringify(data)}\n\n`);
   };
 
-  const maxRounds = 8;
+  try {
+    const maxRounds = 8;
 
-  for (let round = 0; round < maxRounds; round++) {
-    let streamContent = "";
+    for (let round = 0; round < maxRounds; round++) {
+      let streamContent = "";
 
-    const result = await callLLM({
-      model,
-      messages,
-      tools: crewTools,
-      maxTokens: 4096,
-      maxRetries: 3,
-      timeoutMs: 120_000,
-      onEvent: (ev) => {
-        if (ev.type === "delta") {
-          streamContent += ev.content;
-          send("delta", { content: ev.content });
-        }
-      },
-    });
-
-    if (!result.toolCalls?.length) {
-      // Final answer
-      send("done", {
-        content: result.content || streamContent,
-        history: [...history, { role: "user", content: message }, { role: "assistant", content: result.content || streamContent }],
+      const result = await callLLM({
+        model,
+        messages,
+        tools: crewTools,
+        maxTokens: 4096,
+        maxRetries: 3,
+        timeoutMs: 120_000,
+        onEvent: (ev) => {
+          if (ev.type === "delta") {
+            streamContent += ev.content;
+            send("delta", { content: ev.content });
+          }
+        },
       });
-      res.end();
-      return;
+
+      if (!result.toolCalls?.length) {
+        // Final answer
+        send("done", {
+          content: result.content || streamContent,
+          history: [...history, { role: "user", content: message }, { role: "assistant", content: result.content || streamContent }],
+        });
+        res.end();
+        return;
+      }
+
+      // Tool calls — execute and continue
+      messages.push({ role: "assistant", content: result.content, tool_calls: result.toolCalls });
+
+      for (const call of result.toolCalls) {
+        send("tool_call", { name: call.function?.name, args: call.function?.arguments });
+
+        const toolResult = await toolRegistry.execute(call, { crew });
+        onToolCall?.({ name: call.function?.name, result: toolResult.text?.slice(0, 200) });
+
+        send("tool_result", { name: call.function?.name, result: toolResult.text?.slice(0, 500) });
+
+        messages.push({
+          role: "tool",
+          tool_call_id: call.id,
+          content: toolResult.text || JSON.stringify(toolResult),
+        });
+      }
     }
 
-    // Tool calls — execute and continue
-    messages.push({ role: "assistant", content: result.content, tool_calls: result.toolCalls });
-
-    for (const call of result.toolCalls) {
-      send("tool_call", { name: call.function?.name, args: call.function?.arguments });
-
-      const toolResult = await toolRegistry.execute(call, { crew });
-      onToolCall?.({ name: call.function?.name, result: toolResult.text?.slice(0, 200) });
-
-      send("tool_result", { name: call.function?.name, result: toolResult.text?.slice(0, 500) });
-
-      messages.push({
-        role: "tool",
-        tool_call_id: call.id,
-        content: toolResult.text || JSON.stringify(toolResult),
-      });
-    }
+    send("done", { content: "⚠️ 達到最大工具呼叫次數。", history: [] });
+  } catch (err) {
+    console.error(`[agent-stream] ${crew.id}: ${err.message}`);
+    send("error", { message: err.message });
+  } finally {
+    if (!res.writableEnded) res.end();
   }
-
-  send("done", { content: "⚠️ 達到最大工具呼叫次數。", history: [] });
-  res.end();
 }
 
 /** Build system prompt from crew definition */

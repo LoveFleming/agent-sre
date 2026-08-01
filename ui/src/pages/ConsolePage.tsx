@@ -149,8 +149,21 @@ export default function ConsolePage({
           crewId: activeTab.crewId,
           message: text,
           model: model || undefined,
+          stream: true,
         }),
       });
+
+      // Show HTTP-level errors (e.g. provider not configured → 500)
+      if (!resp.ok) {
+        let errText = `HTTP ${resp.status}`;
+        try { const d = await resp.json(); errText = d.error || errText; } catch { /* not JSON */ }
+        setChatTabs(prev => prev.map((t, i) =>
+          i === tabIdx
+            ? { ...t, messages: [...t.messages.slice(0, -1), { role: "assistant", content: `⚠️ ${errText}` }] }
+            : t
+        ));
+        return;
+      }
 
       const reader = resp.body?.getReader();
       if (!reader) throw new Error("No response stream");
@@ -164,27 +177,37 @@ export default function ConsolePage({
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
 
-        // Parse SSE lines
-        const lines = buffer.split("\n\n");
-        buffer = lines.pop() || "";
+        // Parse SSE events
+        const events = buffer.split("\n\n");
+        buffer = events.pop() || "";
 
-        for (const chunk of lines) {
-          const dataLines = chunk.split("\n").filter(l => l.startsWith("data:"));
-          for (const dl of dataLines) {
-            const payload = dl.slice(5).trim();
-            if (!payload) continue;
-            try {
-              const obj = JSON.parse(payload);
-              if (obj.delta) {
-                acc += obj.delta;
-                setChatTabs(prev => prev.map((t, i) =>
-                  i === tabIdx
-                    ? { ...t, messages: [...t.messages.slice(0, -1), { role: "assistant", content: acc, ts: new Date().toISOString() }] }
-                    : t
-                ));
-              }
-            } catch { /* skip non-JSON */ }
+        for (const chunk of events) {
+          const chunkLines = chunk.split("\n");
+          let eventType = "";
+          let payload = "";
+          for (const line of chunkLines) {
+            if (line.startsWith("event: ")) eventType = line.slice(7).trim();
+            else if (line.startsWith("data: ")) payload = line.slice(6).trim();
+            else if (line.startsWith("data:")) payload = line.slice(5).trim();
           }
+          if (!payload) continue;
+          try {
+            const obj = JSON.parse(payload);
+            if (eventType === "delta" && obj.content) {
+              acc += obj.content;
+              setChatTabs(prev => prev.map((t, i) =>
+                i === tabIdx
+                  ? { ...t, messages: [...t.messages.slice(0, -1), { role: "assistant", content: acc, ts: new Date().toISOString() }] }
+                  : t
+              ));
+            } else if (eventType === "error") {
+              setChatTabs(prev => prev.map((t, i) =>
+                i === tabIdx
+                  ? { ...t, messages: [...t.messages.slice(0, -1), { role: "assistant", content: `⚠️ ${obj.message || "發生錯誤"}` }] }
+                  : t
+              ));
+            }
+          } catch { /* skip non-JSON */ }
         }
       }
     } catch (err) {
