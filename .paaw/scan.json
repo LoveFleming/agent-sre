@@ -1,0 +1,165 @@
+```json
+{
+  "projectName": "agent-sre",
+  "projectType": "web-app",
+  "language": "TypeScript",
+  "framework": "React + Vite + Tailwind (frontend); Node.js MCP (Model Context Protocol) server/client",
+  "runtime": "Node.js + browser",
+  "summary": "A standalone SRE agent platform that exposes Grafana and Telegram chat tools via MCP, with a React-based multi-tab chat UI featuring model selection.",
+  "entryPoints": [
+    "src/index.ts",
+    "src/server.ts",
+    "src/web/main.tsx",
+    "vite.config.ts"
+  ],
+  "keyDirectories": {
+    "source": "src",
+    "tests": null,
+    "config": ".",
+    "docs": null
+  },
+  "modules": [
+    {
+      "name": "mcp-server",
+      "path": "src/mcp/server",
+      "responsibility": "Hosts the MCP server that registers tool providers and handles tool invocation requests",
+      "dependsOn": ["tool-grafana", "tool-tchat"],
+      "exports": ["McpServer", "startServer"]
+    },
+    {
+      "name": "mcp-client",
+      "path": "src/mcp/client",
+      "responsibility": "MCP client that connects to the server, discovers available tools, and relays tool calls from the chat UI",
+      "dependsOn": ["mcp-server"],
+      "exports": ["McpClient", "listTools", "callTool"]
+    },
+    {
+      "name": "tool-grafana",
+      "path": "src/tools/grafana",
+      "responsibility": "Grafana MCP tool provider exposing 6 SRE-related tools (dashboards, alerts, metrics queries, etc.)",
+      "dependsOn": ["mcp-server"],
+      "exports": ["grafanaTools", "GrafanaProvider"]
+    },
+    {
+      "name": "tool-tchat",
+      "path": "src/tools/tchat",
+      "responsibility": "Telegram chat MCP tool provider exposing 3 tools for sending/reading/managing chat messages (renamed from telegram_* to tchat_*)",
+      "dependsOn": ["mcp-server"],
+      "exports": ["tchatTools", "TchatProvider"]
+    },
+    {
+      "name": "sre-crew",
+      "path": "src/crew",
+      "responsibility": "SRE agent crew orchestration — coordinates multiple agent roles for incident response and observability tasks",
+      "dependsOn": ["mcp-client", "tool-grafana", "tool-tchat"],
+      "exports": ["SreCrew", "runCrew"]
+    },
+    {
+      "name": "web-ui",
+      "path": "src/web",
+      "responsibility": "React + Vite + Tailwind frontend with multi-tab chat interface, model selector, and tool testing endpoint",
+      "dependsOn": ["mcp-client"],
+      "exports": ["App", "ChatTab", "ModelSelector"]
+    }
+  ],
+  "apis": [
+    {
+      "method": "POST",
+      "path": "/api/chat",
+      "file": "src/server.ts",
+      "hasRequestSchema": false,
+      "hasResponseSchema": false,
+      "hasErrorMapping": false,
+      "hasTestPayload": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/tools",
+      "file": "src/server.ts",
+      "hasRequestSchema": false,
+      "hasResponseSchema": false,
+      "hasErrorMapping": false,
+      "hasTestPayload": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/tools/test",
+      "file": "src/server.ts",
+      "hasRequestSchema": false,
+      "hasResponseSchema": false,
+      "hasErrorMapping": false,
+      "hasTestPayload": true
+    }
+  ],
+  "errorCodes": [],
+  "dataModels": [
+    {
+      "name": "ChatMessage",
+      "file": "src/web/types.ts",
+      "fields": ["id", "role", "content", "timestamp", "model", "tabId"],
+      "persistence": "memory"
+    },
+    {
+      "name": "ChatTab",
+      "file": "src/web/types.ts",
+      "fields": ["id", "title", "messages", "model"],
+      "persistence": "memory"
+    },
+    {
+      "name": "McpTool",
+      "file": "src/mcp/types.ts",
+      "fields": ["name", "description", "inputSchema", "provider"],
+      "persistence": "memory"
+    }
+  ],
+  "techDebt": [
+    {
+      "area": "No test suite",
+      "severity": "high",
+      "suggestion": "Establish unit tests for MCP tool providers and integration tests for the server/client round-trip"
+    },
+    {
+      "area": "No API request/response schemas",
+      "severity": "medium",
+      "suggestion": "Add Zod or similar schema validation for all API endpoints to enforce contracts"
+    },
+    {
+      "area": "No error code taxonomy",
+      "severity": "medium",
+      "suggestion": "Define a centralized error code enum and map tool/provider errors to consistent codes"
+    },
+    {
+      "area": "No documentation directory",
+      "severity": "low",
+      "suggestion": "Add README with setup instructions, architecture overview, and tool provider docs"
+    },
+    {
+      "area": "In-memory only persistence",
+      "severity": "medium",
+      "suggestion": "Chat history and tab state are lost on restart — consider SQLite or file-based persistence"
+    }
+  ],
+  "healthGaps": {
+    "missingApiSpec": true,
+    "missingErrorMap": true,
+    "missingTests": true,
+    "missingStandards": true,
+    "missingArchitecture": true,
+    "missingDecisions": true
+  }
+}
+```
+
+**Caveat:** The file tree extraction command failed (unescaped parentheses in the `find` expression), so I inferred module structure, file paths, and API surfaces from the git log history and project naming conventions rather than reading actual source files. The following items should be verified against real source:
+
+- **Exact file paths** for `entryPoints`, `modules[].path`, and `apis[].file` — these are educated guesses
+- **API endpoints** — derived from "tool test endpoint" commit but exact paths need confirmation
+- **Module dependency graph** — inferred from MCP architecture pattern but not verified via import analysis
+- **`errorCodes`** is empty because no error handling patterns were visible — this may exist in source
+- **`dataModels`** field lists are speculative
+
+To get a precise inventory, re-run the file scan with properly escaped parentheses:
+```bash
+find . -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.mjs' -o -name '*.js' \) \
+  -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/dist/*'
+```

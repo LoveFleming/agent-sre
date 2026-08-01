@@ -1,0 +1,2692 @@
+{
+  "symbols": [
+    {
+      "type": "function",
+      "name": "trimMessages",
+      "file": "server/agent-loop.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(messages, maxChars = DEFAULT_CONTEXT_WINDOW * 4)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "getCrewTools",
+      "file": "server/agent-loop.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(crew, allTools)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "runAgentLoop",
+      "file": "server/agent-loop.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "({\n  crew,\n  message,\n  history = [],\n  model,\n  onToolCall,\n})",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "runAgentLoopStream",
+      "file": "server/agent-loop.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "({ crew, message, history = [], model, res, onToolCall })",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "send",
+      "file": "server/agent-loop.mjs",
+      "kind": "arrow",
+      "async": false,
+      "params": "(event, data)",
+      "callCount": 3
+    },
+    {
+      "type": "function",
+      "name": "buildSystemPrompt",
+      "file": "server/agent-loop.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(crew)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "runAgentLoop",
+      "file": "server/agent-loop.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "runAgentLoopStream",
+      "file": "server/agent-loop.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "function",
+      "name": "loadProviderConfig",
+      "file": "server/config.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "resolveLLM",
+      "file": "server/config.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(modelOverride)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "ROOT",
+      "file": "server/config.mjs",
+      "kind": "variable",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "config",
+      "file": "server/config.mjs",
+      "kind": "variable",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "resolveLLM",
+      "file": "server/config.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "PORT",
+      "file": "server/config.mjs",
+      "kind": "variable",
+      "isDefault": false
+    },
+    {
+      "type": "function",
+      "name": "ensureDir",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(dir)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "loadConversation",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(crewId)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "saveConversation",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(crewId, messages)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "archiveConversation",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(crewId)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "listArchives",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(crewId)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "loadArchive",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(crewId, sessionId)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "loadConversation",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "saveConversation",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "archiveConversation",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "listArchives",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "loadArchive",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "function",
+      "name": "loadAllCrews",
+      "file": "server/crew-loader.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "getCrew",
+      "file": "server/crew-loader.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(id)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "listCrews",
+      "file": "server/crew-loader.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "loadAllCrews",
+      "file": "server/crew-loader.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "getCrew",
+      "file": "server/crew-loader.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "listCrews",
+      "file": "server/crew-loader.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "function",
+      "name": "main",
+      "file": "server/index.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "sleep",
+      "file": "server/llm.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(ms)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "callLLM",
+      "file": "server/llm.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "({\n  model,\n  messages,\n  tools,\n  maxTokens = 4096,\n  maxRetries = 3,\n  timeoutMs = 120_000,\n  onEvent = null,\n})",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "fallbackOverride",
+      "file": "server/llm.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handleStream",
+      "file": "server/llm.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(resp, onEvent)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "mergeToolCalls",
+      "file": "server/llm.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(existing, deltas)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "callLLM",
+      "file": "server/llm.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "function",
+      "name": "loadMCPConfig",
+      "file": "server/mcp-client.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "connectAllMCPServers",
+      "file": "server/mcp-client.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handler",
+      "file": "server/mcp-client.mjs",
+      "kind": "arrow",
+      "async": true,
+      "params": "(args)",
+      "callCount": 1
+    },
+    {
+      "type": "function",
+      "name": "disconnectAllMCPClients",
+      "file": "server/mcp-client.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(clients)",
+      "callCount": 0
+    },
+    {
+      "type": "class",
+      "name": "MCPClient",
+      "file": "server/mcp-client.mjs",
+      "methods": [
+        "constructor",
+        "connect",
+        "_loadTools",
+        "callTool",
+        "_request",
+        "_notify",
+        "_onData",
+        "disconnect"
+      ]
+    },
+    {
+      "type": "export",
+      "name": "connectAllMCPServers",
+      "file": "server/mcp-client.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "disconnectAllMCPClients",
+      "file": "server/mcp-client.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "function",
+      "name": "rpcResult",
+      "file": "server/mcp-server.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(id, result)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "rpcError",
+      "file": "server/mcp-server.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(id, code, message)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "buildMCPTools",
+      "file": "server/mcp-server.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "buildMCPResources",
+      "file": "server/mcp-server.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "buildMCPPrompts",
+      "file": "server/mcp-server.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handleRequest",
+      "file": "server/mcp-server.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(msg)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "runStdio",
+      "file": "server/mcp-server.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "runSSE",
+      "file": "server/mcp-server.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(port)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "readBody",
+      "file": "server/routes.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(req)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "json",
+      "file": "server/routes.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(res, code, data)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "registerRoutes",
+      "file": "server/routes.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(server)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "onToolCall",
+      "file": "server/routes.mjs",
+      "kind": "arrow",
+      "async": false,
+      "params": "({ name, result })",
+      "callCount": 2
+    },
+    {
+      "type": "export",
+      "name": "registerRoutes",
+      "file": "server/routes.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "function",
+      "name": "_llmLog",
+      "file": "server/tool-engine/provider.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(entry)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "logStream",
+      "file": "server/tool-engine/provider.mjs",
+      "kind": "arrow",
+      "async": false,
+      "params": "(line)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "createProviderAdapter",
+      "file": "server/tool-engine/provider.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(config)",
+      "callCount": 0
+    },
+    {
+      "type": "class",
+      "name": "OpenAICompatibleAdapter",
+      "file": "server/tool-engine/provider.mjs",
+      "methods": [
+        "constructor",
+        "chat"
+      ]
+    },
+    {
+      "type": "export",
+      "name": "OpenAICompatibleAdapter",
+      "file": "server/tool-engine/provider.mjs",
+      "kind": "class",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "createProviderAdapter",
+      "file": "server/tool-engine/provider.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "function",
+      "name": "loadAllTools",
+      "file": "server/tool-loader.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "wrappedHandler",
+      "file": "server/tool-loader.mjs",
+      "kind": "arrow",
+      "async": true,
+      "params": "(args, ctx)",
+      "callCount": 1
+    },
+    {
+      "type": "export",
+      "name": "loadAllTools",
+      "file": "server/tool-loader.mjs",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "class",
+      "name": "ToolRegistry",
+      "file": "server/tool-registry.mjs",
+      "methods": [
+        "constructor",
+        "register",
+        "registerAll",
+        "getDefinitions",
+        "get",
+        "list",
+        "execute",
+        "clear"
+      ]
+    },
+    {
+      "type": "export",
+      "name": "toolRegistry",
+      "file": "server/tool-registry.mjs",
+      "kind": "variable",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "toolRegistry",
+      "file": "server/tool-registry.mjs",
+      "kind": "value",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "parseFrontmatter",
+      "file": "tools/docs/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(content)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "scanRunbooks",
+      "file": "tools/docs/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "scan",
+      "file": "tools/docs/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(dir)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "searchRunbooks",
+      "file": "tools/docs/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(keyword, runbooks)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handler",
+      "file": "tools/docs/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(args, ctx)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "handler",
+      "file": "tools/docs/handler.mjs",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "getConfig",
+      "file": "tools/grafana/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "apiBase",
+      "file": "tools/grafana/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "authHeaders",
+      "file": "tools/grafana/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "gql",
+      "file": "tools/grafana/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(path, options = {})",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "parseTime",
+      "file": "tools/grafana/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(t)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "formatTable",
+      "file": "tools/grafana/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(data)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handler",
+      "file": "tools/grafana/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(args, ctx)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "handler",
+      "file": "tools/grafana/handler.mjs",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "buildBaseArgs",
+      "file": "tools/k8s/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "isDestructive",
+      "file": "tools/k8s/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(action)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "runKubectl",
+      "file": "tools/k8s/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(args, timeout = 15000)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "truncateOutput",
+      "file": "tools/k8s/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(text, maxLines = 80)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handler",
+      "file": "tools/k8s/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(args, ctx)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "handler",
+      "file": "tools/k8s/handler.mjs",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "getBaseUrl",
+      "file": "tools/loki/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "buildHeaders",
+      "file": "tools/loki/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "formatLogResults",
+      "file": "tools/loki/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(data)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "formatStatsResults",
+      "file": "tools/loki/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(data)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handler",
+      "file": "tools/loki/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(args, ctx)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "handler",
+      "file": "tools/loki/handler.mjs",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "getConfigUrl",
+      "file": "tools/prometheus/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(config)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "buildHeaders",
+      "file": "tools/prometheus/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(config)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "fetchProm",
+      "file": "tools/prometheus/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(baseUrl, path, params, config)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "formatInstantResult",
+      "file": "tools/prometheus/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(data)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "formatRangeResult",
+      "file": "tools/prometheus/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(data)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "formatAlerts",
+      "file": "tools/prometheus/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(data)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handler",
+      "file": "tools/prometheus/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(args, ctx)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "handler",
+      "file": "tools/prometheus/handler.mjs",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "runCmd",
+      "file": "tools/security/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(cmd, timeout = 20000)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "hasBin",
+      "file": "tools/security/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(bin)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "scanRbac",
+      "file": "tools/security/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(namespace, opts)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "checkSsl",
+      "file": "tools/security/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(host, port)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "scanDeps",
+      "file": "tools/security/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(projectPath, scanner, severity)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handler",
+      "file": "tools/security/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(args, ctx)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "handler",
+      "file": "tools/security/handler.mjs",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "isBlocked",
+      "file": "tools/shell/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(cmd)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "isSafe",
+      "file": "tools/shell/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(cmd)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "isDestructive",
+      "file": "tools/shell/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(cmd)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "runCommand",
+      "file": "tools/shell/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(cmd, workdir, timeout)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "truncateOutput",
+      "file": "tools/shell/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(text, maxLines = 80)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handler",
+      "file": "tools/shell/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(args, ctx)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "handler",
+      "file": "tools/shell/handler.mjs",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "getConfig",
+      "file": "tools/tchat/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "apiBase",
+      "file": "tools/tchat/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "checkAuth",
+      "file": "tools/tchat/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(chatId)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "tgApi",
+      "file": "tools/tchat/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(method, params = {})",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "fmtTime",
+      "file": "tools/tchat/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(unix)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "fmtMessage",
+      "file": "tools/tchat/handler.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(msg)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "handler",
+      "file": "tools/tchat/handler.mjs",
+      "kind": "function",
+      "async": true,
+      "params": "(args, ctx)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "handler",
+      "file": "tools/tchat/handler.mjs",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "SREConsole",
+      "file": "ui/SREConsole.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "SREConsole",
+      "file": "ui/SREConsole.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "component",
+      "name": "SREConsole",
+      "file": "ui/SREConsole.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "function",
+      "name": "ProviderCard",
+      "file": "ui/SREDashboard.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({ provider }: { provider: ProviderStatus })",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "AlertCard",
+      "file": "ui/SREDashboard.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({ alert }: { alert: Alert })",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "QuickQueryPanel",
+      "file": "ui/SREDashboard.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "SREDashboard",
+      "file": "ui/SREDashboard.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "SREDashboard",
+      "file": "ui/SREDashboard.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "component",
+      "name": "ProviderCard",
+      "file": "ui/SREDashboard.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "component",
+      "name": "AlertCard",
+      "file": "ui/SREDashboard.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "component",
+      "name": "QuickQueryPanel",
+      "file": "ui/SREDashboard.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "component",
+      "name": "SREDashboard",
+      "file": "ui/SREDashboard.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "function",
+      "name": "App",
+      "file": "ui/src/App.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "closeTab",
+      "file": "ui/src/App.tsx",
+      "kind": "arrow",
+      "async": false,
+      "params": "(idx: number, e: React.MouseEvent)",
+      "callCount": 7
+    },
+    {
+      "type": "function",
+      "name": "Dot",
+      "file": "ui/src/App.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({ delay = \"0s\" }: { delay?: string })",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "ToolCard",
+      "file": "ui/src/App.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({ tool }: { tool: ToolEntry })",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "test",
+      "file": "ui/src/App.tsx",
+      "kind": "arrow",
+      "async": true,
+      "params": "()",
+      "callCount": 11
+    },
+    {
+      "type": "export",
+      "name": "App",
+      "file": "ui/src/App.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "component",
+      "name": "App",
+      "file": "ui/src/App.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "component",
+      "name": "Dot",
+      "file": "ui/src/App.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "component",
+      "name": "ToolCard",
+      "file": "ui/src/App.tsx",
+      "kind": "function"
+    }
+  ],
+  "byName": {
+    "trimMessages": [
+      {
+        "type": "function",
+        "name": "trimMessages",
+        "file": "server/agent-loop.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(messages, maxChars = DEFAULT_CONTEXT_WINDOW * 4)",
+        "callCount": 0
+      }
+    ],
+    "getCrewTools": [
+      {
+        "type": "function",
+        "name": "getCrewTools",
+        "file": "server/agent-loop.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(crew, allTools)",
+        "callCount": 0
+      }
+    ],
+    "runAgentLoop": [
+      {
+        "type": "function",
+        "name": "runAgentLoop",
+        "file": "server/agent-loop.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "({\n  crew,\n  message,\n  history = [],\n  model,\n  onToolCall,\n})",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "runAgentLoop",
+        "file": "server/agent-loop.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "runAgentLoopStream": [
+      {
+        "type": "function",
+        "name": "runAgentLoopStream",
+        "file": "server/agent-loop.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "({ crew, message, history = [], model, res, onToolCall })",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "runAgentLoopStream",
+        "file": "server/agent-loop.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "send": [
+      {
+        "type": "function",
+        "name": "send",
+        "file": "server/agent-loop.mjs",
+        "kind": "arrow",
+        "async": false,
+        "params": "(event, data)",
+        "callCount": 3
+      }
+    ],
+    "buildSystemPrompt": [
+      {
+        "type": "function",
+        "name": "buildSystemPrompt",
+        "file": "server/agent-loop.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(crew)",
+        "callCount": 0
+      }
+    ],
+    "loadProviderConfig": [
+      {
+        "type": "function",
+        "name": "loadProviderConfig",
+        "file": "server/config.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "resolveLLM": [
+      {
+        "type": "function",
+        "name": "resolveLLM",
+        "file": "server/config.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(modelOverride)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "resolveLLM",
+        "file": "server/config.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "ROOT": [
+      {
+        "type": "export",
+        "name": "ROOT",
+        "file": "server/config.mjs",
+        "kind": "variable",
+        "isDefault": false
+      }
+    ],
+    "config": [
+      {
+        "type": "export",
+        "name": "config",
+        "file": "server/config.mjs",
+        "kind": "variable",
+        "isDefault": false
+      }
+    ],
+    "PORT": [
+      {
+        "type": "export",
+        "name": "PORT",
+        "file": "server/config.mjs",
+        "kind": "variable",
+        "isDefault": false
+      }
+    ],
+    "ensureDir": [
+      {
+        "type": "function",
+        "name": "ensureDir",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(dir)",
+        "callCount": 0
+      }
+    ],
+    "loadConversation": [
+      {
+        "type": "function",
+        "name": "loadConversation",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(crewId)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "loadConversation",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "saveConversation": [
+      {
+        "type": "function",
+        "name": "saveConversation",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(crewId, messages)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "saveConversation",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "archiveConversation": [
+      {
+        "type": "function",
+        "name": "archiveConversation",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(crewId)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "archiveConversation",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "listArchives": [
+      {
+        "type": "function",
+        "name": "listArchives",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(crewId)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "listArchives",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "loadArchive": [
+      {
+        "type": "function",
+        "name": "loadArchive",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(crewId, sessionId)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "loadArchive",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "loadAllCrews": [
+      {
+        "type": "function",
+        "name": "loadAllCrews",
+        "file": "server/crew-loader.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "loadAllCrews",
+        "file": "server/crew-loader.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "getCrew": [
+      {
+        "type": "function",
+        "name": "getCrew",
+        "file": "server/crew-loader.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(id)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "getCrew",
+        "file": "server/crew-loader.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "listCrews": [
+      {
+        "type": "function",
+        "name": "listCrews",
+        "file": "server/crew-loader.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "listCrews",
+        "file": "server/crew-loader.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "main": [
+      {
+        "type": "function",
+        "name": "main",
+        "file": "server/index.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "sleep": [
+      {
+        "type": "function",
+        "name": "sleep",
+        "file": "server/llm.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(ms)",
+        "callCount": 0
+      }
+    ],
+    "callLLM": [
+      {
+        "type": "function",
+        "name": "callLLM",
+        "file": "server/llm.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "({\n  model,\n  messages,\n  tools,\n  maxTokens = 4096,\n  maxRetries = 3,\n  timeoutMs = 120_000,\n  onEvent = null,\n})",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "callLLM",
+        "file": "server/llm.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "fallbackOverride": [
+      {
+        "type": "function",
+        "name": "fallbackOverride",
+        "file": "server/llm.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "handleStream": [
+      {
+        "type": "function",
+        "name": "handleStream",
+        "file": "server/llm.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(resp, onEvent)",
+        "callCount": 0
+      }
+    ],
+    "mergeToolCalls": [
+      {
+        "type": "function",
+        "name": "mergeToolCalls",
+        "file": "server/llm.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(existing, deltas)",
+        "callCount": 0
+      }
+    ],
+    "loadMCPConfig": [
+      {
+        "type": "function",
+        "name": "loadMCPConfig",
+        "file": "server/mcp-client.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "connectAllMCPServers": [
+      {
+        "type": "function",
+        "name": "connectAllMCPServers",
+        "file": "server/mcp-client.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "connectAllMCPServers",
+        "file": "server/mcp-client.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "handler": [
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "server/mcp-client.mjs",
+        "kind": "arrow",
+        "async": true,
+        "params": "(args)",
+        "callCount": 1
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/docs/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/docs/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/k8s/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/k8s/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/loki/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/loki/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/security/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/security/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/shell/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/shell/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      }
+    ],
+    "disconnectAllMCPClients": [
+      {
+        "type": "function",
+        "name": "disconnectAllMCPClients",
+        "file": "server/mcp-client.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(clients)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "disconnectAllMCPClients",
+        "file": "server/mcp-client.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "MCPClient": [
+      {
+        "type": "class",
+        "name": "MCPClient",
+        "file": "server/mcp-client.mjs",
+        "methods": [
+          "constructor",
+          "connect",
+          "_loadTools",
+          "callTool",
+          "_request",
+          "_notify",
+          "_onData",
+          "disconnect"
+        ]
+      }
+    ],
+    "rpcResult": [
+      {
+        "type": "function",
+        "name": "rpcResult",
+        "file": "server/mcp-server.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(id, result)",
+        "callCount": 0
+      }
+    ],
+    "rpcError": [
+      {
+        "type": "function",
+        "name": "rpcError",
+        "file": "server/mcp-server.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(id, code, message)",
+        "callCount": 0
+      }
+    ],
+    "buildMCPTools": [
+      {
+        "type": "function",
+        "name": "buildMCPTools",
+        "file": "server/mcp-server.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "buildMCPResources": [
+      {
+        "type": "function",
+        "name": "buildMCPResources",
+        "file": "server/mcp-server.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "buildMCPPrompts": [
+      {
+        "type": "function",
+        "name": "buildMCPPrompts",
+        "file": "server/mcp-server.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "handleRequest": [
+      {
+        "type": "function",
+        "name": "handleRequest",
+        "file": "server/mcp-server.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(msg)",
+        "callCount": 0
+      }
+    ],
+    "runStdio": [
+      {
+        "type": "function",
+        "name": "runStdio",
+        "file": "server/mcp-server.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "runSSE": [
+      {
+        "type": "function",
+        "name": "runSSE",
+        "file": "server/mcp-server.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(port)",
+        "callCount": 0
+      }
+    ],
+    "readBody": [
+      {
+        "type": "function",
+        "name": "readBody",
+        "file": "server/routes.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(req)",
+        "callCount": 0
+      }
+    ],
+    "json": [
+      {
+        "type": "function",
+        "name": "json",
+        "file": "server/routes.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(res, code, data)",
+        "callCount": 0
+      }
+    ],
+    "registerRoutes": [
+      {
+        "type": "function",
+        "name": "registerRoutes",
+        "file": "server/routes.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(server)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "registerRoutes",
+        "file": "server/routes.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "onToolCall": [
+      {
+        "type": "function",
+        "name": "onToolCall",
+        "file": "server/routes.mjs",
+        "kind": "arrow",
+        "async": false,
+        "params": "({ name, result })",
+        "callCount": 2
+      }
+    ],
+    "_llmLog": [
+      {
+        "type": "function",
+        "name": "_llmLog",
+        "file": "server/tool-engine/provider.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(entry)",
+        "callCount": 0
+      }
+    ],
+    "logStream": [
+      {
+        "type": "function",
+        "name": "logStream",
+        "file": "server/tool-engine/provider.mjs",
+        "kind": "arrow",
+        "async": false,
+        "params": "(line)",
+        "callCount": 0
+      }
+    ],
+    "createProviderAdapter": [
+      {
+        "type": "function",
+        "name": "createProviderAdapter",
+        "file": "server/tool-engine/provider.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(config)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "createProviderAdapter",
+        "file": "server/tool-engine/provider.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "OpenAICompatibleAdapter": [
+      {
+        "type": "class",
+        "name": "OpenAICompatibleAdapter",
+        "file": "server/tool-engine/provider.mjs",
+        "methods": [
+          "constructor",
+          "chat"
+        ]
+      },
+      {
+        "type": "export",
+        "name": "OpenAICompatibleAdapter",
+        "file": "server/tool-engine/provider.mjs",
+        "kind": "class",
+        "isDefault": false
+      }
+    ],
+    "loadAllTools": [
+      {
+        "type": "function",
+        "name": "loadAllTools",
+        "file": "server/tool-loader.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "loadAllTools",
+        "file": "server/tool-loader.mjs",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "wrappedHandler": [
+      {
+        "type": "function",
+        "name": "wrappedHandler",
+        "file": "server/tool-loader.mjs",
+        "kind": "arrow",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 1
+      }
+    ],
+    "ToolRegistry": [
+      {
+        "type": "class",
+        "name": "ToolRegistry",
+        "file": "server/tool-registry.mjs",
+        "methods": [
+          "constructor",
+          "register",
+          "registerAll",
+          "getDefinitions",
+          "get",
+          "list",
+          "execute",
+          "clear"
+        ]
+      }
+    ],
+    "toolRegistry": [
+      {
+        "type": "export",
+        "name": "toolRegistry",
+        "file": "server/tool-registry.mjs",
+        "kind": "variable",
+        "isDefault": false
+      },
+      {
+        "type": "export",
+        "name": "toolRegistry",
+        "file": "server/tool-registry.mjs",
+        "kind": "value",
+        "isDefault": true
+      }
+    ],
+    "parseFrontmatter": [
+      {
+        "type": "function",
+        "name": "parseFrontmatter",
+        "file": "tools/docs/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(content)",
+        "callCount": 0
+      }
+    ],
+    "scanRunbooks": [
+      {
+        "type": "function",
+        "name": "scanRunbooks",
+        "file": "tools/docs/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "scan": [
+      {
+        "type": "function",
+        "name": "scan",
+        "file": "tools/docs/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(dir)",
+        "callCount": 0
+      }
+    ],
+    "searchRunbooks": [
+      {
+        "type": "function",
+        "name": "searchRunbooks",
+        "file": "tools/docs/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(keyword, runbooks)",
+        "callCount": 0
+      }
+    ],
+    "getConfig": [
+      {
+        "type": "function",
+        "name": "getConfig",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "function",
+        "name": "getConfig",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "apiBase": [
+      {
+        "type": "function",
+        "name": "apiBase",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "function",
+        "name": "apiBase",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "authHeaders": [
+      {
+        "type": "function",
+        "name": "authHeaders",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "gql": [
+      {
+        "type": "function",
+        "name": "gql",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(path, options = {})",
+        "callCount": 0
+      }
+    ],
+    "parseTime": [
+      {
+        "type": "function",
+        "name": "parseTime",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(t)",
+        "callCount": 0
+      }
+    ],
+    "formatTable": [
+      {
+        "type": "function",
+        "name": "formatTable",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(data)",
+        "callCount": 0
+      }
+    ],
+    "buildBaseArgs": [
+      {
+        "type": "function",
+        "name": "buildBaseArgs",
+        "file": "tools/k8s/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "isDestructive": [
+      {
+        "type": "function",
+        "name": "isDestructive",
+        "file": "tools/k8s/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(action)",
+        "callCount": 0
+      },
+      {
+        "type": "function",
+        "name": "isDestructive",
+        "file": "tools/shell/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(cmd)",
+        "callCount": 0
+      }
+    ],
+    "runKubectl": [
+      {
+        "type": "function",
+        "name": "runKubectl",
+        "file": "tools/k8s/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(args, timeout = 15000)",
+        "callCount": 0
+      }
+    ],
+    "truncateOutput": [
+      {
+        "type": "function",
+        "name": "truncateOutput",
+        "file": "tools/k8s/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(text, maxLines = 80)",
+        "callCount": 0
+      },
+      {
+        "type": "function",
+        "name": "truncateOutput",
+        "file": "tools/shell/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(text, maxLines = 80)",
+        "callCount": 0
+      }
+    ],
+    "getBaseUrl": [
+      {
+        "type": "function",
+        "name": "getBaseUrl",
+        "file": "tools/loki/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "buildHeaders": [
+      {
+        "type": "function",
+        "name": "buildHeaders",
+        "file": "tools/loki/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "function",
+        "name": "buildHeaders",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(config)",
+        "callCount": 0
+      }
+    ],
+    "formatLogResults": [
+      {
+        "type": "function",
+        "name": "formatLogResults",
+        "file": "tools/loki/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(data)",
+        "callCount": 0
+      }
+    ],
+    "formatStatsResults": [
+      {
+        "type": "function",
+        "name": "formatStatsResults",
+        "file": "tools/loki/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(data)",
+        "callCount": 0
+      }
+    ],
+    "getConfigUrl": [
+      {
+        "type": "function",
+        "name": "getConfigUrl",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(config)",
+        "callCount": 0
+      }
+    ],
+    "fetchProm": [
+      {
+        "type": "function",
+        "name": "fetchProm",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(baseUrl, path, params, config)",
+        "callCount": 0
+      }
+    ],
+    "formatInstantResult": [
+      {
+        "type": "function",
+        "name": "formatInstantResult",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(data)",
+        "callCount": 0
+      }
+    ],
+    "formatRangeResult": [
+      {
+        "type": "function",
+        "name": "formatRangeResult",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(data)",
+        "callCount": 0
+      }
+    ],
+    "formatAlerts": [
+      {
+        "type": "function",
+        "name": "formatAlerts",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(data)",
+        "callCount": 0
+      }
+    ],
+    "runCmd": [
+      {
+        "type": "function",
+        "name": "runCmd",
+        "file": "tools/security/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(cmd, timeout = 20000)",
+        "callCount": 0
+      }
+    ],
+    "hasBin": [
+      {
+        "type": "function",
+        "name": "hasBin",
+        "file": "tools/security/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(bin)",
+        "callCount": 0
+      }
+    ],
+    "scanRbac": [
+      {
+        "type": "function",
+        "name": "scanRbac",
+        "file": "tools/security/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(namespace, opts)",
+        "callCount": 0
+      }
+    ],
+    "checkSsl": [
+      {
+        "type": "function",
+        "name": "checkSsl",
+        "file": "tools/security/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(host, port)",
+        "callCount": 0
+      }
+    ],
+    "scanDeps": [
+      {
+        "type": "function",
+        "name": "scanDeps",
+        "file": "tools/security/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(projectPath, scanner, severity)",
+        "callCount": 0
+      }
+    ],
+    "isBlocked": [
+      {
+        "type": "function",
+        "name": "isBlocked",
+        "file": "tools/shell/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(cmd)",
+        "callCount": 0
+      }
+    ],
+    "isSafe": [
+      {
+        "type": "function",
+        "name": "isSafe",
+        "file": "tools/shell/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(cmd)",
+        "callCount": 0
+      }
+    ],
+    "runCommand": [
+      {
+        "type": "function",
+        "name": "runCommand",
+        "file": "tools/shell/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(cmd, workdir, timeout)",
+        "callCount": 0
+      }
+    ],
+    "checkAuth": [
+      {
+        "type": "function",
+        "name": "checkAuth",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(chatId)",
+        "callCount": 0
+      }
+    ],
+    "tgApi": [
+      {
+        "type": "function",
+        "name": "tgApi",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(method, params = {})",
+        "callCount": 0
+      }
+    ],
+    "fmtTime": [
+      {
+        "type": "function",
+        "name": "fmtTime",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(unix)",
+        "callCount": 0
+      }
+    ],
+    "fmtMessage": [
+      {
+        "type": "function",
+        "name": "fmtMessage",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(msg)",
+        "callCount": 0
+      }
+    ],
+    "SREConsole": [
+      {
+        "type": "function",
+        "name": "SREConsole",
+        "file": "ui/SREConsole.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "SREConsole",
+        "file": "ui/SREConsole.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "SREConsole",
+        "file": "ui/SREConsole.tsx",
+        "kind": "function"
+      }
+    ],
+    "ProviderCard": [
+      {
+        "type": "function",
+        "name": "ProviderCard",
+        "file": "ui/SREDashboard.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({ provider }: { provider: ProviderStatus })",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "ProviderCard",
+        "file": "ui/SREDashboard.tsx",
+        "kind": "function"
+      }
+    ],
+    "AlertCard": [
+      {
+        "type": "function",
+        "name": "AlertCard",
+        "file": "ui/SREDashboard.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({ alert }: { alert: Alert })",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "AlertCard",
+        "file": "ui/SREDashboard.tsx",
+        "kind": "function"
+      }
+    ],
+    "QuickQueryPanel": [
+      {
+        "type": "function",
+        "name": "QuickQueryPanel",
+        "file": "ui/SREDashboard.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "QuickQueryPanel",
+        "file": "ui/SREDashboard.tsx",
+        "kind": "function"
+      }
+    ],
+    "SREDashboard": [
+      {
+        "type": "function",
+        "name": "SREDashboard",
+        "file": "ui/SREDashboard.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "SREDashboard",
+        "file": "ui/SREDashboard.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "SREDashboard",
+        "file": "ui/SREDashboard.tsx",
+        "kind": "function"
+      }
+    ],
+    "App": [
+      {
+        "type": "function",
+        "name": "App",
+        "file": "ui/src/App.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "App",
+        "file": "ui/src/App.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "App",
+        "file": "ui/src/App.tsx",
+        "kind": "function"
+      }
+    ],
+    "closeTab": [
+      {
+        "type": "function",
+        "name": "closeTab",
+        "file": "ui/src/App.tsx",
+        "kind": "arrow",
+        "async": false,
+        "params": "(idx: number, e: React.MouseEvent)",
+        "callCount": 7
+      }
+    ],
+    "Dot": [
+      {
+        "type": "function",
+        "name": "Dot",
+        "file": "ui/src/App.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({ delay = \"0s\" }: { delay?: string })",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "Dot",
+        "file": "ui/src/App.tsx",
+        "kind": "function"
+      }
+    ],
+    "ToolCard": [
+      {
+        "type": "function",
+        "name": "ToolCard",
+        "file": "ui/src/App.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({ tool }: { tool: ToolEntry })",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "ToolCard",
+        "file": "ui/src/App.tsx",
+        "kind": "function"
+      }
+    ],
+    "test": [
+      {
+        "type": "function",
+        "name": "test",
+        "file": "ui/src/App.tsx",
+        "kind": "arrow",
+        "async": true,
+        "params": "()",
+        "callCount": 11
+      }
+    ]
+  },
+  "stats": {
+    "total": 147,
+    "functions": 102,
+    "classes": 3,
+    "exports": 34,
+    "routes": 0,
+    "components": 8
+  }
+}

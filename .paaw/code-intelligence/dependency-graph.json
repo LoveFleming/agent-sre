@@ -1,0 +1,925 @@
+{
+  "files": {
+    "server/agent-loop.mjs": {
+      "path": "server/agent-loop.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "./llm.mjs",
+          "resolved": true,
+          "targetFile": "server/llm.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/mcp-server.mjs",
+          "names": []
+        },
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "runAgentLoop",
+        "runAgentLoopStream"
+      ]
+    },
+    "server/llm.mjs": {
+      "path": "server/llm.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "./config.mjs",
+          "resolved": true,
+          "targetFile": "server/config.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/agent-loop.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "callLLM"
+      ]
+    },
+    "server/tool-registry.mjs": {
+      "path": "server/tool-registry.mjs",
+      "language": "javascript",
+      "imports": [],
+      "importedBy": [
+        {
+          "source": "server/agent-loop.mjs",
+          "names": []
+        },
+        {
+          "source": "server/mcp-client.mjs",
+          "names": []
+        },
+        {
+          "source": "server/mcp-server.mjs",
+          "names": []
+        },
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/tool-loader.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "toolRegistry",
+        "toolRegistry"
+      ]
+    },
+    "server/config.mjs": {
+      "path": "server/config.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/index.mjs",
+          "names": []
+        },
+        {
+          "source": "server/llm.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "ROOT",
+        "config",
+        "resolveLLM",
+        "PORT"
+      ]
+    },
+    "server/conversation.mjs": {
+      "path": "server/conversation.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/mcp-server.mjs",
+          "names": []
+        },
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "loadConversation",
+        "saveConversation",
+        "archiveConversation",
+        "listArchives",
+        "loadArchive"
+      ]
+    },
+    "server/crew-loader.mjs": {
+      "path": "server/crew-loader.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/index.mjs",
+          "names": []
+        },
+        {
+          "source": "server/mcp-server.mjs",
+          "names": []
+        },
+        {
+          "source": "server/mcp-server.mjs",
+          "names": []
+        },
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "loadAllCrews",
+        "getCrew",
+        "listCrews"
+      ]
+    },
+    "server/index.mjs": {
+      "path": "server/index.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "http",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./config.mjs",
+          "resolved": true,
+          "targetFile": "server/config.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./crew-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/crew-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./routes.mjs",
+          "resolved": true,
+          "targetFile": "server/routes.mjs",
+          "names": []
+        },
+        {
+          "source": "./mcp-client.mjs",
+          "resolved": true,
+          "targetFile": "server/mcp-client.mjs",
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/tool-loader.mjs": {
+      "path": "server/tool-loader.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/index.mjs",
+          "names": []
+        },
+        {
+          "source": "server/mcp-server.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "loadAllTools"
+      ]
+    },
+    "server/routes.mjs": {
+      "path": "server/routes.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "./crew-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/crew-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./agent-loop.mjs",
+          "resolved": true,
+          "targetFile": "server/agent-loop.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-registry.mjs",
+          "names": []
+        },
+        {
+          "source": "./conversation.mjs",
+          "resolved": true,
+          "targetFile": "server/conversation.mjs",
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/index.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "registerRoutes"
+      ]
+    },
+    "server/mcp-client.mjs": {
+      "path": "server/mcp-client.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "child_process",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/index.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "connectAllMCPServers",
+        "disconnectAllMCPClients"
+      ]
+    },
+    "server/mcp-server.mjs": {
+      "path": "server/mcp-server.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "http",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./crew-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/crew-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-registry.mjs",
+          "names": []
+        },
+        {
+          "source": "./agent-loop.mjs",
+          "resolved": true,
+          "targetFile": "server/agent-loop.mjs",
+          "names": []
+        },
+        {
+          "source": "./crew-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/crew-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./conversation.mjs",
+          "resolved": true,
+          "targetFile": "server/conversation.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/tool-engine/provider.mjs": {
+      "path": "server/tool-engine/provider.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "../llm-utils.mjs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": [
+        "OpenAICompatibleAdapter",
+        "createProviderAdapter"
+      ]
+    },
+    "tools/docs/handler.mjs": {
+      "path": "tools/docs/handler.mjs",
+      "language": "javascript",
+      "imports": [],
+      "importedBy": [],
+      "exports": [
+        "handler"
+      ]
+    },
+    "tools/grafana/handler.mjs": {
+      "path": "tools/grafana/handler.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": [
+        "handler"
+      ]
+    },
+    "tools/k8s/handler.mjs": {
+      "path": "tools/k8s/handler.mjs",
+      "language": "javascript",
+      "imports": [],
+      "importedBy": [],
+      "exports": [
+        "handler"
+      ]
+    },
+    "tools/loki/handler.mjs": {
+      "path": "tools/loki/handler.mjs",
+      "language": "javascript",
+      "imports": [],
+      "importedBy": [],
+      "exports": [
+        "handler"
+      ]
+    },
+    "tools/prometheus/handler.mjs": {
+      "path": "tools/prometheus/handler.mjs",
+      "language": "javascript",
+      "imports": [],
+      "importedBy": [],
+      "exports": [
+        "handler"
+      ]
+    },
+    "tools/security/handler.mjs": {
+      "path": "tools/security/handler.mjs",
+      "language": "javascript",
+      "imports": [],
+      "importedBy": [],
+      "exports": [
+        "handler"
+      ]
+    },
+    "tools/shell/handler.mjs": {
+      "path": "tools/shell/handler.mjs",
+      "language": "javascript",
+      "imports": [],
+      "importedBy": [],
+      "exports": [
+        "handler"
+      ]
+    },
+    "tools/tchat/handler.mjs": {
+      "path": "tools/tchat/handler.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": [
+        "handler"
+      ]
+    },
+    "ui/SREConsole.tsx": {
+      "path": "ui/SREConsole.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "../api",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../utils",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../i18n",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../theme",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../components/MarkdownText",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../components/AgentConsole",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./SREDashboard",
+          "resolved": true,
+          "targetFile": "ui/SREDashboard.tsx",
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": [
+        "SREConsole"
+      ]
+    },
+    "ui/SREDashboard.tsx": {
+      "path": "ui/SREDashboard.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "../api",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../theme",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../utils",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../components/MarkdownText",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "ui/SREConsole.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "SREDashboard"
+      ]
+    },
+    "ui/src/App.tsx": {
+      "path": "ui/src/App.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "ui/src/main.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "App"
+      ]
+    },
+    "ui/src/main.tsx": {
+      "path": "ui/src/main.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "react-dom/client",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./App",
+          "resolved": true,
+          "targetFile": "ui/src/App.tsx",
+          "names": []
+        },
+        {
+          "source": "./index.css",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "ui/vite.config.ts": {
+      "path": "ui/vite.config.ts",
+      "language": "typescript",
+      "imports": [
+        {
+          "source": "vite",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "@vitejs/plugin-react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    }
+  },
+  "edges": [
+    {
+      "from": "server/agent-loop.mjs",
+      "to": "server/llm.mjs",
+      "names": []
+    },
+    {
+      "from": "server/agent-loop.mjs",
+      "to": "server/tool-registry.mjs",
+      "names": []
+    },
+    {
+      "from": "server/index.mjs",
+      "to": "server/config.mjs",
+      "names": []
+    },
+    {
+      "from": "server/index.mjs",
+      "to": "server/tool-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/index.mjs",
+      "to": "server/crew-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/index.mjs",
+      "to": "server/routes.mjs",
+      "names": []
+    },
+    {
+      "from": "server/index.mjs",
+      "to": "server/mcp-client.mjs",
+      "names": []
+    },
+    {
+      "from": "server/llm.mjs",
+      "to": "server/config.mjs",
+      "names": []
+    },
+    {
+      "from": "server/mcp-client.mjs",
+      "to": "server/tool-registry.mjs",
+      "names": []
+    },
+    {
+      "from": "server/mcp-server.mjs",
+      "to": "server/tool-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/mcp-server.mjs",
+      "to": "server/crew-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/mcp-server.mjs",
+      "to": "server/tool-registry.mjs",
+      "names": []
+    },
+    {
+      "from": "server/mcp-server.mjs",
+      "to": "server/agent-loop.mjs",
+      "names": []
+    },
+    {
+      "from": "server/mcp-server.mjs",
+      "to": "server/crew-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/mcp-server.mjs",
+      "to": "server/conversation.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/crew-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/agent-loop.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/tool-registry.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/conversation.mjs",
+      "names": []
+    },
+    {
+      "from": "server/tool-loader.mjs",
+      "to": "server/tool-registry.mjs",
+      "names": []
+    },
+    {
+      "from": "ui/SREConsole.tsx",
+      "to": "ui/SREDashboard.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/main.tsx",
+      "to": "ui/src/App.tsx",
+      "names": []
+    }
+  ],
+  "stats": {
+    "totalFiles": 25,
+    "totalEdges": 22,
+    "resolvedImports": 22,
+    "unresolvedImports": 54
+  }
+}

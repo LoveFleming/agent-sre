@@ -1,0 +1,1077 @@
+{
+  "nodes": [
+    {
+      "id": "server/agent-loop.mjs:trimMessages",
+      "name": "trimMessages",
+      "file": "server/agent-loop.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/agent-loop.mjs:getCrewTools",
+      "name": "getCrewTools",
+      "file": "server/agent-loop.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/agent-loop.mjs:runAgentLoop",
+      "name": "runAgentLoop",
+      "file": "server/agent-loop.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/agent-loop.mjs:runAgentLoopStream",
+      "name": "runAgentLoopStream",
+      "file": "server/agent-loop.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/agent-loop.mjs:send",
+      "name": "send",
+      "file": "server/agent-loop.mjs",
+      "line": 0,
+      "kind": "arrow",
+      "async": false
+    },
+    {
+      "id": "server/agent-loop.mjs:buildSystemPrompt",
+      "name": "buildSystemPrompt",
+      "file": "server/agent-loop.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/config.mjs:loadProviderConfig",
+      "name": "loadProviderConfig",
+      "file": "server/config.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/config.mjs:resolveLLM",
+      "name": "resolveLLM",
+      "file": "server/config.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/conversation.mjs:ensureDir",
+      "name": "ensureDir",
+      "file": "server/conversation.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/conversation.mjs:loadConversation",
+      "name": "loadConversation",
+      "file": "server/conversation.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/conversation.mjs:saveConversation",
+      "name": "saveConversation",
+      "file": "server/conversation.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/conversation.mjs:archiveConversation",
+      "name": "archiveConversation",
+      "file": "server/conversation.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/conversation.mjs:listArchives",
+      "name": "listArchives",
+      "file": "server/conversation.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/conversation.mjs:loadArchive",
+      "name": "loadArchive",
+      "file": "server/conversation.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/crew-loader.mjs:loadAllCrews",
+      "name": "loadAllCrews",
+      "file": "server/crew-loader.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/crew-loader.mjs:getCrew",
+      "name": "getCrew",
+      "file": "server/crew-loader.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/crew-loader.mjs:listCrews",
+      "name": "listCrews",
+      "file": "server/crew-loader.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/index.mjs:main",
+      "name": "main",
+      "file": "server/index.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/llm.mjs:sleep",
+      "name": "sleep",
+      "file": "server/llm.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/llm.mjs:callLLM",
+      "name": "callLLM",
+      "file": "server/llm.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/llm.mjs:fallbackOverride",
+      "name": "fallbackOverride",
+      "file": "server/llm.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/llm.mjs:handleStream",
+      "name": "handleStream",
+      "file": "server/llm.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/llm.mjs:mergeToolCalls",
+      "name": "mergeToolCalls",
+      "file": "server/llm.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/mcp-client.mjs:loadMCPConfig",
+      "name": "loadMCPConfig",
+      "file": "server/mcp-client.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/mcp-client.mjs:connectAllMCPServers",
+      "name": "connectAllMCPServers",
+      "file": "server/mcp-client.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/mcp-client.mjs:handler",
+      "name": "handler",
+      "file": "server/mcp-client.mjs",
+      "line": 0,
+      "kind": "arrow",
+      "async": true
+    },
+    {
+      "id": "server/mcp-client.mjs:disconnectAllMCPClients",
+      "name": "disconnectAllMCPClients",
+      "file": "server/mcp-client.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/mcp-server.mjs:rpcResult",
+      "name": "rpcResult",
+      "file": "server/mcp-server.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/mcp-server.mjs:rpcError",
+      "name": "rpcError",
+      "file": "server/mcp-server.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/mcp-server.mjs:buildMCPTools",
+      "name": "buildMCPTools",
+      "file": "server/mcp-server.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/mcp-server.mjs:buildMCPResources",
+      "name": "buildMCPResources",
+      "file": "server/mcp-server.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/mcp-server.mjs:buildMCPPrompts",
+      "name": "buildMCPPrompts",
+      "file": "server/mcp-server.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/mcp-server.mjs:handleRequest",
+      "name": "handleRequest",
+      "file": "server/mcp-server.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/mcp-server.mjs:runStdio",
+      "name": "runStdio",
+      "file": "server/mcp-server.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/mcp-server.mjs:runSSE",
+      "name": "runSSE",
+      "file": "server/mcp-server.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/routes.mjs:readBody",
+      "name": "readBody",
+      "file": "server/routes.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/routes.mjs:json",
+      "name": "json",
+      "file": "server/routes.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/routes.mjs:registerRoutes",
+      "name": "registerRoutes",
+      "file": "server/routes.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/routes.mjs:onToolCall",
+      "name": "onToolCall",
+      "file": "server/routes.mjs",
+      "line": 0,
+      "kind": "arrow",
+      "async": false
+    },
+    {
+      "id": "server/tool-engine/provider.mjs:_llmLog",
+      "name": "_llmLog",
+      "file": "server/tool-engine/provider.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/tool-engine/provider.mjs:logStream",
+      "name": "logStream",
+      "file": "server/tool-engine/provider.mjs",
+      "line": 0,
+      "kind": "arrow",
+      "async": false
+    },
+    {
+      "id": "server/tool-engine/provider.mjs:createProviderAdapter",
+      "name": "createProviderAdapter",
+      "file": "server/tool-engine/provider.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/tool-loader.mjs:loadAllTools",
+      "name": "loadAllTools",
+      "file": "server/tool-loader.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "server/tool-loader.mjs:wrappedHandler",
+      "name": "wrappedHandler",
+      "file": "server/tool-loader.mjs",
+      "line": 0,
+      "kind": "arrow",
+      "async": true
+    },
+    {
+      "id": "tools/docs/handler.mjs:parseFrontmatter",
+      "name": "parseFrontmatter",
+      "file": "tools/docs/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/docs/handler.mjs:scanRunbooks",
+      "name": "scanRunbooks",
+      "file": "tools/docs/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/docs/handler.mjs:scan",
+      "name": "scan",
+      "file": "tools/docs/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/docs/handler.mjs:searchRunbooks",
+      "name": "searchRunbooks",
+      "file": "tools/docs/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/docs/handler.mjs:handler",
+      "name": "handler",
+      "file": "tools/docs/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/grafana/handler.mjs:getConfig",
+      "name": "getConfig",
+      "file": "tools/grafana/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/grafana/handler.mjs:apiBase",
+      "name": "apiBase",
+      "file": "tools/grafana/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/grafana/handler.mjs:authHeaders",
+      "name": "authHeaders",
+      "file": "tools/grafana/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/grafana/handler.mjs:gql",
+      "name": "gql",
+      "file": "tools/grafana/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/grafana/handler.mjs:parseTime",
+      "name": "parseTime",
+      "file": "tools/grafana/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/grafana/handler.mjs:formatTable",
+      "name": "formatTable",
+      "file": "tools/grafana/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/grafana/handler.mjs:handler",
+      "name": "handler",
+      "file": "tools/grafana/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/k8s/handler.mjs:buildBaseArgs",
+      "name": "buildBaseArgs",
+      "file": "tools/k8s/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/k8s/handler.mjs:isDestructive",
+      "name": "isDestructive",
+      "file": "tools/k8s/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/k8s/handler.mjs:runKubectl",
+      "name": "runKubectl",
+      "file": "tools/k8s/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/k8s/handler.mjs:truncateOutput",
+      "name": "truncateOutput",
+      "file": "tools/k8s/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/k8s/handler.mjs:handler",
+      "name": "handler",
+      "file": "tools/k8s/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/loki/handler.mjs:getBaseUrl",
+      "name": "getBaseUrl",
+      "file": "tools/loki/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/loki/handler.mjs:buildHeaders",
+      "name": "buildHeaders",
+      "file": "tools/loki/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/loki/handler.mjs:formatLogResults",
+      "name": "formatLogResults",
+      "file": "tools/loki/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/loki/handler.mjs:formatStatsResults",
+      "name": "formatStatsResults",
+      "file": "tools/loki/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/loki/handler.mjs:handler",
+      "name": "handler",
+      "file": "tools/loki/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/prometheus/handler.mjs:getConfigUrl",
+      "name": "getConfigUrl",
+      "file": "tools/prometheus/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/prometheus/handler.mjs:buildHeaders",
+      "name": "buildHeaders",
+      "file": "tools/prometheus/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/prometheus/handler.mjs:fetchProm",
+      "name": "fetchProm",
+      "file": "tools/prometheus/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/prometheus/handler.mjs:formatInstantResult",
+      "name": "formatInstantResult",
+      "file": "tools/prometheus/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/prometheus/handler.mjs:formatRangeResult",
+      "name": "formatRangeResult",
+      "file": "tools/prometheus/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/prometheus/handler.mjs:formatAlerts",
+      "name": "formatAlerts",
+      "file": "tools/prometheus/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/prometheus/handler.mjs:handler",
+      "name": "handler",
+      "file": "tools/prometheus/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/security/handler.mjs:runCmd",
+      "name": "runCmd",
+      "file": "tools/security/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/security/handler.mjs:hasBin",
+      "name": "hasBin",
+      "file": "tools/security/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/security/handler.mjs:scanRbac",
+      "name": "scanRbac",
+      "file": "tools/security/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/security/handler.mjs:checkSsl",
+      "name": "checkSsl",
+      "file": "tools/security/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/security/handler.mjs:scanDeps",
+      "name": "scanDeps",
+      "file": "tools/security/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/security/handler.mjs:handler",
+      "name": "handler",
+      "file": "tools/security/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/shell/handler.mjs:isBlocked",
+      "name": "isBlocked",
+      "file": "tools/shell/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/shell/handler.mjs:isSafe",
+      "name": "isSafe",
+      "file": "tools/shell/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/shell/handler.mjs:isDestructive",
+      "name": "isDestructive",
+      "file": "tools/shell/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/shell/handler.mjs:runCommand",
+      "name": "runCommand",
+      "file": "tools/shell/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/shell/handler.mjs:truncateOutput",
+      "name": "truncateOutput",
+      "file": "tools/shell/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/shell/handler.mjs:handler",
+      "name": "handler",
+      "file": "tools/shell/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/tchat/handler.mjs:getConfig",
+      "name": "getConfig",
+      "file": "tools/tchat/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/tchat/handler.mjs:apiBase",
+      "name": "apiBase",
+      "file": "tools/tchat/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/tchat/handler.mjs:checkAuth",
+      "name": "checkAuth",
+      "file": "tools/tchat/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/tchat/handler.mjs:tgApi",
+      "name": "tgApi",
+      "file": "tools/tchat/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "tools/tchat/handler.mjs:fmtTime",
+      "name": "fmtTime",
+      "file": "tools/tchat/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/tchat/handler.mjs:fmtMessage",
+      "name": "fmtMessage",
+      "file": "tools/tchat/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "tools/tchat/handler.mjs:handler",
+      "name": "handler",
+      "file": "tools/tchat/handler.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": true
+    },
+    {
+      "id": "ui/SREConsole.tsx:SREConsole",
+      "name": "SREConsole",
+      "file": "ui/SREConsole.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/SREDashboard.tsx:ProviderCard",
+      "name": "ProviderCard",
+      "file": "ui/SREDashboard.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/SREDashboard.tsx:AlertCard",
+      "name": "AlertCard",
+      "file": "ui/SREDashboard.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/SREDashboard.tsx:QuickQueryPanel",
+      "name": "QuickQueryPanel",
+      "file": "ui/SREDashboard.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/SREDashboard.tsx:SREDashboard",
+      "name": "SREDashboard",
+      "file": "ui/SREDashboard.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/App.tsx:App",
+      "name": "App",
+      "file": "ui/src/App.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/App.tsx:closeTab",
+      "name": "closeTab",
+      "file": "ui/src/App.tsx",
+      "line": 0,
+      "kind": "arrow",
+      "async": false
+    },
+    {
+      "id": "ui/src/App.tsx:Dot",
+      "name": "Dot",
+      "file": "ui/src/App.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/App.tsx:ToolCard",
+      "name": "ToolCard",
+      "file": "ui/src/App.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/App.tsx:test",
+      "name": "test",
+      "file": "ui/src/App.tsx",
+      "line": 0,
+      "kind": "arrow",
+      "async": true
+    }
+  ],
+  "edges": [
+    {
+      "caller": "server/agent-loop.mjs:send",
+      "callee": "res.write",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "server/agent-loop.mjs:send",
+      "callee": "res.write",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "server/agent-loop.mjs:send",
+      "callee": "JSON.stringify",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "server/mcp-client.mjs:handler",
+      "callee": "client.callTool",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "server/routes.mjs:onToolCall",
+      "callee": "console.log",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "server/routes.mjs:onToolCall",
+      "callee": "result.slice",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "server/tool-loader.mjs:wrappedHandler",
+      "callee": "handler",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:closeTab",
+      "callee": "e.stopPropagation",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:closeTab",
+      "callee": "chatTabs.filter",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:closeTab",
+      "callee": "setChatTabs",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:closeTab",
+      "callee": "setActiveTabIdx",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:closeTab",
+      "callee": "Math.max",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:closeTab",
+      "callee": "setActiveTabIdx",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:closeTab",
+      "callee": "setActiveTabIdx",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "setTesting",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "setResult",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "JSON.parse",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "fetch",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "encodeURIComponent",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "JSON.stringify",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "server/routes.mjs:json",
+      "type": "method"
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "setResult",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "JSON.stringify",
+      "type": "method",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "setResult",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/App.tsx:test",
+      "callee": "setTesting",
+      "type": "direct",
+      "resolved": false
+    }
+  ],
+  "callersOf": {
+    "res.write": [
+      "server/agent-loop.mjs:send",
+      "server/agent-loop.mjs:send"
+    ],
+    "JSON.stringify": [
+      "server/agent-loop.mjs:send",
+      "ui/src/App.tsx:test",
+      "ui/src/App.tsx:test"
+    ],
+    "client.callTool": [
+      "server/mcp-client.mjs:handler"
+    ],
+    "console.log": [
+      "server/routes.mjs:onToolCall"
+    ],
+    "result.slice": [
+      "server/routes.mjs:onToolCall"
+    ],
+    "handler": [
+      "server/tool-loader.mjs:wrappedHandler"
+    ],
+    "e.stopPropagation": [
+      "ui/src/App.tsx:closeTab"
+    ],
+    "chatTabs.filter": [
+      "ui/src/App.tsx:closeTab"
+    ],
+    "setChatTabs": [
+      "ui/src/App.tsx:closeTab"
+    ],
+    "setActiveTabIdx": [
+      "ui/src/App.tsx:closeTab",
+      "ui/src/App.tsx:closeTab",
+      "ui/src/App.tsx:closeTab"
+    ],
+    "Math.max": [
+      "ui/src/App.tsx:closeTab"
+    ],
+    "setTesting": [
+      "ui/src/App.tsx:test",
+      "ui/src/App.tsx:test"
+    ],
+    "setResult": [
+      "ui/src/App.tsx:test",
+      "ui/src/App.tsx:test",
+      "ui/src/App.tsx:test"
+    ],
+    "JSON.parse": [
+      "ui/src/App.tsx:test"
+    ],
+    "fetch": [
+      "ui/src/App.tsx:test"
+    ],
+    "encodeURIComponent": [
+      "ui/src/App.tsx:test"
+    ],
+    "server/routes.mjs:json": [
+      "ui/src/App.tsx:test"
+    ]
+  },
+  "calleesOf": {
+    "server/agent-loop.mjs:send": [
+      "res.write",
+      "res.write",
+      "JSON.stringify"
+    ],
+    "server/mcp-client.mjs:handler": [
+      "client.callTool"
+    ],
+    "server/routes.mjs:onToolCall": [
+      "console.log",
+      "result.slice"
+    ],
+    "server/tool-loader.mjs:wrappedHandler": [
+      "handler"
+    ],
+    "ui/src/App.tsx:closeTab": [
+      "e.stopPropagation",
+      "chatTabs.filter",
+      "setChatTabs",
+      "setActiveTabIdx",
+      "Math.max",
+      "setActiveTabIdx",
+      "setActiveTabIdx"
+    ],
+    "ui/src/App.tsx:test": [
+      "setTesting",
+      "setResult",
+      "JSON.parse",
+      "fetch",
+      "encodeURIComponent",
+      "JSON.stringify",
+      "server/routes.mjs:json",
+      "setResult",
+      "JSON.stringify",
+      "setResult",
+      "setTesting"
+    ]
+  },
+  "stats": {
+    "totalFunctions": 102,
+    "totalCalls": 25,
+    "resolvedCalls": 1,
+    "unresolvedCalls": 24
+  }
+}

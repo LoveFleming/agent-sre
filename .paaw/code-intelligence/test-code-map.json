@@ -1,0 +1,72 @@
+{
+  "mappings": [
+    {
+      "testFile": "server/agent-loop.mjs",
+      "productionFile": "server/llm.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 6
+    },
+    {
+      "testFile": "server/index.mjs",
+      "productionFile": "server/config.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
+      "testFile": "server/llm.mjs",
+      "productionFile": "server/config.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 5
+    },
+    {
+      "testFile": "server/mcp-client.mjs",
+      "productionFile": "server/tool-registry.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 4
+    },
+    {
+      "testFile": "server/mcp-server.mjs",
+      "productionFile": "server/tool-loader.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 8
+    },
+    {
+      "testFile": "server/routes.mjs",
+      "productionFile": "server/crew-loader.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 4
+    },
+    {
+      "testFile": "server/tool-loader.mjs",
+      "productionFile": "server/tool-registry.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 2
+    },
+    {
+      "testFile": "ui/SREConsole.tsx",
+      "productionFile": "ui/SREDashboard.tsx",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
+      "testFile": "ui/src/main.tsx",
+      "productionFile": "ui/src/App.tsx",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 0
+    }
+  ],
+  "stats": {
+    "totalTestFiles": 0,
+    "matchedTests": 9,
+    "totalTestedFunctions": 0
+  }
+}

@@ -1,0 +1,1717 @@
+{
+  "files": [
+    {
+      "file": "server/agent-loop.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "runAgentLoop",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "runAgentLoopStream",
+          "isDefault": false
+        }
+      ],
+      "imports": [
+        {
+          "source": "./llm.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "trimMessages",
+          "kind": "function",
+          "async": false,
+          "params": "(messages, maxChars = DEFAULT_CONTEXT_WINDOW * 4)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "getCrewTools",
+          "kind": "function",
+          "async": false,
+          "params": "(crew, allTools)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "runAgentLoop",
+          "kind": "function",
+          "async": true,
+          "params": "({\n  crew,\n  message,\n  history = [],\n  model,\n  onToolCall,\n})",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "runAgentLoopStream",
+          "kind": "function",
+          "async": true,
+          "params": "({ crew, message, history = [], model, res, onToolCall })",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "send",
+          "kind": "arrow",
+          "async": false,
+          "params": "(event, data)",
+          "callCount": 3,
+          "calls": [
+            "res.write",
+            "res.write",
+            "JSON.stringify"
+          ]
+        },
+        {
+          "name": "buildSystemPrompt",
+          "kind": "function",
+          "async": false,
+          "params": "(crew)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/config.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "variable",
+          "name": "ROOT",
+          "isDefault": false
+        },
+        {
+          "kind": "variable",
+          "name": "config",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "resolveLLM",
+          "isDefault": false
+        },
+        {
+          "kind": "variable",
+          "name": "PORT",
+          "isDefault": false
+        }
+      ],
+      "imports": [
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "loadProviderConfig",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "resolveLLM",
+          "kind": "function",
+          "async": false,
+          "params": "(modelOverride)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/conversation.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "loadConversation",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "saveConversation",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "archiveConversation",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "listArchives",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "loadArchive",
+          "isDefault": false
+        }
+      ],
+      "imports": [
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "ensureDir",
+          "kind": "function",
+          "async": false,
+          "params": "(dir)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "loadConversation",
+          "kind": "function",
+          "async": false,
+          "params": "(crewId)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "saveConversation",
+          "kind": "function",
+          "async": false,
+          "params": "(crewId, messages)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "archiveConversation",
+          "kind": "function",
+          "async": false,
+          "params": "(crewId)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "listArchives",
+          "kind": "function",
+          "async": false,
+          "params": "(crewId)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "loadArchive",
+          "kind": "function",
+          "async": false,
+          "params": "(crewId, sessionId)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/crew-loader.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "loadAllCrews",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "getCrew",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "listCrews",
+          "isDefault": false
+        }
+      ],
+      "imports": [
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "loadAllCrews",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "getCrew",
+          "kind": "function",
+          "async": false,
+          "params": "(id)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "listCrews",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/index.mjs",
+      "language": "javascript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "http",
+          "names": []
+        },
+        {
+          "source": "./config.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./crew-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./routes.mjs",
+          "names": []
+        },
+        {
+          "source": "./mcp-client.mjs",
+          "names": []
+        },
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "main",
+          "kind": "function",
+          "async": true,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/llm.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "callLLM",
+          "isDefault": false
+        }
+      ],
+      "imports": [
+        {
+          "source": "./config.mjs",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "sleep",
+          "kind": "function",
+          "async": true,
+          "params": "(ms)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "callLLM",
+          "kind": "function",
+          "async": true,
+          "params": "({\n  model,\n  messages,\n  tools,\n  maxTokens = 4096,\n  maxRetries = 3,\n  timeoutMs = 120_000,\n  onEvent = null,\n})",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "fallbackOverride",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handleStream",
+          "kind": "function",
+          "async": true,
+          "params": "(resp, onEvent)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "mergeToolCalls",
+          "kind": "function",
+          "async": false,
+          "params": "(existing, deltas)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/mcp-client.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "connectAllMCPServers",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "disconnectAllMCPClients",
+          "isDefault": false
+        }
+      ],
+      "imports": [
+        {
+          "source": "child_process",
+          "names": []
+        },
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "loadMCPConfig",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "connectAllMCPServers",
+          "kind": "function",
+          "async": true,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handler",
+          "kind": "arrow",
+          "async": true,
+          "params": "(args)",
+          "callCount": 1,
+          "calls": [
+            "client.callTool"
+          ]
+        },
+        {
+          "name": "disconnectAllMCPClients",
+          "kind": "function",
+          "async": false,
+          "params": "(clients)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "MCPClient",
+          "methods": [
+            "constructor",
+            "connect",
+            "_loadTools",
+            "callTool",
+            "_request",
+            "_notify",
+            "_onData",
+            "disconnect"
+          ]
+        }
+      ],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/mcp-server.mjs",
+      "language": "javascript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "http",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./crew-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "names": []
+        },
+        {
+          "source": "./agent-loop.mjs",
+          "names": []
+        },
+        {
+          "source": "./crew-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./conversation.mjs",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "rpcResult",
+          "kind": "function",
+          "async": false,
+          "params": "(id, result)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "rpcError",
+          "kind": "function",
+          "async": false,
+          "params": "(id, code, message)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "buildMCPTools",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "buildMCPResources",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "buildMCPPrompts",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handleRequest",
+          "kind": "function",
+          "async": true,
+          "params": "(msg)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "runStdio",
+          "kind": "function",
+          "async": true,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "runSSE",
+          "kind": "function",
+          "async": true,
+          "params": "(port)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/routes.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "registerRoutes",
+          "isDefault": false
+        }
+      ],
+      "imports": [
+        {
+          "source": "./crew-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./agent-loop.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "names": []
+        },
+        {
+          "source": "./conversation.mjs",
+          "names": []
+        },
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "readBody",
+          "kind": "function",
+          "async": false,
+          "params": "(req)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "json",
+          "kind": "function",
+          "async": false,
+          "params": "(res, code, data)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "registerRoutes",
+          "kind": "function",
+          "async": false,
+          "params": "(server)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "onToolCall",
+          "kind": "arrow",
+          "async": false,
+          "params": "({ name, result })",
+          "callCount": 2,
+          "calls": [
+            "console.log",
+            "result.slice"
+          ]
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/tool-engine/provider.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "class",
+          "name": "OpenAICompatibleAdapter",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "createProviderAdapter",
+          "isDefault": false
+        }
+      ],
+      "imports": [
+        {
+          "source": "../llm-utils.mjs",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "fs",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "_llmLog",
+          "kind": "function",
+          "async": false,
+          "params": "(entry)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "logStream",
+          "kind": "arrow",
+          "async": false,
+          "params": "(line)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "createProviderAdapter",
+          "kind": "function",
+          "async": false,
+          "params": "(config)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "OpenAICompatibleAdapter",
+          "methods": [
+            "constructor",
+            "chat"
+          ]
+        }
+      ],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/tool-loader.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "loadAllTools",
+          "isDefault": false
+        }
+      ],
+      "imports": [
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "loadAllTools",
+          "kind": "function",
+          "async": true,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "wrappedHandler",
+          "kind": "arrow",
+          "async": true,
+          "params": "(args, ctx)",
+          "callCount": 1,
+          "calls": [
+            "handler"
+          ]
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/tool-registry.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "variable",
+          "name": "toolRegistry",
+          "isDefault": false
+        },
+        {
+          "kind": "value",
+          "name": "toolRegistry",
+          "isDefault": true
+        }
+      ],
+      "imports": [],
+      "functions": [],
+      "classes": [
+        {
+          "name": "ToolRegistry",
+          "methods": [
+            "constructor",
+            "register",
+            "registerAll",
+            "getDefinitions",
+            "get",
+            "list",
+            "execute",
+            "clear"
+          ]
+        }
+      ],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "tools/docs/handler.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "isDefault": true
+        }
+      ],
+      "imports": [],
+      "functions": [
+        {
+          "name": "parseFrontmatter",
+          "kind": "function",
+          "async": false,
+          "params": "(content)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "scanRunbooks",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "scan",
+          "kind": "function",
+          "async": false,
+          "params": "(dir)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "searchRunbooks",
+          "kind": "function",
+          "async": false,
+          "params": "(keyword, runbooks)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handler",
+          "kind": "function",
+          "async": true,
+          "params": "(args, ctx)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "tools/grafana/handler.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "getConfig",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "apiBase",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "authHeaders",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "gql",
+          "kind": "function",
+          "async": true,
+          "params": "(path, options = {})",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "parseTime",
+          "kind": "function",
+          "async": false,
+          "params": "(t)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "formatTable",
+          "kind": "function",
+          "async": false,
+          "params": "(data)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handler",
+          "kind": "function",
+          "async": true,
+          "params": "(args, ctx)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "tools/k8s/handler.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "isDefault": true
+        }
+      ],
+      "imports": [],
+      "functions": [
+        {
+          "name": "buildBaseArgs",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "isDestructive",
+          "kind": "function",
+          "async": false,
+          "params": "(action)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "runKubectl",
+          "kind": "function",
+          "async": false,
+          "params": "(args, timeout = 15000)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "truncateOutput",
+          "kind": "function",
+          "async": false,
+          "params": "(text, maxLines = 80)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handler",
+          "kind": "function",
+          "async": true,
+          "params": "(args, ctx)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "tools/loki/handler.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "isDefault": true
+        }
+      ],
+      "imports": [],
+      "functions": [
+        {
+          "name": "getBaseUrl",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "buildHeaders",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "formatLogResults",
+          "kind": "function",
+          "async": false,
+          "params": "(data)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "formatStatsResults",
+          "kind": "function",
+          "async": false,
+          "params": "(data)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handler",
+          "kind": "function",
+          "async": true,
+          "params": "(args, ctx)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "tools/prometheus/handler.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "isDefault": true
+        }
+      ],
+      "imports": [],
+      "functions": [
+        {
+          "name": "getConfigUrl",
+          "kind": "function",
+          "async": false,
+          "params": "(config)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "buildHeaders",
+          "kind": "function",
+          "async": false,
+          "params": "(config)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "fetchProm",
+          "kind": "function",
+          "async": true,
+          "params": "(baseUrl, path, params, config)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "formatInstantResult",
+          "kind": "function",
+          "async": false,
+          "params": "(data)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "formatRangeResult",
+          "kind": "function",
+          "async": false,
+          "params": "(data)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "formatAlerts",
+          "kind": "function",
+          "async": false,
+          "params": "(data)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handler",
+          "kind": "function",
+          "async": true,
+          "params": "(args, ctx)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "tools/security/handler.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "isDefault": true
+        }
+      ],
+      "imports": [],
+      "functions": [
+        {
+          "name": "runCmd",
+          "kind": "function",
+          "async": false,
+          "params": "(cmd, timeout = 20000)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "hasBin",
+          "kind": "function",
+          "async": false,
+          "params": "(bin)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "scanRbac",
+          "kind": "function",
+          "async": false,
+          "params": "(namespace, opts)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "checkSsl",
+          "kind": "function",
+          "async": false,
+          "params": "(host, port)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "scanDeps",
+          "kind": "function",
+          "async": false,
+          "params": "(projectPath, scanner, severity)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handler",
+          "kind": "function",
+          "async": true,
+          "params": "(args, ctx)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "tools/shell/handler.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "isDefault": true
+        }
+      ],
+      "imports": [],
+      "functions": [
+        {
+          "name": "isBlocked",
+          "kind": "function",
+          "async": false,
+          "params": "(cmd)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "isSafe",
+          "kind": "function",
+          "async": false,
+          "params": "(cmd)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "isDestructive",
+          "kind": "function",
+          "async": false,
+          "params": "(cmd)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "runCommand",
+          "kind": "function",
+          "async": false,
+          "params": "(cmd, workdir, timeout)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "truncateOutput",
+          "kind": "function",
+          "async": false,
+          "params": "(text, maxLines = 80)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handler",
+          "kind": "function",
+          "async": true,
+          "params": "(args, ctx)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "tools/tchat/handler.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "getConfig",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "apiBase",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "checkAuth",
+          "kind": "function",
+          "async": false,
+          "params": "(chatId)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "tgApi",
+          "kind": "function",
+          "async": true,
+          "params": "(method, params = {})",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "fmtTime",
+          "kind": "function",
+          "async": false,
+          "params": "(unix)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "fmtMessage",
+          "kind": "function",
+          "async": false,
+          "params": "(msg)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "handler",
+          "kind": "function",
+          "async": true,
+          "params": "(args, ctx)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "ui/SREConsole.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "SREConsole",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "../api",
+          "names": []
+        },
+        {
+          "source": "react",
+          "names": []
+        },
+        {
+          "source": "../utils",
+          "names": []
+        },
+        {
+          "source": "../i18n",
+          "names": []
+        },
+        {
+          "source": "../theme",
+          "names": []
+        },
+        {
+          "source": "../components/MarkdownText",
+          "names": []
+        },
+        {
+          "source": "../components/AgentConsole",
+          "names": []
+        },
+        {
+          "source": "./SREDashboard",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "SREConsole",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "SREConsole",
+          "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/SREDashboard.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "SREDashboard",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "../api",
+          "names": []
+        },
+        {
+          "source": "react",
+          "names": []
+        },
+        {
+          "source": "../theme",
+          "names": []
+        },
+        {
+          "source": "../utils",
+          "names": []
+        },
+        {
+          "source": "../components/MarkdownText",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "ProviderCard",
+          "kind": "function",
+          "async": false,
+          "params": "({ provider }: { provider: ProviderStatus })",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "AlertCard",
+          "kind": "function",
+          "async": false,
+          "params": "({ alert }: { alert: Alert })",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "QuickQueryPanel",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "SREDashboard",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "ProviderCard",
+          "kind": "function"
+        },
+        {
+          "name": "AlertCard",
+          "kind": "function"
+        },
+        {
+          "name": "QuickQueryPanel",
+          "kind": "function"
+        },
+        {
+          "name": "SREDashboard",
+          "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/src/App.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "App",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "react",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "App",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "closeTab",
+          "kind": "arrow",
+          "async": false,
+          "params": "(idx: number, e: React.MouseEvent)",
+          "callCount": 7,
+          "calls": [
+            "e.stopPropagation",
+            "chatTabs.filter",
+            "setChatTabs",
+            "setActiveTabIdx",
+            "Math.max",
+            "setActiveTabIdx",
+            "setActiveTabIdx"
+          ]
+        },
+        {
+          "name": "Dot",
+          "kind": "function",
+          "async": false,
+          "params": "({ delay = \"0s\" }: { delay?: string })",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "ToolCard",
+          "kind": "function",
+          "async": false,
+          "params": "({ tool }: { tool: ToolEntry })",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "test",
+          "kind": "arrow",
+          "async": true,
+          "params": "()",
+          "callCount": 11,
+          "calls": [
+            "setTesting",
+            "setResult",
+            "JSON.parse",
+            "fetch",
+            "encodeURIComponent",
+            "JSON.stringify",
+            "res.json",
+            "setResult",
+            "JSON.stringify",
+            "setResult",
+            "setTesting"
+          ]
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "App",
+          "kind": "function"
+        },
+        {
+          "name": "Dot",
+          "kind": "function"
+        },
+        {
+          "name": "ToolCard",
+          "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/src/main.tsx",
+      "language": "tsx",
+      "exports": [],
+      "imports": [
+        {
+          "source": "react",
+          "names": []
+        },
+        {
+          "source": "react-dom/client",
+          "names": []
+        },
+        {
+          "source": "./App",
+          "names": []
+        },
+        {
+          "source": "./index.css",
+          "names": []
+        }
+      ],
+      "functions": [],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "ui/vite.config.ts",
+      "language": "typescript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vite",
+          "names": []
+        },
+        {
+          "source": "@vitejs/plugin-react",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        }
+      ],
+      "functions": [],
+      "classes": [],
+      "routes": [],
+      "components": []
+    }
+  ],
+  "stats": {
+    "totalFiles": 27,
+    "parsedFiles": 25,
+    "errors": 0,
+    "languages": {
+      "javascript": 22,
+      "tsx": 4,
+      "typescript": 1
+    }
+  }
+}

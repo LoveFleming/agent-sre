@@ -1,0 +1,1155 @@
+{
+  "generatedAt": "2026-08-01T03:07:54.443Z",
+  "period": "30 days",
+  "commits": [
+    {
+      "hash": "6f00301",
+      "author": "LoveFleming",
+      "date": "2026-07-31T14:29:27.000Z",
+      "subject": "feat: multi-tab chat + model selector",
+      "fileCount": 1,
+      "files": [
+        "ui/src/App.tsx"
+      ]
+    },
+    {
+      "hash": "c6a0c48",
+      "author": "LoveFleming",
+      "date": "2026-07-31T14:27:14.000Z",
+      "subject": "feat: React + Vite + Tailwind UI (matching PAAW stack)",
+      "fileCount": 13,
+      "files": [
+        ".gitignore",
+        "package.json",
+        "server/routes.mjs",
+        "ui/index.html",
+        "ui/package-lock.json",
+        "ui/package.json",
+        "ui/postcss.config.js",
+        "ui/src/App.tsx",
+        "ui/src/index.css",
+        "ui/src/main.tsx"
+      ]
+    },
+    {
+      "hash": "1ca8dfa",
+      "author": "LoveFleming",
+      "date": "2026-07-31T14:22:21.000Z",
+      "subject": "feat: add web UI + tool test endpoint",
+      "fileCount": 3,
+      "files": [
+        "server/index.mjs",
+        "server/routes.mjs",
+        "ui/index.html"
+      ]
+    },
+    {
+      "hash": "27db224",
+      "author": "LoveFleming",
+      "date": "2026-07-31T14:18:38.000Z",
+      "subject": "rename: tg_* → tchat_* tool names",
+      "fileCount": 4,
+      "files": [
+        "tools/tchat/handler.mjs",
+        "tools/tchat/tools/tchat_read_history.json",
+        "tools/tchat/tools/tchat_read_next.json",
+        "tools/tchat/tools/tchat_send.json"
+      ]
+    },
+    {
+      "hash": "017f00a",
+      "author": "LoveFleming",
+      "date": "2026-07-31T14:17:08.000Z",
+      "subject": "rename: telegram → tchat",
+      "fileCount": 5,
+      "files": [
+        "tools/tchat/config.example.json",
+        "tools/tchat/handler.mjs",
+        "tools/tchat/tools/tg_read_history.json",
+        "tools/tchat/tools/tg_read_next.json",
+        "tools/tchat/tools/tg_send.json"
+      ]
+    },
+    {
+      "hash": "795e8f0",
+      "author": "LoveFleming",
+      "date": "2026-07-31T14:14:59.000Z",
+      "subject": "feat: add Telegram MCP tool provider (3 tools)",
+      "fileCount": 5,
+      "files": [
+        "tools/telegram/config.example.json",
+        "tools/telegram/handler.mjs",
+        "tools/telegram/tools/tg_read_history.json",
+        "tools/telegram/tools/tg_read_next.json",
+        "tools/telegram/tools/tg_send.json"
+      ]
+    },
+    {
+      "hash": "55cc035",
+      "author": "LoveFleming",
+      "date": "2026-07-31T14:11:42.000Z",
+      "subject": "feat: add Grafana MCP tool provider (6 tools)",
+      "fileCount": 8,
+      "files": [
+        "tools/grafana/config.example.json",
+        "tools/grafana/handler.mjs",
+        "tools/grafana/tools/grafana_get_dashboard.json",
+        "tools/grafana/tools/grafana_list_alerts.json",
+        "tools/grafana/tools/grafana_list_dashboards.json",
+        "tools/grafana/tools/grafana_list_datasources.json",
+        "tools/grafana/tools/grafana_query_panel.json",
+        "tools/grafana/tools/grafana_search.json"
+      ]
+    },
+    {
+      "hash": "c936d78",
+      "author": "LoveFleming",
+      "date": "2026-07-31T13:46:52.000Z",
+      "subject": "feat: add MCP server + client support",
+      "fileCount": 5,
+      "files": [
+        "README.md",
+        "config/mcp-servers.example.json",
+        "server/index.mjs",
+        "server/mcp-client.mjs",
+        "server/mcp-server.mjs"
+      ]
+    },
+    {
+      "hash": "70820ee",
+      "author": "LoveFleming",
+      "date": "2026-07-31T13:42:09.000Z",
+      "subject": "feat: rewrite as fully standalone — zero PAAW dependency",
+      "fileCount": 15,
+      "files": [
+        "README.md",
+        "config/providers.example.json",
+        "package.json",
+        "server/agent-loop.mjs",
+        "server/config.mjs",
+        "server/conversation.mjs",
+        "server/crew-loader.mjs",
+        "server/index.mjs",
+        "server/llm.mjs",
+        "server/routes.mjs"
+      ]
+    },
+    {
+      "hash": "e95687c",
+      "author": "LoveFleming",
+      "date": "2026-07-31T13:32:24.000Z",
+      "subject": "feat: extract SRE agent crew into independent repo",
+      "fileCount": 38,
+      "files": [
+        ".gitignore",
+        "README.md",
+        "crews/sre.commander.json",
+        "crews/sre.logs.json",
+        "crews/sre.metrics.json",
+        "crews/sre.responder.json",
+        "crews/sre.runbook.json",
+        "crews/sre.security.json",
+        "server/sre.mjs",
+        "server/tool-engine/provider.mjs"
+      ]
+    }
+  ],
+  "recentFiles": [
+    {
+      "file": "ui/src/App.tsx",
+      "changeCount": 2,
+      "lastChanged": "2026-07-31T14:29:27.000Z",
+      "commits": [
+        "6f00301",
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": ".gitignore",
+      "changeCount": 2,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48",
+        "e95687c"
+      ]
+    },
+    {
+      "file": "package.json",
+      "changeCount": 2,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48",
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/routes.mjs",
+      "changeCount": 3,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48",
+        "1ca8dfa",
+        "70820ee"
+      ]
+    },
+    {
+      "file": "ui/index.html",
+      "changeCount": 2,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48",
+        "1ca8dfa"
+      ]
+    },
+    {
+      "file": "ui/package-lock.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/package.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/postcss.config.js",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/src/index.css",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/src/main.tsx",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/tailwind.config.js",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/tsconfig.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/vite.config.ts",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:27:14.000Z",
+      "commits": [
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "server/index.mjs",
+      "changeCount": 3,
+      "lastChanged": "2026-07-31T14:22:21.000Z",
+      "commits": [
+        "1ca8dfa",
+        "c936d78",
+        "70820ee"
+      ]
+    },
+    {
+      "file": "tools/tchat/handler.mjs",
+      "changeCount": 2,
+      "lastChanged": "2026-07-31T14:18:38.000Z",
+      "commits": [
+        "27db224",
+        "017f00a"
+      ]
+    },
+    {
+      "file": "tools/tchat/tools/tchat_read_history.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:18:38.000Z",
+      "commits": [
+        "27db224"
+      ]
+    },
+    {
+      "file": "tools/tchat/tools/tchat_read_next.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:18:38.000Z",
+      "commits": [
+        "27db224"
+      ]
+    },
+    {
+      "file": "tools/tchat/tools/tchat_send.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:18:38.000Z",
+      "commits": [
+        "27db224"
+      ]
+    },
+    {
+      "file": "tools/tchat/config.example.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:17:08.000Z",
+      "commits": [
+        "017f00a"
+      ]
+    },
+    {
+      "file": "tools/tchat/tools/tg_read_history.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:17:08.000Z",
+      "commits": [
+        "017f00a"
+      ]
+    },
+    {
+      "file": "tools/tchat/tools/tg_read_next.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:17:08.000Z",
+      "commits": [
+        "017f00a"
+      ]
+    },
+    {
+      "file": "tools/tchat/tools/tg_send.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:17:08.000Z",
+      "commits": [
+        "017f00a"
+      ]
+    },
+    {
+      "file": "tools/telegram/config.example.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:14:59.000Z",
+      "commits": [
+        "795e8f0"
+      ]
+    },
+    {
+      "file": "tools/telegram/handler.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:14:59.000Z",
+      "commits": [
+        "795e8f0"
+      ]
+    },
+    {
+      "file": "tools/telegram/tools/tg_read_history.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:14:59.000Z",
+      "commits": [
+        "795e8f0"
+      ]
+    },
+    {
+      "file": "tools/telegram/tools/tg_read_next.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:14:59.000Z",
+      "commits": [
+        "795e8f0"
+      ]
+    },
+    {
+      "file": "tools/telegram/tools/tg_send.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:14:59.000Z",
+      "commits": [
+        "795e8f0"
+      ]
+    },
+    {
+      "file": "tools/grafana/config.example.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:11:42.000Z",
+      "commits": [
+        "55cc035"
+      ]
+    },
+    {
+      "file": "tools/grafana/handler.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:11:42.000Z",
+      "commits": [
+        "55cc035"
+      ]
+    },
+    {
+      "file": "tools/grafana/tools/grafana_get_dashboard.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:11:42.000Z",
+      "commits": [
+        "55cc035"
+      ]
+    },
+    {
+      "file": "tools/grafana/tools/grafana_list_alerts.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:11:42.000Z",
+      "commits": [
+        "55cc035"
+      ]
+    },
+    {
+      "file": "tools/grafana/tools/grafana_list_dashboards.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:11:42.000Z",
+      "commits": [
+        "55cc035"
+      ]
+    },
+    {
+      "file": "tools/grafana/tools/grafana_list_datasources.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:11:42.000Z",
+      "commits": [
+        "55cc035"
+      ]
+    },
+    {
+      "file": "tools/grafana/tools/grafana_query_panel.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:11:42.000Z",
+      "commits": [
+        "55cc035"
+      ]
+    },
+    {
+      "file": "tools/grafana/tools/grafana_search.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T14:11:42.000Z",
+      "commits": [
+        "55cc035"
+      ]
+    },
+    {
+      "file": "README.md",
+      "changeCount": 3,
+      "lastChanged": "2026-07-31T13:46:52.000Z",
+      "commits": [
+        "c936d78",
+        "70820ee",
+        "e95687c"
+      ]
+    },
+    {
+      "file": "config/mcp-servers.example.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:46:52.000Z",
+      "commits": [
+        "c936d78"
+      ]
+    },
+    {
+      "file": "server/mcp-client.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:46:52.000Z",
+      "commits": [
+        "c936d78"
+      ]
+    },
+    {
+      "file": "server/mcp-server.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:46:52.000Z",
+      "commits": [
+        "c936d78"
+      ]
+    },
+    {
+      "file": "config/providers.example.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/agent-loop.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/config.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/conversation.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/crew-loader.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/llm.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/sre.mjs",
+      "changeCount": 2,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee",
+        "e95687c"
+      ]
+    },
+    {
+      "file": "server/tool-loader.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/tool-registry-init.mjs",
+      "changeCount": 2,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee",
+        "e95687c"
+      ]
+    },
+    {
+      "file": "server/tool-registry.mjs",
+      "changeCount": 2,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee",
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/discord/tool.json",
+      "changeCount": 2,
+      "lastChanged": "2026-07-31T13:42:09.000Z",
+      "commits": [
+        "70820ee",
+        "e95687c"
+      ]
+    },
+    {
+      "file": "crews/sre.commander.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "crews/sre.logs.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "crews/sre.metrics.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "crews/sre.responder.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "crews/sre.runbook.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "crews/sre.security.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "server/tool-engine/provider.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/docs/handler.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/docs/tools/list_runbooks.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/docs/tools/read_runbook.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/k8s/handler.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/k8s/tools/kubectl_apply.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/k8s/tools/kubectl_describe.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/k8s/tools/kubectl_get.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/k8s/tools/kubectl_logs.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/k8s/tools/kubectl_top.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/loki/handler.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/loki/tools/log_stats.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/loki/tools/query_logs.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/prometheus/handler.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/prometheus/tools/list_alerts.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/prometheus/tools/prom_query_range.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/prometheus/tools/query_promql.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/security/handler.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/security/tools/check_ssl.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/security/tools/scan_deps.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/security/tools/scan_rbac.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/shell/handler.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/shell/tools/exec_command.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "tools/shell/tools/health_check.json",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "ui/SREConsole.tsx",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    },
+    {
+      "file": "ui/SREDashboard.tsx",
+      "changeCount": 1,
+      "lastChanged": "2026-07-31T13:32:24.000Z",
+      "commits": [
+        "e95687c"
+      ]
+    }
+  ],
+  "recentFeatures": [
+    {
+      "id": "F-020",
+      "name": "Multi-Tab Chat Interface",
+      "tags": [
+        "ui",
+        "chat",
+        "frontend"
+      ],
+      "changeCount": 2,
+      "files": [
+        "ui/src/App.tsx",
+        "server/routes.mjs"
+      ]
+    },
+    {
+      "id": "F-001",
+      "name": "HTTP API Server & Routing",
+      "tags": [
+        "core",
+        "api",
+        "server"
+      ],
+      "changeCount": 2,
+      "files": [
+        "server/routes.mjs",
+        "server/index.mjs"
+      ]
+    },
+    {
+      "id": "F-021",
+      "name": "React App Bootstrap & Build Config",
+      "tags": [
+        "ui",
+        "build",
+        "config"
+      ],
+      "changeCount": 2,
+      "files": [
+        "ui/src/main.tsx",
+        "ui/vite.config.ts"
+      ]
+    },
+    {
+      "id": "F-003",
+      "name": "LLM Integration",
+      "tags": [
+        "ai",
+        "core"
+      ],
+      "changeCount": 2,
+      "files": [
+        "server/llm.mjs",
+        "server/tool-engine/provider.mjs"
+      ]
+    },
+    {
+      "id": "F-009",
+      "name": "Tool Registry & Loading",
+      "tags": [
+        "core",
+        "tooling"
+      ],
+      "changeCount": 2,
+      "files": [
+        "server/tool-loader.mjs",
+        "server/tool-registry.mjs"
+      ]
+    },
+    {
+      "id": "F-016",
+      "name": "Telegram Chat Tool Provider",
+      "tags": [
+        "tooling",
+        "messaging",
+        "integration"
+      ],
+      "changeCount": 1,
+      "files": [
+        "tools/tchat/handler.mjs"
+      ]
+    },
+    {
+      "id": "F-010",
+      "name": "Grafana Tool Provider",
+      "tags": [
+        "tooling",
+        "observability",
+        "integration"
+      ],
+      "changeCount": 1,
+      "files": [
+        "tools/grafana/handler.mjs"
+      ]
+    },
+    {
+      "id": "F-008",
+      "name": "MCP Client",
+      "tags": [
+        "mcp",
+        "protocol",
+        "client"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/mcp-client.mjs"
+      ]
+    },
+    {
+      "id": "F-007",
+      "name": "MCP Server",
+      "tags": [
+        "mcp",
+        "protocol",
+        "core"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/mcp-server.mjs"
+      ]
+    },
+    {
+      "id": "F-002",
+      "name": "Agent Loop",
+      "tags": [
+        "core",
+        "ai"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/agent-loop.mjs"
+      ]
+    },
+    {
+      "id": "F-004",
+      "name": "Configuration Management",
+      "tags": [
+        "config",
+        "core"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/config.mjs"
+      ]
+    },
+    {
+      "id": "F-005",
+      "name": "Conversation Persistence",
+      "tags": [
+        "data",
+        "persistence"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/conversation.mjs"
+      ]
+    },
+    {
+      "id": "F-006",
+      "name": "Crew Orchestration",
+      "tags": [
+        "core",
+        "orchestration",
+        "ai"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/crew-loader.mjs"
+      ]
+    },
+    {
+      "id": "F-017",
+      "name": "Documentation & Runbook Search",
+      "tags": [
+        "tooling",
+        "docs",
+        "sre"
+      ],
+      "changeCount": 1,
+      "files": [
+        "tools/docs/handler.mjs"
+      ]
+    },
+    {
+      "id": "F-011",
+      "name": "Kubernetes Tool Provider",
+      "tags": [
+        "tooling",
+        "k8s",
+        "sre"
+      ],
+      "changeCount": 1,
+      "files": [
+        "tools/k8s/handler.mjs"
+      ]
+    },
+    {
+      "id": "F-012",
+      "name": "Loki Tool Provider",
+      "tags": [
+        "tooling",
+        "observability",
+        "logging"
+      ],
+      "changeCount": 1,
+      "files": [
+        "tools/loki/handler.mjs"
+      ]
+    },
+    {
+      "id": "F-013",
+      "name": "Prometheus Tool Provider",
+      "tags": [
+        "tooling",
+        "observability",
+        "metrics"
+      ],
+      "changeCount": 1,
+      "files": [
+        "tools/prometheus/handler.mjs"
+      ]
+    },
+    {
+      "id": "F-014",
+      "name": "Security Scanning Tool Provider",
+      "tags": [
+        "tooling",
+        "security",
+        "sre"
+      ],
+      "changeCount": 1,
+      "files": [
+        "tools/security/handler.mjs"
+      ]
+    },
+    {
+      "id": "F-015",
+      "name": "Shell Command Tool Provider",
+      "tags": [
+        "tooling",
+        "shell",
+        "sre"
+      ],
+      "changeCount": 1,
+      "files": [
+        "tools/shell/handler.mjs"
+      ]
+    },
+    {
+      "id": "F-018",
+      "name": "SRE Console UI",
+      "tags": [
+        "ui",
+        "sre",
+        "frontend"
+      ],
+      "changeCount": 1,
+      "files": [
+        "ui/SREConsole.tsx"
+      ]
+    },
+    {
+      "id": "F-019",
+      "name": "SRE Dashboard UI",
+      "tags": [
+        "ui",
+        "sre",
+        "dashboard"
+      ],
+      "changeCount": 1,
+      "files": [
+        "ui/SREDashboard.tsx"
+      ]
+    }
+  ],
+  "recentApis": [],
+  "decisions": [],
+  "impactAnalysis": [
+    {
+      "changedFile": "ui/src/App.tsx",
+      "affectedFiles": [
+        "ui/src/main.tsx"
+      ],
+      "impactLevel": "low"
+    },
+    {
+      "changedFile": "server/routes.mjs",
+      "affectedFiles": [
+        "server/index.mjs"
+      ],
+      "impactLevel": "low"
+    }
+  ],
+  "diffStat": "",
+  "summary": {
+    "period": "30 days",
+    "totalCommits": 10,
+    "totalFilesChanged": 82,
+    "totalFeaturesChanged": 21,
+    "totalApisChanged": 0,
+    "totalDecisions": 0,
+    "highImpactChanges": 0,
+    "topChangedFiles": [
+      {
+        "file": "ui/src/App.tsx",
+        "changes": 2
+      },
+      {
+        "file": ".gitignore",
+        "changes": 2
+      },
+      {
+        "file": "package.json",
+        "changes": 2
+      },
+      {
+        "file": "server/routes.mjs",
+        "changes": 3
+      },
+      {
+        "file": "ui/index.html",
+        "changes": 2
+      }
+    ]
+  }
+}

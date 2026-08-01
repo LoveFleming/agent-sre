@@ -1,0 +1,59 @@
+{
+  "steps": {
+    "scan": {
+      "status": "done",
+      "size": 5872,
+      "updatedAt": "2026-08-01T03:03:20.364Z"
+    },
+    "architecture": {
+      "status": "done",
+      "size": 9038,
+      "updatedAt": "2026-08-01T03:03:53.123Z"
+    },
+    "feature-map": {
+      "status": "done",
+      "size": 9325,
+      "updatedAt": "2026-08-01T03:04:32.689Z"
+    },
+    "api-spec": {
+      "status": "done",
+      "size": 13669,
+      "updatedAt": "2026-08-01T03:05:07.262Z"
+    },
+    "code-intelligence": {
+      "status": "done",
+      "summary": "102 functions",
+      "updatedAt": "2026-08-01T03:05:07.343Z"
+    },
+    "test-intelligence": {
+      "status": "done",
+      "summary": "0 tests",
+      "updatedAt": "2026-08-01T03:05:07.387Z"
+    },
+    "error-mapping": {
+      "status": "done",
+      "size": 30990,
+      "updatedAt": "2026-08-01T03:06:42.188Z"
+    },
+    "security-scan": {
+      "status": "done",
+      "summary": "62 findings",
+      "updatedAt": "2026-08-01T03:06:51.242Z"
+    },
+    "standards": {
+      "status": "done",
+      "size": 6637,
+      "updatedAt": "2026-08-01T03:07:24.582Z"
+    },
+    "overview": {
+      "status": "done",
+      "size": 10167,
+      "updatedAt": "2026-08-01T03:07:54.379Z"
+    },
+    "change-intelligence": {
+      "status": "done",
+      "summary": "10 commits",
+      "updatedAt": "2026-08-01T03:07:54.443Z"
+    }
+  }
+}

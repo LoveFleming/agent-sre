@@ -1,0 +1,146 @@
+{
+  "testFiles": [],
+  "testToCode": [],
+  "codeToTest": {},
+  "whatToRun": {},
+  "coverageGaps": [
+    {
+      "file": "server/mcp-server.mjs",
+      "functionCount": 8,
+      "exportCount": 0
+    },
+    {
+      "file": "tools/grafana/handler.mjs",
+      "functionCount": 7,
+      "exportCount": 1
+    },
+    {
+      "file": "tools/prometheus/handler.mjs",
+      "functionCount": 7,
+      "exportCount": 1
+    },
+    {
+      "file": "tools/tchat/handler.mjs",
+      "functionCount": 7,
+      "exportCount": 1
+    },
+    {
+      "file": "server/agent-loop.mjs",
+      "functionCount": 6,
+      "exportCount": 2
+    },
+    {
+      "file": "server/conversation.mjs",
+      "functionCount": 6,
+      "exportCount": 5
+    },
+    {
+      "file": "tools/security/handler.mjs",
+      "functionCount": 6,
+      "exportCount": 1
+    },
+    {
+      "file": "tools/shell/handler.mjs",
+      "functionCount": 6,
+      "exportCount": 1
+    },
+    {
+      "file": "server/llm.mjs",
+      "functionCount": 5,
+      "exportCount": 1
+    },
+    {
+      "file": "tools/docs/handler.mjs",
+      "functionCount": 5,
+      "exportCount": 1
+    },
+    {
+      "file": "tools/k8s/handler.mjs",
+      "functionCount": 5,
+      "exportCount": 1
+    },
+    {
+      "file": "tools/loki/handler.mjs",
+      "functionCount": 5,
+      "exportCount": 1
+    },
+    {
+      "file": "ui/src/App.tsx",
+      "functionCount": 5,
+      "exportCount": 1
+    },
+    {
+      "file": "server/mcp-client.mjs",
+      "functionCount": 4,
+      "exportCount": 2
+    },
+    {
+      "file": "server/routes.mjs",
+      "functionCount": 4,
+      "exportCount": 1
+    },
+    {
+      "file": "ui/SREDashboard.tsx",
+      "functionCount": 4,
+      "exportCount": 1
+    },
+    {
+      "file": "server/crew-loader.mjs",
+      "functionCount": 3,
+      "exportCount": 3
+    },
+    {
+      "file": "server/tool-engine/provider.mjs",
+      "functionCount": 3,
+      "exportCount": 2
+    },
+    {
+      "file": "server/config.mjs",
+      "functionCount": 2,
+      "exportCount": 4
+    },
+    {
+      "file": "server/tool-loader.mjs",
+      "functionCount": 2,
+      "exportCount": 1
+    },
+    {
+      "file": "server/index.mjs",
+      "functionCount": 1,
+      "exportCount": 0
+    },
+    {
+      "file": "ui/SREConsole.tsx",
+      "functionCount": 1,
+      "exportCount": 1
+    },
+    {
+      "file": "server/tool-registry.mjs",
+      "functionCount": 0,
+      "exportCount": 2
+    },
+    {
+      "file": "ui/src/main.tsx",
+      "functionCount": 0,
+      "exportCount": 0
+    },
+    {
+      "file": "ui/vite.config.ts",
+      "functionCount": 0,
+      "exportCount": 0
+    }
+  ],
+  "featureToTests": [],
+  "stats": {
+    "totalTestFiles": 0,
+    "byType": {
+      "unit": 0,
+      "integration": 0,
+      "e2e": 0
+    },
+    "totalMappings": 0,
+    "coverageGapFiles": 25,
+    "coverageRate": "0.0%",
+    "featureTestCoverage": 0
+  }
+}

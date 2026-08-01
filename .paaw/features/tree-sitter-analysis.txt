@@ -1,0 +1,357 @@
+# Project Source Analysis (Tree-sitter)
+Parsed 25 of 27 source files
+Languages: javascript(22), tsx(4), typescript(1)
+
+## server/agent-loop.mjs [javascript]
+  Imports:
+    * ← ./llm.mjs
+    * ← ./tool-registry.mjs
+  Exports:
+    function: runAgentLoop
+    function: runAgentLoopStream
+  Functions:
+    function trimMessages(messages, maxChars = DEFAULT_CONTEXT_WINDOW * 4)
+    function getCrewTools(crew, allTools)
+    async function runAgentLoop({
+  crew,
+  message,
+  history = [],
+  model,
+  onToolCall,
+})
+    async function runAgentLoopStream({ crew, message, history = [], model, res, onToolCall })
+    arrow send(event, data)
+    function buildSystemPrompt(crew)
+
+## server/config.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← path
+    * ← url
+  Exports:
+    variable: ROOT
+    variable: config
+    function: resolveLLM
+    variable: PORT
+  Functions:
+    function loadProviderConfig()
+    function resolveLLM(modelOverride)
+
+## server/conversation.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← path
+    * ← url
+  Exports:
+    function: loadConversation
+    function: saveConversation
+    function: archiveConversation
+    function: listArchives
+    function: loadArchive
+  Functions:
+    function ensureDir(dir)
+    function loadConversation(crewId)
+    function saveConversation(crewId, messages)
+    function archiveConversation(crewId)
+    function listArchives(crewId)
+    function loadArchive(crewId, sessionId)
+
+## server/crew-loader.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← path
+    * ← url
+  Exports:
+    function: loadAllCrews
+    function: getCrew
+    function: listCrews
+  Functions:
+    function loadAllCrews()
+    function getCrew(id)
+    function listCrews()
+
+## server/index.mjs [javascript]
+  Imports:
+    * ← http
+    * ← ./config.mjs
+    * ← ./tool-loader.mjs
+    * ← ./crew-loader.mjs
+    * ← ./routes.mjs
+    * ← ./mcp-client.mjs
+    * ← fs
+    * ← path
+    * ← url
+  Functions:
+    async function main()
+
+## server/llm.mjs [javascript]
+  Imports:
+    * ← ./config.mjs
+  Exports:
+    function: callLLM
+  Functions:
+    async function sleep(ms)
+    async function callLLM({
+  model,
+  messages,
+  tools,
+  maxTokens = 4096,
+  maxRetries = 3,
+  timeoutMs = 120_000,
+  onEvent = null,
+})
+    function fallbackOverride()
+    async function handleStream(resp, onEvent)
+    function mergeToolCalls(existing, deltas)
+
+## server/mcp-client.mjs [javascript]
+  Imports:
+    * ← child_process
+    * ← fs
+    * ← path
+    * ← url
+    * ← ./tool-registry.mjs
+  Exports:
+    function: connectAllMCPServers
+    function: disconnectAllMCPClients
+  Functions:
+    function loadMCPConfig()
+    async function connectAllMCPServers()
+    async arrow handler(args)
+    function disconnectAllMCPClients(clients)
+  Classes:
+    class MCPClient { constructor, connect, _loadTools, callTool, _request, _notify, _onData, disconnect }
+
+## server/mcp-server.mjs [javascript]
+  Imports:
+    * ← http
+    * ← ./tool-loader.mjs
+    * ← ./crew-loader.mjs
+    * ← ./tool-registry.mjs
+    * ← ./agent-loop.mjs
+    * ← ./crew-loader.mjs
+    * ← ./conversation.mjs
+  Functions:
+    function rpcResult(id, result)
+    function rpcError(id, code, message)
+    function buildMCPTools()
+    function buildMCPResources()
+    function buildMCPPrompts()
+    async function handleRequest(msg)
+    async function runStdio()
+    async function runSSE(port)
+
+## server/routes.mjs [javascript]
+  Imports:
+    * ← ./crew-loader.mjs
+    * ← ./agent-loop.mjs
+    * ← ./tool-registry.mjs
+    * ← ./conversation.mjs
+    * ← fs
+    * ← path
+    * ← url
+  Exports:
+    function: registerRoutes
+  Functions:
+    function readBody(req)
+    function json(res, code, data)
+    function registerRoutes(server)
+    arrow onToolCall({ name, result })
+
+## server/tool-engine/provider.mjs [javascript]
+  Imports:
+    * ← ../llm-utils.mjs
+    * ← url
+    * ← path
+    * ← fs
+  Exports:
+    class: OpenAICompatibleAdapter
+    function: createProviderAdapter
+  Functions:
+    function _llmLog(entry)
+    arrow logStream(line)
+    function createProviderAdapter(config)
+  Classes:
+    class OpenAICompatibleAdapter { constructor, chat }
+
+## server/tool-loader.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← path
+    * ← url
+    * ← ./tool-registry.mjs
+  Exports:
+    function: loadAllTools
+  Functions:
+    async function loadAllTools()
+    async arrow wrappedHandler(args, ctx)
+
+## server/tool-registry.mjs [javascript]
+  Exports:
+    variable: toolRegistry
+    default value: toolRegistry
+  Classes:
+    class ToolRegistry { constructor, register, registerAll, getDefinitions, get, list, execute, clear }
+
+## tools/docs/handler.mjs [javascript]
+  Exports:
+    default function: handler
+  Functions:
+    function parseFrontmatter(content)
+    function scanRunbooks()
+    function scan(dir)
+    function searchRunbooks(keyword, runbooks)
+    async function handler(args, ctx)
+
+## tools/grafana/handler.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← path
+    * ← url
+  Exports:
+    default function: handler
+  Functions:
+    function getConfig()
+    function apiBase()
+    function authHeaders()
+    async function gql(path, options = {})
+    function parseTime(t)
+    function formatTable(data)
+    async function handler(args, ctx)
+
+## tools/k8s/handler.mjs [javascript]
+  Exports:
+    default function: handler
+  Functions:
+    function buildBaseArgs()
+    function isDestructive(action)
+    function runKubectl(args, timeout = 15000)
+    function truncateOutput(text, maxLines = 80)
+    async function handler(args, ctx)
+
+## tools/loki/handler.mjs [javascript]
+  Exports:
+    default function: handler
+  Functions:
+    function getBaseUrl()
+    function buildHeaders()
+    function formatLogResults(data)
+    function formatStatsResults(data)
+    async function handler(args, ctx)
+
+## tools/prometheus/handler.mjs [javascript]
+  Exports:
+    default function: handler
+  Functions:
+    function getConfigUrl(config)
+    function buildHeaders(config)
+    async function fetchProm(baseUrl, path, params, config)
+    function formatInstantResult(data)
+    function formatRangeResult(data)
+    function formatAlerts(data)
+    async function handler(args, ctx)
+
+## tools/security/handler.mjs [javascript]
+  Exports:
+    default function: handler
+  Functions:
+    function runCmd(cmd, timeout = 20000)
+    function hasBin(bin)
+    function scanRbac(namespace, opts)
+    function checkSsl(host, port)
+    function scanDeps(projectPath, scanner, severity)
+    async function handler(args, ctx)
+
+## tools/shell/handler.mjs [javascript]
+  Exports:
+    default function: handler
+  Functions:
+    function isBlocked(cmd)
+    function isSafe(cmd)
+    function isDestructive(cmd)
+    function runCommand(cmd, workdir, timeout)
+    function truncateOutput(text, maxLines = 80)
+    async function handler(args, ctx)
+
+## tools/tchat/handler.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← path
+    * ← url
+  Exports:
+    default function: handler
+  Functions:
+    function getConfig()
+    function apiBase()
+    function checkAuth(chatId)
+    async function tgApi(method, params = {})
+    function fmtTime(unix)
+    function fmtMessage(msg)
+    async function handler(args, ctx)
+
+## ui/SREConsole.tsx [tsx]
+  Imports:
+    * ← ../api
+    * ← react
+    * ← ../utils
+    * ← ../i18n
+    * ← ../theme
+    * ← ../components/MarkdownText
+    * ← ../components/AgentConsole
+    * ← ./SREDashboard
+  Exports:
+    default function: SREConsole
+  Functions:
+    function SREConsole()
+  React Components:
+    function: SREConsole
+
+## ui/SREDashboard.tsx [tsx]
+  Imports:
+    * ← ../api
+    * ← react
+    * ← ../theme
+    * ← ../utils
+    * ← ../components/MarkdownText
+  Exports:
+    default function: SREDashboard
+  Functions:
+    function ProviderCard({ provider }: { provider: ProviderStatus })
+    function AlertCard({ alert }: { alert: Alert })
+    function QuickQueryPanel()
+    function SREDashboard()
+  React Components:
+    function: ProviderCard
+    function: AlertCard
+    function: QuickQueryPanel
+    function: SREDashboard
+
+## ui/src/App.tsx [tsx]
+  Imports:
+    * ← react
+  Exports:
+    default function: App
+  Functions:
+    function App()
+    arrow closeTab(idx: number, e: React.MouseEvent)
+    function Dot({ delay = "0s" }: { delay?: string })
+    function ToolCard({ tool }: { tool: ToolEntry })
+    async arrow test()
+  React Components:
+    function: App
+    function: Dot
+    function: ToolCard
+
+## ui/src/main.tsx [tsx]
+  Imports:
+    * ← react
+    * ← react-dom/client
+    * ← ./App
+    * ← ./index.css
+
+## ui/vite.config.ts [typescript]
+  Imports:
+    * ← vite
+    * ← @vitejs/plugin-react
+    * ← path
+    * ← url

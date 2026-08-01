@@ -1,0 +1,282 @@
+{
+  "files": {
+    "server/index.mjs": [
+      {
+        "id": "F-001",
+        "name": "HTTP API Server & Routing",
+        "tags": [
+          "core",
+          "api",
+          "server"
+        ]
+      }
+    ],
+    "server/routes.mjs": [
+      {
+        "id": "F-001",
+        "name": "HTTP API Server & Routing",
+        "tags": [
+          "core",
+          "api",
+          "server"
+        ]
+      },
+      {
+        "id": "F-020",
+        "name": "Multi-Tab Chat Interface",
+        "tags": [
+          "ui",
+          "chat",
+          "frontend"
+        ]
+      }
+    ],
+    "server/agent-loop.mjs": [
+      {
+        "id": "F-002",
+        "name": "Agent Loop",
+        "tags": [
+          "core",
+          "ai"
+        ]
+      }
+    ],
+    "server/llm.mjs": [
+      {
+        "id": "F-003",
+        "name": "LLM Integration",
+        "tags": [
+          "ai",
+          "core"
+        ]
+      }
+    ],
+    "server/tool-engine/provider.mjs": [
+      {
+        "id": "F-003",
+        "name": "LLM Integration",
+        "tags": [
+          "ai",
+          "core"
+        ]
+      }
+    ],
+    "server/config.mjs": [
+      {
+        "id": "F-004",
+        "name": "Configuration Management",
+        "tags": [
+          "config",
+          "core"
+        ]
+      }
+    ],
+    "server/conversation.mjs": [
+      {
+        "id": "F-005",
+        "name": "Conversation Persistence",
+        "tags": [
+          "data",
+          "persistence"
+        ]
+      }
+    ],
+    "server/crew-loader.mjs": [
+      {
+        "id": "F-006",
+        "name": "Crew Orchestration",
+        "tags": [
+          "core",
+          "orchestration",
+          "ai"
+        ]
+      }
+    ],
+    "server/mcp-server.mjs": [
+      {
+        "id": "F-007",
+        "name": "MCP Server",
+        "tags": [
+          "mcp",
+          "protocol",
+          "core"
+        ]
+      }
+    ],
+    "server/mcp-client.mjs": [
+      {
+        "id": "F-008",
+        "name": "MCP Client",
+        "tags": [
+          "mcp",
+          "protocol",
+          "client"
+        ]
+      }
+    ],
+    "server/tool-registry.mjs": [
+      {
+        "id": "F-009",
+        "name": "Tool Registry & Loading",
+        "tags": [
+          "core",
+          "tooling"
+        ]
+      }
+    ],
+    "server/tool-loader.mjs": [
+      {
+        "id": "F-009",
+        "name": "Tool Registry & Loading",
+        "tags": [
+          "core",
+          "tooling"
+        ]
+      }
+    ],
+    "tools/grafana/handler.mjs": [
+      {
+        "id": "F-010",
+        "name": "Grafana Tool Provider",
+        "tags": [
+          "tooling",
+          "observability",
+          "integration"
+        ]
+      }
+    ],
+    "tools/k8s/handler.mjs": [
+      {
+        "id": "F-011",
+        "name": "Kubernetes Tool Provider",
+        "tags": [
+          "tooling",
+          "k8s",
+          "sre"
+        ]
+      }
+    ],
+    "tools/loki/handler.mjs": [
+      {
+        "id": "F-012",
+        "name": "Loki Tool Provider",
+        "tags": [
+          "tooling",
+          "observability",
+          "logging"
+        ]
+      }
+    ],
+    "tools/prometheus/handler.mjs": [
+      {
+        "id": "F-013",
+        "name": "Prometheus Tool Provider",
+        "tags": [
+          "tooling",
+          "observability",
+          "metrics"
+        ]
+      }
+    ],
+    "tools/security/handler.mjs": [
+      {
+        "id": "F-014",
+        "name": "Security Scanning Tool Provider",
+        "tags": [
+          "tooling",
+          "security",
+          "sre"
+        ]
+      }
+    ],
+    "tools/shell/handler.mjs": [
+      {
+        "id": "F-015",
+        "name": "Shell Command Tool Provider",
+        "tags": [
+          "tooling",
+          "shell",
+          "sre"
+        ]
+      }
+    ],
+    "tools/tchat/handler.mjs": [
+      {
+        "id": "F-016",
+        "name": "Telegram Chat Tool Provider",
+        "tags": [
+          "tooling",
+          "messaging",
+          "integration"
+        ]
+      }
+    ],
+    "tools/docs/handler.mjs": [
+      {
+        "id": "F-017",
+        "name": "Documentation & Runbook Search",
+        "tags": [
+          "tooling",
+          "docs",
+          "sre"
+        ]
+      }
+    ],
+    "ui/SREConsole.tsx": [
+      {
+        "id": "F-018",
+        "name": "SRE Console UI",
+        "tags": [
+          "ui",
+          "sre",
+          "frontend"
+        ]
+      }
+    ],
+    "ui/SREDashboard.tsx": [
+      {
+        "id": "F-019",
+        "name": "SRE Dashboard UI",
+        "tags": [
+          "ui",
+          "sre",
+          "dashboard"
+        ]
+      }
+    ],
+    "ui/src/App.tsx": [
+      {
+        "id": "F-020",
+        "name": "Multi-Tab Chat Interface",
+        "tags": [
+          "ui",
+          "chat",
+          "frontend"
+        ]
+      }
+    ],
+    "ui/src/main.tsx": [
+      {
+        "id": "F-021",
+        "name": "React App Bootstrap & Build Config",
+        "tags": [
+          "ui",
+          "build",
+          "config"
+        ]
+      }
+    ],
+    "ui/vite.config.ts": [
+      {
+        "id": "F-021",
+        "name": "React App Bootstrap & Build Config",
+        "tags": [
+          "ui",
+          "build",
+          "config"
+        ]
+      }
+    ]
+  },
+  "updatedAt": "2026-08-01T03:04:32.688Z"
+}
