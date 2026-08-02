@@ -8,7 +8,7 @@
  */
 
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
-import { resolve, join, dirname } from "path";
+import { resolve, dirname, relative, isAbsolute } from "path";
 import { fileURLToPath } from "url";
 import { toolRegistry } from "./tool-registry.mjs";
 
@@ -17,32 +17,57 @@ const __dirname = dirname(__filename);
 const ROOT = resolve(__dirname, "..");
 const TOOLS_DIR = resolve(ROOT, "tools");
 
+/**
+ * Resolve `child` against `base` and assert the result stays within `base`.
+ * Rejects path traversal (`../`) and absolute paths that escape the base dir.
+ * @param {string} base - Absolute base directory to anchor to.
+ * @param {...string} child - Path segments to resolve under `base`.
+ * @returns {string} The safe absolute path within `base`.
+ * @throws {Error} If the resolved path escapes `base`.
+ */
+function safeResolve(base, ...child) {
+  const childPath = child.length === 1 ? child[0] : child.join("/");
+  // Reject absolute paths passed as child segments — they would hijack join/resolve.
+  if (isAbsolute(childPath)) {
+    throw new Error(`Path traversal blocked: absolute path "${childPath}"`);
+  }
+  const resolved = resolve(base, childPath);
+  const rel = relative(base, resolved);
+  // `relative()` returns a string starting with `..` (or `""` when equal) on escape.
+  if (rel.startsWith("..") || isAbsolute(rel)) {
+    throw new Error(`Path traversal blocked: "${childPath}" escapes base "${base}"`);
+  }
+  return resolved;
+}
+
 /** Load all tool providers */
 export async function loadAllTools() {
   const loaded = [];
 
   if (!existsSync(TOOLS_DIR)) return loaded;
 
-  const providers = readdirSync(TOOLS_DIR).filter(f =>
-    statSync(join(TOOLS_DIR, f)).isDirectory()
-  );
+  const providers = readdirSync(TOOLS_DIR).filter(f => {
+    const dirPath = safeResolve(TOOLS_DIR, f);
+    return statSync(dirPath).isDirectory();
+  });
 
   for (const providerId of providers) {
-    const providerDir = join(TOOLS_DIR, providerId);
-    const handlerPath = join(providerDir, "handler.mjs");
-    const toolsDir = join(providerDir, "tools");
+    const providerDir = safeResolve(TOOLS_DIR, providerId);
+    const handlerPath = safeResolve(providerDir, "handler.mjs");
+    const toolsDir = safeResolve(providerDir, "tools");
 
     if (!existsSync(handlerPath) || !existsSync(toolsDir)) continue;
 
     try {
-      // Import handler — fix PAAW_ROOT references to use agent-sre ROOT
+      // Import handler — fix PAAW_ROOT references to use agent-sre ROOT.
+      // handlerPath is already validated to be within providerDir by safeResolve.
       const handler = (await import(handlerPath)).default;
 
       // Load all tool definitions
       const toolFiles = readdirSync(toolsDir).filter(f => f.endsWith(".json"));
 
       for (const toolFile of toolFiles) {
-        const toolPath = join(toolsDir, toolFile);
+        const toolPath = safeResolve(toolsDir, toolFile);
         try {
           const def = JSON.parse(readFileSync(toolPath, "utf-8"));
 
