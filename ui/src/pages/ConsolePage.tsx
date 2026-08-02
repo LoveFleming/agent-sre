@@ -7,6 +7,8 @@
  * Phase 5 will enhance this with the full SREConsole feature set.
  */
 import { useState, useEffect, useCallback, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import type { Crew, ChatMsg, ToolEntry, ChatTab } from "../types";
 
 const API = "";
@@ -295,13 +297,21 @@ export default function ConsolePage({
         {activeTab ? (
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {activeTab.messages.filter(m => m.role !== "tool").map((m, i) => (
-              <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[75%] px-4 py-2 rounded-xl text-sm whitespace-pre-wrap break-words ${
+              <div key={i} className="flex justify-end">
+                <div className={`max-w-[80%] px-4 py-2 rounded-xl text-sm break-words ${
                   m.role === "user"
                     ? "bg-emerald-500 text-white rounded-br-sm"
                     : "bg-white border border-stone-200 text-stone-700 rounded-bl-sm"
                 }`}>
-                  {m.content}
+                  {m.role === "user" ? (
+                    <span className="whitespace-pre-wrap">{m.content}</span>
+                  ) : (
+                    <div className="markdown-body [&_p]:my-1 [&_p:first-child]:mt-0 [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_pre]:my-2 [&_pre]:bg-stone-100 [&_pre]:p-2 [&_pre]:rounded-lg [&_pre]:overflow-x-auto [&_code]:text-emerald-600 [&_code]:font-mono [&_code]:text-xs [&_a]:text-emerald-600 [&_a]:underline [&_h1]:text-base [&_h1]:font-bold [&_h1]:my-1 [&_h2]:text-sm [&_h2]:font-bold [&_h2]:my-1 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:my-1 [&_blockquote]:border-l-2 [&_blockquote]:border-stone-300 [&_blockquote]:pl-2 [&_blockquote]:text-stone-500 [&_table]:my-2 [&_th]:border [&_th]:border-stone-300 [&_th]:px-2 [&_th]:py-1 [&_td]:border [&_td]:border-stone-300 [&_td]:px-2 [&_td]:py-1">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {m.content}
+                      </ReactMarkdown>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

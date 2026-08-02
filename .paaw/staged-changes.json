@@ -1,0 +1,26 @@
+{
+  "createdAt": "2026-08-02T06:44:03.787Z",
+  "agent": "developer",
+  "task": "TASK-001：依 tPAAW 風格改造 main page 視覺設計",
+  "summary": "參考 /Users/steward/App/tPAAW 專案的視覺風格，將 agent-sre 平台首頁及 Sidebar 的外觀統一改造。\n\n主要變更：\n1. **Sidebar.tsx** — 改用 tPAAW NavItem 風格：active 項目 3px 左側橘色 border + 橘底 + 橘色文字；非 active hover 時動態切換為橘底；emoji icon 固定寬度對齊。\n2. **HomePage.tsx** — emerald → orange 系全面替換；Hero 區改為深色漸層 (stone-900) + 橘色 glow blur 效果；Card 標題改為 font-normal（細標題）；quick action 按鈕統一橘色 hover；所有 accent 色（link、hover border、error retry 按鈕）改用橘色 palette。\n3. **StatusBadge.tsx** — 文字 font-weight 改為 normal 配合 tPAAW 風格（狀態色維持原綠/紅/琥珀的語意不變）。\n4. **index.css** — 加入 CSS design tokens（--accent 等變數）；滾動條 hover 改為橘色。\n\n風格對齊重點：\n- 主色：emerald-500 → orange-500 (#f97316)\n- Active border：左 4px emerald → 左 3px orange\n- Hero：淺色漸層 → 深色 stone-900 漸層 + glow\n- Card 標題：font-bold → font-normal\n- Hover 效果：靜態 class → inline style 動態切換 accent 色",
+  "files": [
+    {
+      "path": "ui/src/components/Sidebar.tsx",
+      "reason": "改用 tPAAW NavItem 風格（border-left 3px + 動態 hover + emoji icon 對齊）"
+    },
+    {
+      "path": "ui/src/pages/HomePage.tsx",
+      "reason": "全面 emerald → orange 系；Hero 改深色漸層 + glow；Card 標題改細字；quick action 統一橘色 hover"
+    },
+    {
+      "path": "ui/src/components/StatusBadge.tsx",
+      "reason": "文字 font-weight 改 normal 配合 tPAAW 風格"
+    },
+    {
+      "path": "ui/src/index.css",
+      "reason": "加入 accent CSS design tokens + 滾動條 hover 改橘色"
+    }
+  ],
+  "howToTest": "1. `cd ui && npx vite` 啟動 dev server（或 `npm run ui:dev`）\n2. 打開瀏覽器訪問 http://localhost:5173\n3. 確認 Sidebar：\n   - Home 項目為 active 狀態（橘色左 border + 橘底）\n   - 滑鼠 hover 非主動項目 → 背景變橘底、文字變橘色\n   - disabled 項目（Tasks badge \"soon\"）不可點擊、半透明\n4. 確認 HomePage：\n   - Hero 區為深色漸層背景 + 右側橘色 glow 模糊效果\n   - Quick action 按鈕 hover → 邊框和底色變橘\n   - Stats 卡片標題為細字（font-normal）\n   - Agent Team / Tools 區塊標題為細字\n   - \"View all →\" 連結為橘色，hover 變深橘\n5. 確認 StatusBadge：文字為 normal 字重\n6. 滾動頁面 → 滾動條 hover 變橘色",
+  "risk": "低。純視覺調整，不涉及邏輯變更。StatusBadge 的狀態色（綠/紅/琥珀）刻意保留語意不變，只改字重。HomePage 的 inline style hover 動態切換是 tPAAW 的慣用模式但與純 Tailwind class 不同，需注意若未來加 CSS-in-JS 方案需統一。"
+}

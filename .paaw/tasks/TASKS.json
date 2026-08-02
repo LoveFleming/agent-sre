@@ -1,0 +1,163 @@
+{
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "依 tPAAW 風格改造 main page 視覺設計",
+      "type": "feature",
+      "status": "in-progress",
+      "priority": "medium",
+      "parentId": null,
+      "description": "參考外部專案 /Users/steward/App/tPAAW 的視覺風格，將 agent-sre 平台首頁及導航的外觀統一改造。\n\n主要風格差異（tPAAW vs 目前）：\n1. 主色 emerald → orange (#f97316 orange-500 + #fff7ed orange-50 底色)\n2. Sidebar active item：border-left 3px 橘色 + accent 底色 + hover 動態變色 + emoji icon\n3. Card 標題：font-bold 粗體 → font-normal text-lg text-stone-800 細標題\n4. Sidebar 結構：可折疊分組（SidebarSection + chevron）\n5. Hover 效果：inline style 動態切換 accent 底色 + 文字色\n6. Hero/登入頁：淺色漸層 → 深色漸層 stone-900 + 橘色 glow logo",
+      "labels": [
+        "ui",
+        "styling",
+        "design-refactor"
+      ],
+      "assignee": null,
+      "createdAt": "2026-08-02T06:04:56.853Z",
+      "updatedAt": "2026-08-02T06:44:10.340Z",
+      "createdBy": "agent",
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "參考外部專案 /Users/steward/App/tPAAW 的視覺風格，將 agent-sre 平台首頁及導航的外觀統一改造。\n\n主要風格差異（tPAAW vs 目前）：\n1. 主色 emerald → orange (#f97316 orange-500 + #fff7ed orange-50 底色)\n2. Sidebar active item：border-left 3px 橘色 + accent 底色 + hover 動態變色 + emoji icon\n3. Card 標題：font-bold 粗體 → font-normal text-lg text-stone-800 細標題\n4. Sidebar 結構：可折疊分組（SidebarSection + chevron）\n5. Hover 效果：inline style 動態切換 accent 底色 + 文字色\n6. Hero/登入頁：淺色漸層 → 深色漸層 stone-900 + 橘色 glow logo",
+        "acceptanceCriteria": [
+          "首頁及 Sidebar 主色統一為橘色系 (orange-500 / orange-50)",
+          "Sidebar active item 呈現 border-left 3px 橘色 + 橘底效果",
+          "Card 標題使用 font-normal text-lg 細標題風格",
+          "Hover 互動效果與 tPAAW 一致（動態 accent 底色）",
+          "頁面整體視覺與 tPAAW 風格一致：白底 + 橘色 accent + 乾淨邊框"
+        ],
+        "fileScope": [
+          "ui/src/components/Sidebar.tsx",
+          "ui/src/pages/HomePage.tsx",
+          "ui/src/components/StatusBadge.tsx",
+          "ui/src/index.css",
+          "ui/tailwind.config.js"
+        ],
+        "outOfScope": []
+      },
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-02T06:04:56.853Z"
+        },
+        "implement": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-02T06:40:55.677Z"
+        },
+        "review": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-02T06:44:10.340Z"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "notes": [],
+      "discussion": []
+    },
+    {
+      "id": "TASK-002",
+      "title": "Phase 0: SRE 多 Agent 編排核心 — dispatch_agent + task management",
+      "type": "feature",
+      "status": "open",
+      "priority": "critical",
+      "parentId": null,
+      "description": "讓 Commander 能自主派工給其他 agent，實現多 Agent 編排排查。\n\n核心交付物：\n1. tools/orchestrator/ provider — dispatch_agent, task_decompose, task_list, task_update\n2. agent-loop.mjs 修改 — getCrewTools 支援 toolGroups 映射 + maxRounds/toolFilter 參數\n3. crews/sre.commander.json 修改 — toolGroups 加入 orchestrator\n\n詳細設計見 .paaw/PHASE-0-DESIGN.md",
+      "labels": [
+        "multi-agent",
+        "orchestration",
+        "phase-0",
+        "core"
+      ],
+      "assignee": null,
+      "createdAt": "2026-08-02T06:47:22.489Z",
+      "updatedAt": "2026-08-02T06:47:22.489Z",
+      "createdBy": "agent",
+      "source": {
+        "type": "discussion"
+      },
+      "spec": {
+        "description": "讓 Commander 能自主派工給其他 agent，實現多 Agent 編排排查。\n\n核心交付物：\n1. tools/orchestrator/ provider — dispatch_agent, task_decompose, task_list, task_update\n2. agent-loop.mjs 修改 — getCrewTools 支援 toolGroups 映射 + maxRounds/toolFilter 參數\n3. crews/sre.commander.json 修改 — toolGroups 加入 orchestrator\n\n詳細設計見 .paaw/PHASE-0-DESIGN.md",
+        "acceptanceCriteria": [
+          "GET /api/tools 能看到 dispatch_agent, task_decompose, task_list, task_update",
+          "Commander 的 tool 列表只包含 orchestrator tools（不直接含 prometheus/loki 等）",
+          "在 Console 對 Commander 說「查一下系統狀態」，Commander 能 dispatch 給 metrics agent",
+          "其他 crew (Metrics 等) 看不到 dispatch_agent tool",
+          "子 agent 不會無限遞迴（dispatch_agent 不掛載在子 agent 上）",
+          "dispatch 失敗（錯誤 agentId）有清楚錯誤訊息"
+        ],
+        "fileScope": [
+          "tools/orchestrator/",
+          "server/agent-loop.mjs",
+          "crews/sre.commander.json"
+        ],
+        "outOfScope": []
+      },
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-02T06:47:22.489Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "notes": [],
+      "discussion": []
+    }
+  ],
+  "updatedAt": "2026-08-02T06:47:22.489Z"
+}

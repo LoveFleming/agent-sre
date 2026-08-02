@@ -1,5 +1,5 @@
 /**
- * HomePage — Platform landing page.
+ * HomePage — Platform landing page (tPAAW style).
  *
  * Aggregates data from three endpoints:
  *   GET /api/health  → server status + uptime + tool count
@@ -7,7 +7,7 @@
  *   GET /api/tools   → registered tools
  *
  * Layout sections:
- *   1. Hero — welcome + quick actions
+ *   1. Hero — dark gradient + orange glow (tPAAW hero style)
  *   2. Stats row — agents / tools / uptime
  *   3. Agent grid — crew cards
  *   4. Tools by provider — grouped tool list
@@ -38,6 +38,13 @@ const QUICK_ACTIONS = [
   { id: "health-check", label: "健康檢查", prompt: "做一次全面健康檢查：latency、error rate、resource usage", icon: "❤️" },
   { id: "security-scan", label: "安全掃描", prompt: "做一次基本安全掃描，檢查有沒有高風險問題", icon: "🔒" },
 ];
+
+// ── Accent palette (matches tPAAW "sunny" theme) ──
+const ACCENT = "#f97316"; // orange-500
+const ACCENT_BG = "#fff7ed"; // orange-50
+const ACCENT_TEXT = "#9a3412"; // orange-800
+const ACCENT_HOVER = "#ea580c"; // orange-600
+const INACTIVE_TEXT = "#78716c"; // stone-500
 
 export default function HomePage({ onNavigate, onQuickAction }: HomePageProps) {
   const [crews, setCrews] = useState<Crew[]>([]);
@@ -112,7 +119,14 @@ export default function HomePage({ onNavigate, onQuickAction }: HomePageProps) {
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 text-sm rounded-lg bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
+          className="mt-4 px-4 py-2 text-sm rounded-lg text-white transition-colors"
+          style={{ backgroundColor: ACCENT }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = ACCENT_HOVER;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = ACCENT;
+          }}
         >
           重試
         </button>
@@ -122,30 +136,55 @@ export default function HomePage({ onNavigate, onQuickAction }: HomePageProps) {
 
   return (
     <div className="p-6 space-y-6 overflow-y-auto">
-      {/* ── 1. Hero ── */}
-      <section className="rounded-xl bg-gradient-to-br from-stone-100 to-stone-50 border border-stone-200 p-6">
-        <h1 className="text-xl font-bold text-stone-800">
-          🛡️ SRE Agent Platform
-        </h1>
-        <p className="text-sm text-stone-500 mt-1">
-          {crews.length} 位 AI Agent · {tools.length} 個工具 · 自動化事件排查
-        </p>
-        <div className="flex flex-wrap gap-2 mt-4">
-          {QUICK_ACTIONS.map((action) => (
-            <button
-              key={action.id}
-              type="button"
-              onClick={() =>
-                onQuickAction
-                  ? onQuickAction(action.prompt)
-                  : onNavigate("console")
-              }
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-white border border-stone-200 text-stone-600 hover:border-emerald-400 hover:text-emerald-600 transition-colors"
-            >
-              <span aria-hidden="true">{action.icon}</span>
-              {action.label}
-            </button>
-          ))}
+      {/* ── 1. Hero — dark gradient + orange glow (tPAAW hero style) ── */}
+      <section
+        className="rounded-xl p-6 relative overflow-hidden"
+        style={{
+          background:
+            "linear-gradient(135deg, #1c1917 0%, #292524 100%)",
+        }}
+      >
+        {/* Orange glow accent */}
+        <div
+          className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-20 pointer-events-none"
+          style={{ backgroundColor: ACCENT }}
+          aria-hidden="true"
+        />
+        <div className="relative">
+          <h1 className="text-xl font-normal text-stone-100">
+            🛡️ SRE Agent Platform
+          </h1>
+          <p className="text-sm text-stone-400 mt-1">
+            {crews.length} 位 AI Agent · {tools.length} 個工具 · 自動化事件排查
+          </p>
+          <div className="flex flex-wrap gap-2 mt-4">
+            {QUICK_ACTIONS.map((action) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() =>
+                  onQuickAction
+                    ? onQuickAction(action.prompt)
+                    : onNavigate("console")
+                }
+                className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-white/5 border border-white/10 transition-colors"
+                style={{ color: "#d6d3d1" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = ACCENT;
+                  e.currentTarget.style.backgroundColor = ACCENT_BG;
+                  e.currentTarget.style.color = ACCENT_TEXT;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "";
+                  e.currentTarget.style.backgroundColor = "";
+                  e.currentTarget.style.color = "#d6d3d1";
+                }}
+              >
+                <span aria-hidden="true">{action.icon}</span>
+                {action.label}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -163,13 +202,20 @@ export default function HomePage({ onNavigate, onQuickAction }: HomePageProps) {
       {/* ── 3. Agent grid ── */}
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold text-stone-700 uppercase tracking-wide">
+          <h2 className="text-lg font-normal text-stone-800">
             Agent Team
           </h2>
           <button
             type="button"
             onClick={() => onNavigate("agents")}
-            className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+            className="text-xs font-medium transition-colors"
+            style={{ color: ACCENT }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = ACCENT_HOVER;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = ACCENT;
+            }}
           >
             View all →
           </button>
@@ -180,7 +226,15 @@ export default function HomePage({ onNavigate, onQuickAction }: HomePageProps) {
               key={crew.id}
               type="button"
               onClick={() => onNavigate("console")}
-              className="text-left p-4 rounded-xl bg-white border border-stone-200 hover:border-emerald-400 hover:shadow-sm transition-all"
+              className="text-left p-4 rounded-xl bg-white border border-stone-200 transition-all"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = ACCENT;
+                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "";
+                e.currentTarget.style.boxShadow = "";
+              }}
             >
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xl" aria-hidden="true">
@@ -204,13 +258,20 @@ export default function HomePage({ onNavigate, onQuickAction }: HomePageProps) {
       {/* ── 4. Tools by provider ── */}
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold text-stone-700 uppercase tracking-wide">
+          <h2 className="text-lg font-normal text-stone-800">
             Tools
           </h2>
           <button
             type="button"
             onClick={() => onNavigate("tools")}
-            className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+            className="text-xs font-medium transition-colors"
+            style={{ color: ACCENT }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = ACCENT_HOVER;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = ACCENT;
+            }}
           >
             View all →
           </button>

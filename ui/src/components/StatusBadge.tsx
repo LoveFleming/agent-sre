@@ -1,10 +1,12 @@
 /**
- * StatusBadge — Server connection status indicator.
+ * StatusBadge — Server connection status indicator (tPAAW style).
  *
  * Shows a coloured dot + label.
- *   online  → green
+ *   online  → green (kept for semantic clarity)
  *   offline → red
  *   checking→ amber (pulse animation)
+ *
+ * Text weight reduced to match tPAAW's lighter font style.
  */
 interface StatusBadgeProps {
   status: "online" | "offline" | "checking";
@@ -36,7 +38,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
   return (
     <div className="flex items-center gap-2 px-3 py-2 text-xs">
       <span className={`w-2.5 h-2.5 rounded-full ${c.dot}`} aria-hidden="true" />
-      <span className={`font-medium ${c.text}`}>{c.label}</span>
+      <span className={`font-normal ${c.text}`}>{c.label}</span>
     </div>
   );
 }
