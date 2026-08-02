@@ -25,7 +25,6 @@ import { PORT } from "./config.mjs";
 import { loadAllTools } from "./tool-loader.mjs";
 import { loadAllCrews } from "./crew-loader.mjs";
 import { registerRoutes } from "./routes.mjs";
-import { connectAllMCPServers, disconnectAllMCPClients } from "./mcp-client.mjs";
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -56,13 +55,6 @@ async function main() {
     console.log(`  🔧 ${t}`);
   }
 
-  // ── Connect MCP servers ──
-  const { clients: mcpClients, registered: mcpTools } = await connectAllMCPServers();
-  if (mcpTools.length > 0) {
-    console.log(`\n[mcp] ${mcpTools.length} MCP tools registered:`);
-    for (const t of mcpTools) console.log(`  🔌 ${t}`);
-  }
-
   // ── Start HTTP server ──
   const server = createServer();
   registerRoutes(server);
@@ -72,19 +64,12 @@ async function main() {
     console.log(`   Health:  GET  /api/health`);
     console.log(`   Crews:   GET  /api/crews`);
     console.log(`   Chat:    POST /api/chat`);
-    console.log(`   MCP:     node server/mcp-server.mjs (stdio) or --port 4300 (SSE)`);
     console.log(`   UI:      http://localhost:${PORT}/`);
   });
 
   // ── Graceful shutdown ──
-  process.on("SIGINT", () => {
-    disconnectAllMCPClients(mcpClients);
-    process.exit(0);
-  });
-  process.on("SIGTERM", () => {
-    disconnectAllMCPClients(mcpClients);
-    process.exit(0);
-  });
+  process.on("SIGINT", () => process.exit(0));
+  process.on("SIGTERM", () => process.exit(0));
 }
 
 main().catch(err => {

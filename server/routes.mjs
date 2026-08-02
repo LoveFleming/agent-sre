@@ -6,6 +6,7 @@ import { loadAllCrews, getCrew, listCrews } from "./crew-loader.mjs";
 import { runAgentLoop, runAgentLoopStream } from "./agent-loop.mjs";
 import { toolRegistry } from "./tool-registry.mjs";
 import { loadConversation, saveConversation, archiveConversation, listArchives, loadArchive } from "./conversation.mjs";
+import { taskStore } from "./task-store.mjs";
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -40,7 +41,7 @@ export function registerRoutes(server) {
 
     // CORS
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     if (method === "OPTIONS") { res.writeHead(204); res.end(); return; }
 
@@ -71,6 +72,53 @@ export function registerRoutes(server) {
           source: toolRegistry.get(name).source,
         }));
         return json(res, 200, { tools });
+      }
+
+      // ── GET /api/tasks — list all tasks ──
+      if (path === "/api/tasks" && method === "GET") {
+        return json(res, 200, { tasks: taskStore.list() });
+      }
+
+      // ── POST /api/tasks — create a new task ──
+      if (path === "/api/tasks" && method === "POST") {
+        const body = await readBody(req);
+        if (!body.name) {
+          return json(res, 400, { error: "Missing required field: name" });
+        }
+        const task = taskStore.create(body);
+        return json(res, 201, { task });
+      }
+
+      // ── Task by-id routes: GET / PUT / DELETE ──
+      const taskMatch = path.match(/^\/api\/tasks\/([^/]+)$/);
+      if (taskMatch) {
+        const id = decodeURIComponent(taskMatch[1]);
+
+        // GET /api/tasks/:id — retrieve a single task
+        if (method === "GET") {
+          const task = taskStore.get(id);
+          if (!task) return json(res, 404, { error: `Task not found: ${id}` });
+          return json(res, 200, { task });
+        }
+
+        // PUT /api/tasks/:id — update a task
+        if (method === "PUT") {
+          const task = taskStore.get(id);
+          if (!task) return json(res, 404, { error: `Task not found: ${id}` });
+          const body = await readBody(req);
+          if (!body || typeof body !== "object") {
+            return json(res, 400, { error: "Request body must be a JSON object" });
+          }
+          const updated = taskStore.update(id, body);
+          return json(res, 200, { task: updated });
+        }
+
+        // DELETE /api/tasks/:id — delete a task
+        if (method === "DELETE") {
+          const deleted = taskStore.delete(id);
+          if (!deleted) return json(res, 404, { error: `Task not found: ${id}` });
+          return json(res, 200, { success: true, id });
+        }
       }
 
       // ── GET /api/conversations/:crewId ──

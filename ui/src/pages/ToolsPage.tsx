@@ -1,7 +1,7 @@
 /**
  * ToolsPage — Tool management interface.
  *
- * Lists all registered MCP tools grouped by provider.
+ * Lists all registered tools grouped by provider.
  * Phase 3 will add a full test panel; for now this is a read-only
  * view extracted from the original App.tsx.
  */
@@ -68,7 +68,7 @@ export default function ToolsPage() {
   return (
     <div className="p-6 space-y-3 overflow-y-auto">
       <div className="flex items-center justify-between mb-2">
-        <h1 className="text-lg font-bold text-stone-700">MCP Tools</h1>
+        <h1 className="text-lg font-bold text-stone-700">Tools</h1>
         <span className="text-xs text-stone-400">
           {tools.length} tools · {providerNames.length} providers
         </span>

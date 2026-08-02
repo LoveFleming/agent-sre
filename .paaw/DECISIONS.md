@@ -76,3 +76,17 @@ dispatch_agent 作為一個註冊在 tool registry 的 tool，當 Commander 呼�
 - 設定子 agent timeout（30s）
 - Phase 2 可加 Promise.all 平行 dispatch
 
+## ADR-003: SRE 定時巡檢架構 — Scheduler + Inspection Engine + 閾值過濾 + tChat 告警
+- **日期**: 2026-08-02
+- **狀態**: Proposed
+- **背景**: 使用者需求是「定時讀 Grafana dashboard 全部圖表給 AI 解讀，有問題丟公司 tChat channel 通知值班」。現有系統已是聊天互動架構，缺「定時觸發」與「大批 panel 巡檢」兩塊。核心成本風險：全量丟 AI 解讀很貴很慢，需過濾層。
+- **決定**: 在現有 agent-sre 上新增「定時巡檢」能力：新增 Scheduler（排程器）+ Inspection Engine（巡檢執行器）。巡檢策略採 B（閾值/規則先行過濾，只有異常 panel 才丟 AI 解讀，控制 token 成本）。任務管理先採 config-driven（jobs/*.json），後續再補 UI。通知走 tchat_send 到值班 channel。
+- **後果**: 需要新增 scheduler + inspection modules、jobs 設定檔、閾值規則、通知封裝。相較聊天架構是獨立一層，不影響現有 chat。過濾層降低 token 成本但需定義閾值；初期可用簡單規則，後續可讓 AI 學習。
+
+## ADR-004: 不採用 MCP，使用 Direct Tool Implementation
+- **日期**: 2026-08-02
+- **狀態**: Proposed
+- **背景**: 專案需要決定工具架構層是走 MCP（Model Context Protocol）還是 direct tool implementation。目前專案同時存在兩套機制：tool-registry（direct）和 mcp-client/mcp-server（MCP）。評估後認為 SRE Agent 是單一 server 自用場景，工具都是內部整合（Grafana/Prometheus/Loki/K8s），不需要跨 process 通訊或標準化協議。
+- **決定**: 移除 MCP server/client 程式碼（TASK-003），保留 tool-registry + tool-loader 的 direct tool implementation。MCP 相關的 mcp-server.mjs、mcp-client.mjs、mcp-servers.example.json 全數刪除。未來若有外接需求（例如要讓 Claude Desktop 或其他應用連入）再重新引入 MCP。
+- **後果**: 優點：減少程式碼複雜度、零網路 overhead、好 debug、啟動更快。缺點：未來若要讓外部應用共用工具，需要重新加回 MCP 層。
+

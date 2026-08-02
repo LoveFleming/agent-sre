@@ -1,58 +1,38 @@
 {
   "tasks": [
     {
-      "id": "TASK-001",
-      "title": "依 tPAAW 風格改造 main page 視覺設計",
-      "type": "feature",
-      "status": "in-progress",
-      "priority": "medium",
+      "id": "TASK-003",
+      "title": "Remove MCP server/client code from project",
+      "type": "refactor",
       "parentId": null,
-      "description": "參考外部專案 /Users/steward/App/tPAAW 的視覺風格，將 agent-sre 平台首頁及導航的外觀統一改造。\n\n主要風格差異（tPAAW vs 目前）：\n1. 主色 emerald → orange (#f97316 orange-500 + #fff7ed orange-50 底色)\n2. Sidebar active item：border-left 3px 橘色 + accent 底色 + hover 動態變色 + emoji icon\n3. Card 標題：font-bold 粗體 → font-normal text-lg text-stone-800 細標題\n4. Sidebar 結構：可折疊分組（SidebarSection + chevron）\n5. Hover 效果：inline style 動態切換 accent 底色 + 文字色\n6. Hero/登入頁：淺色漸層 → 深色漸層 stone-900 + 橘色 glow logo",
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "medium",
+      "effort": null,
       "labels": [
-        "ui",
-        "styling",
-        "design-refactor"
+        "refactor",
+        "cleanup"
       ],
       "assignee": null,
-      "createdAt": "2026-08-02T06:04:56.853Z",
-      "updatedAt": "2026-08-02T06:44:10.340Z",
+      "description": "專案已決定不走 MCP（ADR-003），改用 direct tool implementation。需要移除所有 MCP 相關程式碼。\n\n## 要做的事\n\n### 1. 刪除檔案（3 個）\n- `server/mcp-server.mjs` — MCP Server，對外暴露 tools/crews 的 stdio/SSE server\n- `server/mcp-client.mjs` — MCP Client，連接外部 MCP server 並註冊工具\n- `config/mcp-servers.example.json` — MCP server 設定範例\n\n### 2. 修改 `server/index.mjs`\n- 移除 `import { connectAllMCPServers, disconnectAllMCPClients } from \"./mcp-client.mjs\"`\n- 移除第 59-63 行：MCP servers 連線區塊（`connectAllMCPServers()` 及 log）\n- 移除 signal handlers 裡的 `disconnectAllMCPClients(mcpClients)` 呼叫（第 81, 85 行）\n- 移除第 75 行 help 文字裡的 MCP 提示\n\n### 3. 修改 UI（3 個檔案）\n- `ui/src/pages/HomePage.tsx` — 第 194 行 \"MCP Tools\" → \"Tools\"\n- `ui/src/pages/ToolsPage.tsx` — 第 4 行註解、第 71 行標題 \"MCP Tools\" → \"Tools\"\n- `ui/src/pages/HomePage.test.tsx` — 第 148, 159 行測試斷言 \"MCP Tools\" → \"Tools\"\n\n### 4. 驗證\n- `node server/index.mjs` 正常啟動，無 MCP 相關 import error\n- `GET /api/tools` 仍正常回傳工具列表（不靠 MCP）\n- Chat 功能正常（agent-loop 不依賴 MCP）\n- UI 首頁顯示 \"Tools\" 而非 \"MCP Tools\"\n\n## 不需要動的\n- `server/tool-registry.mjs` — 保留，這是 direct tool 機制的核心\n- `server/tool-loader.mjs` — 保留，自動掃描 `tools/` 註冊\n- `tools/` 目錄下所有 handler — 保留，都是 direct implementation\n- `server/routes.mjs` — 保留，不直接引用 MCP",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "createdAt": "2026-08-02T09:27:50.466Z",
+      "updatedAt": "2026-08-02T09:27:50.466Z",
+      "resolvedAt": null,
       "createdBy": "agent",
-      "source": {
-        "type": "manual"
-      },
-      "spec": {
-        "description": "參考外部專案 /Users/steward/App/tPAAW 的視覺風格，將 agent-sre 平台首頁及導航的外觀統一改造。\n\n主要風格差異（tPAAW vs 目前）：\n1. 主色 emerald → orange (#f97316 orange-500 + #fff7ed orange-50 底色)\n2. Sidebar active item：border-left 3px 橘色 + accent 底色 + hover 動態變色 + emoji icon\n3. Card 標題：font-bold 粗體 → font-normal text-lg text-stone-800 細標題\n4. Sidebar 結構：可折疊分組（SidebarSection + chevron）\n5. Hover 效果：inline style 動態切換 accent 底色 + 文字色\n6. Hero/登入頁：淺色漸層 → 深色漸層 stone-900 + 橘色 glow logo",
-        "acceptanceCriteria": [
-          "首頁及 Sidebar 主色統一為橘色系 (orange-500 / orange-50)",
-          "Sidebar active item 呈現 border-left 3px 橘色 + 橘底效果",
-          "Card 標題使用 font-normal text-lg 細標題風格",
-          "Hover 互動效果與 tPAAW 一致（動態 accent 底色）",
-          "頁面整體視覺與 tPAAW 風格一致：白底 + 橘色 accent + 乾淨邊框"
-        ],
-        "fileScope": [
-          "ui/src/components/Sidebar.tsx",
-          "ui/src/pages/HomePage.tsx",
-          "ui/src/components/StatusBadge.tsx",
-          "ui/src/index.css",
-          "ui/tailwind.config.js"
-        ],
-        "outOfScope": []
-      },
       "pipeline": {
         "spec": {
           "status": "done",
           "by": "agent",
-          "at": "2026-08-02T06:04:56.853Z"
+          "at": "2026-08-02T09:27:50.466Z"
         },
         "implement": {
-          "status": "done",
-          "by": "agent",
-          "at": "2026-08-02T06:40:55.677Z"
+          "status": "pending"
         },
         "review": {
-          "status": "done",
-          "by": "agent",
-          "at": "2026-08-02T06:44:10.340Z"
+          "status": "pending"
         },
         "test": {
           "status": "pending"
@@ -67,6 +47,30 @@
           "status": "pending"
         }
       },
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "專案已決定不走 MCP（ADR-003），改用 direct tool implementation。需要移除所有 MCP 相關程式碼。\n\n## 要做的事\n\n### 1. 刪除檔案（3 個）\n- `server/mcp-server.mjs` — MCP Server，對外暴露 tools/crews 的 stdio/SSE server\n- `server/mcp-client.mjs` — MCP Client，連接外部 MCP server 並註冊工具\n- `config/mcp-servers.example.json` — MCP server 設定範例\n\n### 2. 修改 `server/index.mjs`\n- 移除 `import { connectAllMCPServers, disconnectAllMCPClients } from \"./mcp-client.mjs\"`\n- 移除第 59-63 行：MCP servers 連線區塊（`connectAllMCPServers()` 及 log）\n- 移除 signal handlers 裡的 `disconnectAllMCPClients(mcpClients)` 呼叫（第 81, 85 行）\n- 移除第 75 行 help 文字裡的 MCP 提示\n\n### 3. 修改 UI（3 個檔案）\n- `ui/src/pages/HomePage.tsx` — 第 194 行 \"MCP Tools\" → \"Tools\"\n- `ui/src/pages/ToolsPage.tsx` — 第 4 行註解、第 71 行標題 \"MCP Tools\" → \"Tools\"\n- `ui/src/pages/HomePage.test.tsx` — 第 148, 159 行測試斷言 \"MCP Tools\" → \"Tools\"\n\n### 4. 驗證\n- `node server/index.mjs` 正常啟動，無 MCP 相關 import error\n- `GET /api/tools` 仍正常回傳工具列表（不靠 MCP）\n- Chat 功能正常（agent-loop 不依賴 MCP）\n- UI 首頁顯示 \"Tools\" 而非 \"MCP Tools\"\n\n## 不需要動的\n- `server/tool-registry.mjs` — 保留，這是 direct tool 機制的核心\n- `server/tool-loader.mjs` — 保留，自動掃描 `tools/` 註冊\n- `tools/` 目錄下所有 handler — 保留，都是 direct implementation\n- `server/routes.mjs` — 保留，不直接引用 MCP",
+        "acceptanceCriteria": [
+          "3 個 MCP 檔案已刪除",
+          "server/index.mjs 啟動無 MCP import error",
+          "GET /api/tools 正常運作",
+          "Chat 功能正常",
+          "UI 不再顯示 MCP Tools 字樣",
+          "首頁測試通過"
+        ],
+        "fileScope": [
+          "server/mcp-server.mjs",
+          "server/mcp-client.mjs",
+          "config/mcp-servers.example.json",
+          "server/index.mjs",
+          "ui/src/pages/HomePage.tsx",
+          "ui/src/pages/ToolsPage.tsx",
+          "ui/src/pages/HomePage.test.tsx"
+        ],
+        "outOfScope": []
+      },
       "changes": {
         "filesAdded": [],
         "filesModified": [],
@@ -78,44 +82,50 @@
         "staged": false,
         "committedSha": null
       },
-      "notes": [],
-      "discussion": []
+      "testResult": null,
+      "qaResult": null,
+      "overnight": null
     },
     {
-      "id": "TASK-002",
-      "title": "Phase 0: SRE 多 Agent 編排核心 — dispatch_agent + task management",
+      "id": "TASK-004",
+      "title": "Task 管理介面 — 新增/編輯 Task（含工具選擇、Agent 規則、Context、Prompt 設定）",
       "type": "feature",
       "status": "open",
-      "priority": "critical",
+      "priority": "high",
       "parentId": null,
-      "description": "讓 Commander 能自主派工給其他 agent，實現多 Agent 編排排查。\n\n核心交付物：\n1. tools/orchestrator/ provider — dispatch_agent, task_decompose, task_list, task_update\n2. agent-loop.mjs 修改 — getCrewTools 支援 toolGroups 映射 + maxRounds/toolFilter 參數\n3. crews/sre.commander.json 修改 — toolGroups 加入 orchestrator\n\n詳細設計見 .paaw/PHASE-0-DESIGN.md",
+      "description": "## 需求概述\n\n建立一個 Task 管理介面，讓使用者可以：\n1. **新增 Task** — 定義一個可執行的 SRE 任務\n2. **選擇工具** — 從已註冊的 27 個 tool 中勾選這個 task 可以使用哪些\n3. **設定 Agent 規則** — guardrails、redirect rules、refuse topics\n4. **設定 Context** — 額外注入的專案背景知識\n5. **設定 Prompt** — system prompt / role prompt\n\nTask 的本質 = **一個 Agent 配置 + 可用工具集合 + 執行規則 + 排程設定**\n\n## 目前系統現況\n\n- **Agent/Crew 定義**：`crews/*.json`（6 個 agent，手動編輯 JSON）\n- **Tool 定義**：`tools/*/tools/*.json`（27 個 tool，已註冊在 toolRegistry）\n- **Agent 如何知道用哪些 tool**：crew JSON 裡的 `toolGroups` 欄位（如 `[\"core-read\", \"memory\", \"sre-prometheus\"]`）\n- **UI 現況**：Tasks 頁面目前是 Placeholder（`ui/src/pages/Placeholder.tsx`），顯示 \"Phase 6\"\n\n## Task 資料模型\n\n```jsonc\n{\n  \"id\": \"task.payment-health-check\",\n  \"name\": \"Payment Service 健康巡檢\",\n  \"description\": \"每 5 分鐘檢查 payment service 的 dashboard，異常時通知值班\",\n\n  // ── Agent 設定 ──\n  \"agent\": {\n    \"crewId\": \"sre.metrics\",           // 基於哪個既有 agent 角色\n    \"systemPrompt\": \"你是 Metrics...\", // 可覆寫 / 補充的 prompt\n    \"additionalContext\": \"Payment service 用 Go 寫的...\", // 額外 context\n    \"guardrails\": {\n      \"redirectRules\": \"查 log → 趙明軒\\n執行處置 → 黃志強\",\n      \"refuseTopics\": \"寫程式碼\\n架構設計\"\n    },\n    \"chatConfig\": {\n      \"temperature\": 0.3,\n      \"maxTokens\": 4096\n    }\n  },\n\n  // ── 可用工具 ──\n  \"tools\": [\n    \"grafana_list_dashboards\",\n    \"grafana_get_dashboard\",\n    \"grafana_query_panel\",\n    \"grafana_list_alerts\",\n    \"tchat_send\"\n  ],\n\n  // ── 排程（Phase B 才接上 Scheduler）──\n  \"schedule\": {\n    \"enabled\": true,\n    \"interval\": \"5m\",                   // 5m / 1h / 1d\n    \"cron\": \"\"                          // 進階用 cron（可選）\n  },\n\n  // ── 狀態 ──\n  \"status\": \"draft\",                    // draft / active / paused\n  \"lastRunAt\": null,\n  \"createdAt\": \"2026-08-02T...\"\n}\n```\n\n## 需要實作的內容\n\n### 1. Backend API（server/）\n\n| Endpoint | Method | 用途 |\n|---|---|---|\n| `/api/tasks` | GET | 列出所有 task |\n| `/api/tasks` | POST | 新增 task |\n| `/api/tasks/:id` | GET | 取得單一 task |\n| `/api/tasks/:id` | PUT | 更新 task |\n| `/api/tasks/:id` | DELETE | 刪除 task |\n| `/api/tasks/:id/run` | POST | 手動執行 task（Phase B） |\n\n**檔案：**\n- `server/task-store.mjs`（新）— Task 的 file-based CRUD（存 `tasks/*.json`，仿 `conversation.mjs` 模式）\n- `server/routes.mjs`（改）— 加上 6 個新 route\n\n### 2. Frontend UI（ui/src/）\n\n**取代現有的 Tasks Placeholder**，變成完整的 Task 管理介面：\n\n- `ui/src/pages/TasksPage.tsx`（新）— Task 列表 + 新增按鈕\n- `ui/src/pages/TaskEditor.tsx`（新）— Task 編輯器（表單）：\n  - **基本資訊**：名稱、描述\n  - **Agent 設定**：選擇 crew → 編輯 prompt / context / guardrails\n  - **工具選擇**：從 `/api/tools` 載入可用工具清單，checkbox 多選\n  - **排程設定**：開關 + interval 選擇\n- `ui/src/pages/TaskCard.tsx`（新）— Task 卡片（列表中每個 task 的顯示）\n- `ui/src/types.ts`（改）— 加上 Task 相關 type\n- `ui/src/App.tsx`（改）— Tasks 從 Placeholder 換成 TasksPage\n\n### 3. 儲存格式\n\nTask 存為 `tasks/*.json`，每個 task 一個檔案：\n```\ntasks/\n  task.payment-health-check.json\n  task.k8s-resource-audit.json\n  ...\n```\n\n## 驗收標準\n\n1. ✅ 可以在 UI 上點「新增 Task」打開編輯器\n2. ✅ 編輯器能選擇 Agent（下拉選現有 crew）\n3. ✅ 編輯器能從 27 個 tool 中勾選可用工具（按 provider 分組顯示）\n4. ✅ 可以編輯 system prompt、additional context、guardrails\n5. ✅ 可以設定排程（interval）\n6. ✅ 儲存後 task 出現在列表中\n7. ✅ 可以編輯已存在的 task\n8. ✅ 可以刪除 task\n9. ✅ Task JSON 正確存到 `tasks/*.json`\n10. ✅ 工具選擇時，已選工具在列表中高亮顯示\n",
       "labels": [
-        "multi-agent",
-        "orchestration",
-        "phase-0",
-        "core"
+        "ui",
+        "task-management",
+        "phase-2"
       ],
       "assignee": null,
-      "createdAt": "2026-08-02T06:47:22.489Z",
-      "updatedAt": "2026-08-02T06:47:22.489Z",
+      "createdAt": "2026-08-02T09:34:30.139Z",
+      "updatedAt": "2026-08-02T09:34:30.139Z",
       "createdBy": "agent",
       "source": {
-        "type": "discussion"
+        "type": "manual"
       },
       "spec": {
-        "description": "讓 Commander 能自主派工給其他 agent，實現多 Agent 編排排查。\n\n核心交付物：\n1. tools/orchestrator/ provider — dispatch_agent, task_decompose, task_list, task_update\n2. agent-loop.mjs 修改 — getCrewTools 支援 toolGroups 映射 + maxRounds/toolFilter 參數\n3. crews/sre.commander.json 修改 — toolGroups 加入 orchestrator\n\n詳細設計見 .paaw/PHASE-0-DESIGN.md",
+        "description": "## 需求概述\n\n建立一個 Task 管理介面，讓使用者可以：\n1. **新增 Task** — 定義一個可執行的 SRE 任務\n2. **選擇工具** — 從已註冊的 27 個 tool 中勾選這個 task 可以使用哪些\n3. **設定 Agent 規則** — guardrails、redirect rules、refuse topics\n4. **設定 Context** — 額外注入的專案背景知識\n5. **設定 Prompt** — system prompt / role prompt\n\nTask 的本質 = **一個 Agent 配置 + 可用工具集合 + 執行規則 + 排程設定**\n\n## 目前系統現況\n\n- **Agent/Crew 定義**：`crews/*.json`（6 個 agent，手動編輯 JSON）\n- **Tool 定義**：`tools/*/tools/*.json`（27 個 tool，已註冊在 toolRegistry）\n- **Agent 如何知道用哪些 tool**：crew JSON 裡的 `toolGroups` 欄位（如 `[\"core-read\", \"memory\", \"sre-prometheus\"]`）\n- **UI 現況**：Tasks 頁面目前是 Placeholder（`ui/src/pages/Placeholder.tsx`），顯示 \"Phase 6\"\n\n## Task 資料模型\n\n```jsonc\n{\n  \"id\": \"task.payment-health-check\",\n  \"name\": \"Payment Service 健康巡檢\",\n  \"description\": \"每 5 分鐘檢查 payment service 的 dashboard，異常時通知值班\",\n\n  // ── Agent 設定 ──\n  \"agent\": {\n    \"crewId\": \"sre.metrics\",           // 基於哪個既有 agent 角色\n    \"systemPrompt\": \"你是 Metrics...\", // 可覆寫 / 補充的 prompt\n    \"additionalContext\": \"Payment service 用 Go 寫的...\", // 額外 context\n    \"guardrails\": {\n      \"redirectRules\": \"查 log → 趙明軒\\n執行處置 → 黃志強\",\n      \"refuseTopics\": \"寫程式碼\\n架構設計\"\n    },\n    \"chatConfig\": {\n      \"temperature\": 0.3,\n      \"maxTokens\": 4096\n    }\n  },\n\n  // ── 可用工具 ──\n  \"tools\": [\n    \"grafana_list_dashboards\",\n    \"grafana_get_dashboard\",\n    \"grafana_query_panel\",\n    \"grafana_list_alerts\",\n    \"tchat_send\"\n  ],\n\n  // ── 排程（Phase B 才接上 Scheduler）──\n  \"schedule\": {\n    \"enabled\": true,\n    \"interval\": \"5m\",                   // 5m / 1h / 1d\n    \"cron\": \"\"                          // 進階用 cron（可選）\n  },\n\n  // ── 狀態 ──\n  \"status\": \"draft\",                    // draft / active / paused\n  \"lastRunAt\": null,\n  \"createdAt\": \"2026-08-02T...\"\n}\n```\n\n## 需要實作的內容\n\n### 1. Backend API（server/）\n\n| Endpoint | Method | 用途 |\n|---|---|---|\n| `/api/tasks` | GET | 列出所有 task |\n| `/api/tasks` | POST | 新增 task |\n| `/api/tasks/:id` | GET | 取得單一 task |\n| `/api/tasks/:id` | PUT | 更新 task |\n| `/api/tasks/:id` | DELETE | 刪除 task |\n| `/api/tasks/:id/run` | POST | 手動執行 task（Phase B） |\n\n**檔案：**\n- `server/task-store.mjs`（新）— Task 的 file-based CRUD（存 `tasks/*.json`，仿 `conversation.mjs` 模式）\n- `server/routes.mjs`（改）— 加上 6 個新 route\n\n### 2. Frontend UI（ui/src/）\n\n**取代現有的 Tasks Placeholder**，變成完整的 Task 管理介面：\n\n- `ui/src/pages/TasksPage.tsx`（新）— Task 列表 + 新增按鈕\n- `ui/src/pages/TaskEditor.tsx`（新）— Task 編輯器（表單）：\n  - **基本資訊**：名稱、描述\n  - **Agent 設定**：選擇 crew → 編輯 prompt / context / guardrails\n  - **工具選擇**：從 `/api/tools` 載入可用工具清單，checkbox 多選\n  - **排程設定**：開關 + interval 選擇\n- `ui/src/pages/TaskCard.tsx`（新）— Task 卡片（列表中每個 task 的顯示）\n- `ui/src/types.ts`（改）— 加上 Task 相關 type\n- `ui/src/App.tsx`（改）— Tasks 從 Placeholder 換成 TasksPage\n\n### 3. 儲存格式\n\nTask 存為 `tasks/*.json`，每個 task 一個檔案：\n```\ntasks/\n  task.payment-health-check.json\n  task.k8s-resource-audit.json\n  ...\n```\n\n## 驗收標準\n\n1. ✅ 可以在 UI 上點「新增 Task」打開編輯器\n2. ✅ 編輯器能選擇 Agent（下拉選現有 crew）\n3. ✅ 編輯器能從 27 個 tool 中勾選可用工具（按 provider 分組顯示）\n4. ✅ 可以編輯 system prompt、additional context、guardrails\n5. ✅ 可以設定排程（interval）\n6. ✅ 儲存後 task 出現在列表中\n7. ✅ 可以編輯已存在的 task\n8. ✅ 可以刪除 task\n9. ✅ Task JSON 正確存到 `tasks/*.json`\n10. ✅ 工具選擇時，已選工具在列表中高亮顯示\n",
         "acceptanceCriteria": [
-          "GET /api/tools 能看到 dispatch_agent, task_decompose, task_list, task_update",
-          "Commander 的 tool 列表只包含 orchestrator tools（不直接含 prometheus/loki 等）",
-          "在 Console 對 Commander 說「查一下系統狀態」，Commander 能 dispatch 給 metrics agent",
-          "其他 crew (Metrics 等) 看不到 dispatch_agent tool",
-          "子 agent 不會無限遞迴（dispatch_agent 不掛載在子 agent 上）",
-          "dispatch 失敗（錯誤 agentId）有清楚錯誤訊息"
+          "UI 上可新增 Task，打開編輯器",
+          "編輯器能下拉選擇現有 crew 作為 Agent",
+          "編輯器能從 /api/tools 載入全部工具，按 provider 分組 checkbox 多選",
+          "可編輯 system prompt / additional context / guardrails",
+          "可設定排程 interval",
+          "儲存後 task 存成 tasks/*.json，列表顯示",
+          "可編輯、刪除已存在的 task",
+          "已選工具在工具清單中高亮標示"
         ],
         "fileScope": [
-          "tools/orchestrator/",
-          "server/agent-loop.mjs",
-          "crews/sre.commander.json"
+          "server/task-store.mjs",
+          "server/routes.mjs",
+          "ui/src/pages/TasksPage.tsx",
+          "ui/src/pages/TaskEditor.tsx",
+          "ui/src/pages/TaskCard.tsx",
+          "ui/src/types.ts",
+          "ui/src/App.tsx"
         ],
         "outOfScope": []
       },
@@ -123,7 +133,7 @@
         "spec": {
           "status": "done",
           "by": "agent",
-          "at": "2026-08-02T06:47:22.489Z"
+          "at": "2026-08-02T09:34:30.139Z"
         },
         "implement": {
           "status": "pending"
@@ -159,5 +169,5 @@
       "discussion": []
     }
   ],
-  "updatedAt": "2026-08-02T06:47:22.489Z"
+  "updatedAt": "2026-08-02T09:34:30.139Z"
 }

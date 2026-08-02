@@ -1,0 +1,18 @@
+{
+  "createdAt": "2026-08-02T10:16:24.593Z",
+  "agent": "developer",
+  "task": "修復 2 個 JSON.stringify stable key ordering 安全性警告（server/llm.mjs + server/tool-engine/provider.mjs）",
+  "summary": "審查兩個檔案共 6 處 JSON.stringify 使用場景：\n- provider.mjs _llmLog（第26行）：用於寫 JSONL 日誌，改用 stableStringify（sortKeysDeep 遞迴排序 key）使日誌輸出具確定性。\n- llm.mjs（第63行）：fetch() HTTP request body，標註 false-positive。\n- provider.mjs 其餘 4 處（debug payload dump、HTTP body、2x truncated debug log）：全標註 false-positive。\n語法檢查通過，stableStringify 邏輯經 smoke test 驗證正確。",
+  "files": [
+    {
+      "path": "server/llm.mjs",
+      "reason": "第63行 fetch body JSON.stringify 標註 false-positive 註解"
+    },
+    {
+      "path": "server/tool-engine/provider.mjs",
+      "reason": "_llmLog 改用 stableStringify + 新增 sortKeysDeep helper；4處 false-positive 標註"
+    }
+  ],
+  "howToTest": "1. node --check server/llm.mjs（語法 OK）\n2. node --check server/tool-engine/provider.mjs（語法 OK）\n3. stableStringify smoke test：{b:1,a:2} 和 {a:2,b:1} 產出相同字串，陣列順序保留，原始型過 passthrough — 全部通過\n4. 觀察 data/llm-logs/ 下的 JSONL 日誌，key 應按字母排序",
+  "risk": "低 — stableStringify 僅影響日誌輸出格式（key 排序），不改變資料內容；sortKeysDeep 對 Date 物件有保護，深層物件遞迴處理"
+}

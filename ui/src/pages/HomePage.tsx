@@ -191,7 +191,7 @@ export default function HomePage({ onNavigate, onQuickAction }: HomePageProps) {
       {/* ── 2. Stats row ── */}
       <section className="grid grid-cols-3 gap-4">
         <StatCard label="AI Agents" value={crews.length} icon="👥" />
-        <StatCard label="MCP Tools" value={tools.length} icon="🔧" />
+        <StatCard label="Tools" value={tools.length} icon="🔧" />
         <StatCard
           label="Uptime"
           value={formatUptime(health?.uptime)}

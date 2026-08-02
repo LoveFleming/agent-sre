@@ -25,7 +25,7 @@ const TOOLS_DIR = resolve(ROOT, "tools");
  * @returns {string} The safe absolute path within `base`.
  * @throws {Error} If the resolved path escapes `base`.
  */
-function safeResolve(base, ...child) {
+export function safeResolve(base, ...child) {
   const childPath = child.length === 1 ? child[0] : child.join("/");
   // Reject absolute paths passed as child segments — they would hijack join/resolve.
   if (isAbsolute(childPath)) {

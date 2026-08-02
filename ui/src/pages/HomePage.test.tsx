@@ -144,8 +144,8 @@ describe("HomePage", () => {
       expect(screen.getByText("AI Agents")).toBeInTheDocument();
     });
 
-    // Stat labels present
-    expect(screen.getByText("MCP Tools")).toBeInTheDocument();
+    // Stat labels present (use getAllByText — "Tools" also appears as section heading)
+    expect(screen.getAllByText("Tools").length).toBeGreaterThanOrEqual(1);
     // Uptime 7200s = "2h 0m"
     expect(screen.getByText("2h 0m")).toBeInTheDocument();
 
@@ -156,7 +156,10 @@ describe("HomePage", () => {
     const agentsValue = agentsCard.querySelector(".text-2xl")!;
     expect(agentsValue.textContent).toBe("2");
 
-    const toolsLabel = screen.getByText("MCP Tools");
+    // "Tools" appears in both the stat card and a section heading; find the stat card one
+    const toolsLabel = screen.getAllByText("Tools").find(
+      (el) => el.closest("div.p-4") !== null
+    )!;
     const toolsCard = toolsLabel.closest("div.p-4")!;
     const toolsValue = toolsCard.querySelector(".text-2xl")!;
     expect(toolsValue.textContent).toBe("2");
@@ -253,7 +256,7 @@ describe("HomePage", () => {
     render(<HomePage onNavigate={onNavigate} onQuickAction={vi.fn()} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Tools")).toBeInTheDocument();
+      expect(screen.getByText("2h 0m")).toBeInTheDocument();
     });
 
     const viewAllLinks = screen.getAllByText("View all →");

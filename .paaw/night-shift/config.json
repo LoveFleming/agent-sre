@@ -1,0 +1,22 @@
+{
+  "mode": "em",
+  "projectPhase": "bootstrap",
+  "schedule": {
+    "enabled": true,
+    "time": "18:11",
+    "tz": "Asia/Taipei"
+  },
+  "model": {
+    "primary": "zai/glm-5.1",
+    "fallbacks": [
+      "openrouter/deepseek/deepseek-v4-flash-0731"
+    ]
+  },
+  "tasks": [
+    "feature-map-refresh",
+    "security-scan",
+    "code-intelligence",
+    "test-intelligence",
+    "change-intelligence"
+  ]
+}
