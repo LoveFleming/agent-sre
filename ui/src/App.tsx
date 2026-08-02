@@ -13,6 +13,7 @@ import Sidebar from "./components/Sidebar";
 import HomePage from "./pages/HomePage";
 import ConsolePage from "./pages/ConsolePage";
 import ToolsPage from "./pages/ToolsPage";
+import TaskManagementPage from "./pages/TaskManagementPage";
 import Placeholder from "./pages/Placeholder";
 import type { NavItem, ViewId } from "./types";
 
@@ -22,7 +23,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "home",    label: "Home",    icon: "🏠" },
   { id: "agents",  label: "Agents",  icon: "👥" },
   { id: "tools",   label: "Tools",   icon: "🔧" },
-  { id: "tasks",   label: "Tasks",   icon: "📋", badge: "soon" },
+  { id: "tasks",   label: "Tasks",   icon: "📋" },
   { id: "monitor", label: "Monitor", icon: "📊" },
   { id: "console", label: "Console", icon: "💬" },
   { id: "config",  label: "Config",  icon: "⚙️" },
@@ -101,9 +102,7 @@ export default function App() {
         {view === "agents" && (
           <Placeholder title="Agents" phase="Phase 2 · Agent management UI" icon="👥" />
         )}
-        {view === "tasks" && (
-          <Placeholder title="Tasks" phase="Phase 6 · Autonomous task center" icon="📋" />
-        )}
+        {view === "tasks" && <TaskManagementPage />}
         {view === "monitor" && (
           <Placeholder title="Monitor" phase="Phase 4 · SRE Dashboard integration" icon="📊" />
         )}
