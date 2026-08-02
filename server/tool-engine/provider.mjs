@@ -23,8 +23,35 @@ function _llmLog(entry) {
     if (!existsSync(logDir)) mkdirSync(logDir, { recursive: true })
     const dateStr = new Date().toISOString().slice(0, 10)
     const logPath = join(logDir, `${dateStr}.jsonl`)
-    appendFileSync(logPath, JSON.stringify(entry) + '\n')
+    // Stable key ordering: sort keys before stringify so JSONL log lines are
+    // deterministic — same logical entry always produces identical key sequence,
+    // improving diff/grep/grokability and preventing Semgrep json-stable-stringify warnings.
+    appendFileSync(logPath, stableStringify(entry) + '\n')
   } catch {}
+}
+
+/**
+ * Deterministic JSON.stringify — returns keys in stable (insertion-independent) order.
+ * Nested objects sorted recursively. Arrays preserve element order.
+ * Used for logging where stable output aids readability and diffing.
+ */
+function stableStringify(value, space) {
+  return JSON.stringify(sortKeysDeep(value), null, space)
+}
+
+function sortKeysDeep(value) {
+  if (Array.isArray(value)) {
+    return value.map(sortKeysDeep)
+  }
+  if (value && typeof value === 'object' && !(value instanceof Date)) {
+    return Object.keys(value)
+      .sort()
+      .reduce((acc, key) => {
+        acc[key] = sortKeysDeep(value[key])
+        return acc
+      }, {})
+  }
+  return value
 }
 
 // ── OpenAI-compatible Provider ──
@@ -88,7 +115,7 @@ export class OpenAICompatibleAdapter {
     const tempDir = nodePath.join(PAAW_ROOT, 'temp')
     if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true })
     const payloadPath = nodePath.join(tempDir, `payload-${Date.now()}.json`)
-    fs.writeFileSync(payloadPath, JSON.stringify(body, null, 2))
+    fs.writeFileSync(payloadPath, JSON.stringify(body, null, 2)) // fp: debug payload dump, not hash/key/comparison
     console.log(`[Provider] Payload: ${payloadPath}`)
     console.log(`[Provider] URL: ${url}`)
 
@@ -97,7 +124,7 @@ export class OpenAICompatibleAdapter {
       response = await fetchStreamWithRetry(url, {
         method: 'POST',
         headers,
-        body: JSON.stringify(body),
+        body: JSON.stringify(body), // fp: HTTP request body, parsed by server via JSON.parse()
       }, {
         maxRetries: 3,
         timeoutMs: 300_000,
@@ -167,10 +194,10 @@ export class OpenAICompatibleAdapter {
 
           try {
             const parsed = JSON.parse(data)
-            logStream(`PARSED: ${JSON.stringify(parsed).slice(0, 300)}`)
+            logStream(`PARSED: ${JSON.stringify(parsed).slice(0, 300)}`) // fp: truncated debug log string
             const choice = parsed.choices?.[0]
             if (!choice) {
-              logStream(`NO CHOICE: ${JSON.stringify(parsed).slice(0, 200)}`)
+              logStream(`NO CHOICE: ${JSON.stringify(parsed).slice(0, 200)}`) // fp: truncated debug log string
               continue
             }
 

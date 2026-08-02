@@ -60,6 +60,8 @@ export async function callLLM({
       const resp = await fetch(llmCfg.apiUrl, {
         method: "POST",
         headers: llmCfg.headers,
+        // Semgrep json-stable-stringify false-positive: HTTP request body for fetch(),
+        // not used as cache key / hash / comparison target. Server parses via JSON.parse().
         body: JSON.stringify({ ...body, model: llmCfg.model }),
         signal: controller.signal,
       });
