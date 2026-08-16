@@ -145,6 +145,25 @@
       "components": []
     },
     {
+      "file": "server/config.test.mjs",
+      "language": "javascript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
+        },
+        {
+          "source": "./config.mjs",
+          "names": []
+        }
+      ],
+      "functions": [],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
       "file": "server/conversation.mjs",
       "language": "javascript",
       "exports": [
@@ -198,6 +217,14 @@
           "calls": []
         },
         {
+          "name": "sanitizeId",
+          "kind": "function",
+          "async": false,
+          "params": "(id)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
           "name": "loadConversation",
           "kind": "function",
           "async": false,
@@ -238,6 +265,37 @@
           "calls": []
         }
       ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/conversation.test.mjs",
+      "language": "javascript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
+        },
+        {
+          "source": "./conversation.mjs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        },
+        {
+          "source": "fs",
+          "names": []
+        }
+      ],
+      "functions": [],
       "classes": [],
       "routes": [],
       "components": []
@@ -332,10 +390,6 @@
           "names": []
         },
         {
-          "source": "./mcp-client.mjs",
-          "names": []
-        },
-        {
           "source": "fs",
           "names": []
         },
@@ -425,192 +479,33 @@
       "components": []
     },
     {
-      "file": "server/mcp-client.mjs",
-      "language": "javascript",
-      "exports": [
-        {
-          "kind": "function",
-          "name": "connectAllMCPServers",
-          "isDefault": false
-        },
-        {
-          "kind": "function",
-          "name": "disconnectAllMCPClients",
-          "isDefault": false
-        }
-      ],
-      "imports": [
-        {
-          "source": "child_process",
-          "names": []
-        },
-        {
-          "source": "fs",
-          "names": []
-        },
-        {
-          "source": "path",
-          "names": []
-        },
-        {
-          "source": "url",
-          "names": []
-        },
-        {
-          "source": "./tool-registry.mjs",
-          "names": []
-        }
-      ],
-      "functions": [
-        {
-          "name": "loadMCPConfig",
-          "kind": "function",
-          "async": false,
-          "params": "()",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "connectAllMCPServers",
-          "kind": "function",
-          "async": true,
-          "params": "()",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "handler",
-          "kind": "arrow",
-          "async": true,
-          "params": "(args)",
-          "callCount": 1,
-          "calls": [
-            "client.callTool"
-          ]
-        },
-        {
-          "name": "disconnectAllMCPClients",
-          "kind": "function",
-          "async": false,
-          "params": "(clients)",
-          "callCount": 0,
-          "calls": []
-        }
-      ],
-      "classes": [
-        {
-          "name": "MCPClient",
-          "methods": [
-            "constructor",
-            "connect",
-            "_loadTools",
-            "callTool",
-            "_request",
-            "_notify",
-            "_onData",
-            "disconnect"
-          ]
-        }
-      ],
-      "routes": [],
-      "components": []
-    },
-    {
-      "file": "server/mcp-server.mjs",
+      "file": "server/llm.test.mjs",
       "language": "javascript",
       "exports": [],
       "imports": [
         {
-          "source": "http",
+          "source": "vitest",
           "names": []
         },
         {
-          "source": "./tool-loader.mjs",
-          "names": []
-        },
-        {
-          "source": "./crew-loader.mjs",
-          "names": []
-        },
-        {
-          "source": "./tool-registry.mjs",
-          "names": []
-        },
-        {
-          "source": "./agent-loop.mjs",
-          "names": []
-        },
-        {
-          "source": "./crew-loader.mjs",
-          "names": []
-        },
-        {
-          "source": "./conversation.mjs",
+          "source": "./llm.mjs",
           "names": []
         }
       ],
       "functions": [
         {
-          "name": "rpcResult",
+          "name": "jsonResponse",
           "kind": "function",
           "async": false,
-          "params": "(id, result)",
+          "params": "(body, ok = true, status = 200)",
           "callCount": 0,
           "calls": []
         },
         {
-          "name": "rpcError",
+          "name": "streamResponse",
           "kind": "function",
           "async": false,
-          "params": "(id, code, message)",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "buildMCPTools",
-          "kind": "function",
-          "async": false,
-          "params": "()",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "buildMCPResources",
-          "kind": "function",
-          "async": false,
-          "params": "()",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "buildMCPPrompts",
-          "kind": "function",
-          "async": false,
-          "params": "()",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "handleRequest",
-          "kind": "function",
-          "async": true,
-          "params": "(msg)",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "runStdio",
-          "kind": "function",
-          "async": true,
-          "params": "()",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "runSSE",
-          "kind": "function",
-          "async": true,
-          "params": "(port)",
+          "params": "(chunks)",
           "callCount": 0,
           "calls": []
         }
@@ -643,7 +538,15 @@
           "names": []
         },
         {
+          "source": "./tool-loader.mjs",
+          "names": []
+        },
+        {
           "source": "./conversation.mjs",
+          "names": []
+        },
+        {
+          "source": "./task-store.mjs",
           "names": []
         },
         {
@@ -701,6 +604,117 @@
       "components": []
     },
     {
+      "file": "server/routes.test.mjs",
+      "language": "javascript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
+        },
+        {
+          "source": "http",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        },
+        {
+          "source": "./routes.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "httpGet",
+          "kind": "function",
+          "async": false,
+          "params": "(pathname)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/task-store.mjs",
+      "language": "javascript",
+      "exports": [
+        {
+          "kind": "variable",
+          "name": "taskStore",
+          "isDefault": false
+        },
+        {
+          "kind": "value",
+          "name": "taskStore",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "crypto",
+          "names": []
+        }
+      ],
+      "functions": [],
+      "classes": [
+        {
+          "name": "TaskStore",
+          "methods": [
+            "constructor",
+            "list",
+            "get",
+            "create",
+            "update",
+            "delete",
+            "clear"
+          ]
+        }
+      ],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/task-store.test.mjs",
+      "language": "javascript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
+        },
+        {
+          "source": "./task-store.mjs",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "makeStore",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
       "file": "server/tool-engine/provider.mjs",
       "language": "javascript",
       "exports": [
@@ -743,6 +757,22 @@
           "calls": []
         },
         {
+          "name": "stableStringify",
+          "kind": "function",
+          "async": false,
+          "params": "(value, space)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "sortKeysDeep",
+          "kind": "function",
+          "async": false,
+          "params": "(value)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
           "name": "logStream",
           "kind": "arrow",
           "async": false,
@@ -777,6 +807,11 @@
       "exports": [
         {
           "kind": "function",
+          "name": "safeResolve",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
           "name": "loadAllTools",
           "isDefault": false
         }
@@ -801,6 +836,14 @@
       ],
       "functions": [
         {
+          "name": "safeResolve",
+          "kind": "function",
+          "async": false,
+          "params": "(base, ...child)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
           "name": "loadAllTools",
           "kind": "function",
           "async": true,
@@ -819,6 +862,41 @@
           ]
         }
       ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/tool-loader.test.mjs",
+      "language": "javascript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "names": []
+        },
+        {
+          "source": "url",
+          "names": []
+        },
+        {
+          "source": "fs",
+          "names": []
+        },
+        {
+          "source": "os",
+          "names": []
+        }
+      ],
+      "functions": [],
       "classes": [],
       "routes": [],
       "components": []
@@ -855,6 +933,42 @@
           ]
         }
       ],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "server/tool-registry.test.mjs",
+      "language": "javascript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "makeRegistry",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "sampleEntry",
+          "kind": "function",
+          "async": false,
+          "params": "(name = \"gr\")",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
       "routes": [],
       "components": []
     },
@@ -1568,6 +1682,34 @@
         {
           "source": "react",
           "names": []
+        },
+        {
+          "source": "./components/Sidebar",
+          "names": []
+        },
+        {
+          "source": "./pages/HomePage",
+          "names": []
+        },
+        {
+          "source": "./pages/ConsolePage",
+          "names": []
+        },
+        {
+          "source": "./pages/ToolsPage",
+          "names": []
+        },
+        {
+          "source": "./pages/TaskManagementPage",
+          "names": []
+        },
+        {
+          "source": "./pages/Placeholder",
+          "names": []
+        },
+        {
+          "source": "./types",
+          "names": []
         }
       ],
       "functions": [
@@ -1580,55 +1722,15 @@
           "calls": []
         },
         {
-          "name": "closeTab",
-          "kind": "arrow",
-          "async": false,
-          "params": "(idx: number, e: React.MouseEvent)",
-          "callCount": 7,
-          "calls": [
-            "e.stopPropagation",
-            "chatTabs.filter",
-            "setChatTabs",
-            "setActiveTabIdx",
-            "Math.max",
-            "setActiveTabIdx",
-            "setActiveTabIdx"
-          ]
-        },
-        {
-          "name": "Dot",
-          "kind": "function",
-          "async": false,
-          "params": "({ delay = \"0s\" }: { delay?: string })",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "ToolCard",
-          "kind": "function",
-          "async": false,
-          "params": "({ tool }: { tool: ToolEntry })",
-          "callCount": 0,
-          "calls": []
-        },
-        {
-          "name": "test",
+          "name": "check",
           "kind": "arrow",
           "async": true,
           "params": "()",
-          "callCount": 11,
+          "callCount": 3,
           "calls": [
-            "setTesting",
-            "setResult",
-            "JSON.parse",
             "fetch",
-            "encodeURIComponent",
-            "JSON.stringify",
-            "res.json",
-            "setResult",
-            "JSON.stringify",
-            "setResult",
-            "setTesting"
+            "setHealthStatus",
+            "setHealthStatus"
           ]
         }
       ],
@@ -1638,13 +1740,139 @@
         {
           "name": "App",
           "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/src/components/Sidebar.test.tsx",
+      "language": "tsx",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
         },
         {
-          "name": "Dot",
+          "source": "@testing-library/react",
+          "names": []
+        },
+        {
+          "source": "@testing-library/user-event",
+          "names": []
+        },
+        {
+          "source": "./Sidebar",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "defaultProps",
+          "kind": "arrow",
+          "async": false,
+          "params": "()",
+          "callCount": 1,
+          "calls": [
+            "vi.fn"
+          ]
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "ui/src/components/Sidebar.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Sidebar",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "../types",
+          "names": []
+        },
+        {
+          "source": "./StatusBadge",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "Sidebar",
+          "kind": "function",
+          "async": false,
+          "params": "({\n  items,\n  activeId,\n  onSelect,\n  healthStatus,\n}: SidebarProps)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "Sidebar",
           "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/src/components/StatusBadge.test.tsx",
+      "language": "tsx",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
         },
         {
-          "name": "ToolCard",
+          "source": "@testing-library/react",
+          "names": []
+        },
+        {
+          "source": "./StatusBadge",
+          "names": []
+        }
+      ],
+      "functions": [],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "ui/src/components/StatusBadge.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "StatusBadge",
+          "isDefault": true
+        }
+      ],
+      "imports": [],
+      "functions": [
+        {
+          "name": "StatusBadge",
+          "kind": "function",
+          "async": false,
+          "params": "({ status }: StatusBadgeProps)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "StatusBadge",
           "kind": "function"
         }
       ]
@@ -1677,6 +1905,439 @@
       "components": []
     },
     {
+      "file": "ui/src/pages/ConsolePage.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "ConsolePage",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "react",
+          "names": []
+        },
+        {
+          "source": "react-markdown",
+          "names": []
+        },
+        {
+          "source": "remark-gfm",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "ConsolePage",
+          "kind": "function",
+          "async": false,
+          "params": "({\n  initialPrompt,\n  onPromptConsumed,\n}: ConsolePageProps)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "ConsolePage",
+          "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/src/pages/HomePage.test.tsx",
+      "language": "tsx",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
+        },
+        {
+          "source": "@testing-library/react",
+          "names": []
+        },
+        {
+          "source": "@testing-library/user-event",
+          "names": []
+        },
+        {
+          "source": "./HomePage",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "mockFetchSuccess",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "mockFetchFailure",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "ui/src/pages/HomePage.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "HomePage",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "react",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "HomePage",
+          "kind": "function",
+          "async": false,
+          "params": "({ onNavigate, onQuickAction }: HomePageProps)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "StatCard",
+          "kind": "function",
+          "async": false,
+          "params": "({\n  label,\n  value,\n  icon,\n}: {\n  label: string;\n  value: string | number;\n  icon: string;\n})",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "HomePage",
+          "kind": "function"
+        },
+        {
+          "name": "StatCard",
+          "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/src/pages/Placeholder.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Placeholder",
+          "isDefault": true
+        }
+      ],
+      "imports": [],
+      "functions": [
+        {
+          "name": "Placeholder",
+          "kind": "function",
+          "async": false,
+          "params": "({ title, phase, icon = \"🚧\" }: PlaceholderProps)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "Placeholder",
+          "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "TaskManagementPage",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "react",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "TaskManagementPage",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "EmptyState",
+          "kind": "function",
+          "async": false,
+          "params": "({ onNewTask }: { onNewTask: () => void })",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "Field",
+          "kind": "function",
+          "async": false,
+          "params": "({\n  label,\n  required,\n  hint,\n  children,\n}: {\n  label: string;\n  required?: boolean;\n  hint?: string;\n  children: React.ReactNode;\n})",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "LinesField",
+          "kind": "function",
+          "async": false,
+          "params": "({\n  label,\n  description,\n  value,\n  onChange,\n  placeholder,\n}: {\n  label: string;\n  description?: string;\n  value: string;\n  onChange: (text: string) => void;\n  placeholder?: string;\n})",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "ToolPicker",
+          "kind": "function",
+          "async": false,
+          "params": "({\n  tools,\n  selected,\n  onToggle,\n}: {\n  tools: ToolEntry[];\n  selected: string[];\n  onToggle: (toolName: string) => void;\n})",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "TaskManagementPage",
+          "kind": "function"
+        },
+        {
+          "name": "EmptyState",
+          "kind": "function"
+        },
+        {
+          "name": "Field",
+          "kind": "function"
+        },
+        {
+          "name": "LinesField",
+          "kind": "function"
+        },
+        {
+          "name": "ToolPicker",
+          "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/src/pages/ToolsPage.tsx",
+      "language": "tsx",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "ToolsPage",
+          "isDefault": true
+        }
+      ],
+      "imports": [
+        {
+          "source": "react",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "names": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "ToolsPage",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": [
+        {
+          "name": "ToolsPage",
+          "kind": "function"
+        }
+      ]
+    },
+    {
+      "file": "ui/src/test/setup.ts",
+      "language": "typescript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "@testing-library/jest-dom/vitest",
+          "names": []
+        },
+        {
+          "source": "vitest",
+          "names": []
+        },
+        {
+          "source": "@testing-library/react",
+          "names": []
+        }
+      ],
+      "functions": [],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "ui/src/types.test.ts",
+      "language": "typescript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "names": []
+        },
+        {
+          "source": "./types",
+          "names": []
+        }
+      ],
+      "functions": [],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
+      "file": "ui/src/types.ts",
+      "language": "typescript",
+      "exports": [
+        {
+          "kind": "function",
+          "name": "emptyTaskDraft",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "linesToText",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "textToLines",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "getProvider",
+          "isDefault": false
+        },
+        {
+          "kind": "function",
+          "name": "formatUptime",
+          "isDefault": false
+        }
+      ],
+      "imports": [],
+      "functions": [
+        {
+          "name": "emptyTaskDraft",
+          "kind": "function",
+          "async": false,
+          "params": "()",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "linesToText",
+          "kind": "function",
+          "async": false,
+          "params": "(lines: string[])",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "textToLines",
+          "kind": "function",
+          "async": false,
+          "params": "(text: string)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "getProvider",
+          "kind": "function",
+          "async": false,
+          "params": "(source?: string)",
+          "callCount": 0,
+          "calls": []
+        },
+        {
+          "name": "formatUptime",
+          "kind": "function",
+          "async": false,
+          "params": "(seconds?: number)",
+          "callCount": 0,
+          "calls": []
+        }
+      ],
+      "classes": [],
+      "routes": [],
+      "components": []
+    },
+    {
       "file": "ui/vite.config.ts",
       "language": "typescript",
       "exports": [],
@@ -1702,16 +2363,31 @@
       "classes": [],
       "routes": [],
       "components": []
+    },
+    {
+      "file": "vitest.config.mjs",
+      "language": "javascript",
+      "exports": [],
+      "imports": [
+        {
+          "source": "vitest/config",
+          "names": []
+        }
+      ],
+      "functions": [],
+      "classes": [],
+      "routes": [],
+      "components": []
     }
   ],
   "stats": {
-    "totalFiles": 27,
-    "parsedFiles": 25,
+    "totalFiles": 47,
+    "parsedFiles": 45,
     "errors": 0,
     "languages": {
-      "javascript": 22,
-      "tsx": 4,
-      "typescript": 1
+      "javascript": 29,
+      "tsx": 14,
+      "typescript": 4
     }
   }
 }

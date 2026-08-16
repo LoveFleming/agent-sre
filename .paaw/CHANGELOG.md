@@ -1,8 +1,10 @@
 # Changelog
 
-## 2026-08-02
+## 2026-08-15
 ### changed
-- code changes (1 new file) (1 modified)
+- 實作 TASK-001：server/agent-store.mjs — file-based Agent Registry 持久化。
+
+【必讀 context (1 new file) (2 modified)
 
 
 
@@ -10,10 +12,4 @@
 
 
 ### changed
-- +806 −157 lines across 7 files
-
-### changed
-- code changes (2 modified)
-
-### changed
-- +807 −157 lines across 7 files
+- +8919 −9636 lines across 61 files

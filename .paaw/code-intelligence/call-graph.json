@@ -73,6 +73,14 @@
       "async": false
     },
     {
+      "id": "server/conversation.mjs:sanitizeId",
+      "name": "sanitizeId",
+      "file": "server/conversation.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
       "id": "server/conversation.mjs:loadConversation",
       "name": "loadConversation",
       "file": "server/conversation.mjs",
@@ -185,100 +193,20 @@
       "async": false
     },
     {
-      "id": "server/mcp-client.mjs:loadMCPConfig",
-      "name": "loadMCPConfig",
-      "file": "server/mcp-client.mjs",
+      "id": "server/llm.test.mjs:jsonResponse",
+      "name": "jsonResponse",
+      "file": "server/llm.test.mjs",
       "line": 0,
       "kind": "function",
       "async": false
     },
     {
-      "id": "server/mcp-client.mjs:connectAllMCPServers",
-      "name": "connectAllMCPServers",
-      "file": "server/mcp-client.mjs",
-      "line": 0,
-      "kind": "function",
-      "async": true
-    },
-    {
-      "id": "server/mcp-client.mjs:handler",
-      "name": "handler",
-      "file": "server/mcp-client.mjs",
-      "line": 0,
-      "kind": "arrow",
-      "async": true
-    },
-    {
-      "id": "server/mcp-client.mjs:disconnectAllMCPClients",
-      "name": "disconnectAllMCPClients",
-      "file": "server/mcp-client.mjs",
+      "id": "server/llm.test.mjs:streamResponse",
+      "name": "streamResponse",
+      "file": "server/llm.test.mjs",
       "line": 0,
       "kind": "function",
       "async": false
-    },
-    {
-      "id": "server/mcp-server.mjs:rpcResult",
-      "name": "rpcResult",
-      "file": "server/mcp-server.mjs",
-      "line": 0,
-      "kind": "function",
-      "async": false
-    },
-    {
-      "id": "server/mcp-server.mjs:rpcError",
-      "name": "rpcError",
-      "file": "server/mcp-server.mjs",
-      "line": 0,
-      "kind": "function",
-      "async": false
-    },
-    {
-      "id": "server/mcp-server.mjs:buildMCPTools",
-      "name": "buildMCPTools",
-      "file": "server/mcp-server.mjs",
-      "line": 0,
-      "kind": "function",
-      "async": false
-    },
-    {
-      "id": "server/mcp-server.mjs:buildMCPResources",
-      "name": "buildMCPResources",
-      "file": "server/mcp-server.mjs",
-      "line": 0,
-      "kind": "function",
-      "async": false
-    },
-    {
-      "id": "server/mcp-server.mjs:buildMCPPrompts",
-      "name": "buildMCPPrompts",
-      "file": "server/mcp-server.mjs",
-      "line": 0,
-      "kind": "function",
-      "async": false
-    },
-    {
-      "id": "server/mcp-server.mjs:handleRequest",
-      "name": "handleRequest",
-      "file": "server/mcp-server.mjs",
-      "line": 0,
-      "kind": "function",
-      "async": true
-    },
-    {
-      "id": "server/mcp-server.mjs:runStdio",
-      "name": "runStdio",
-      "file": "server/mcp-server.mjs",
-      "line": 0,
-      "kind": "function",
-      "async": true
-    },
-    {
-      "id": "server/mcp-server.mjs:runSSE",
-      "name": "runSSE",
-      "file": "server/mcp-server.mjs",
-      "line": 0,
-      "kind": "function",
-      "async": true
     },
     {
       "id": "server/routes.mjs:readBody",
@@ -313,8 +241,40 @@
       "async": false
     },
     {
+      "id": "server/routes.test.mjs:httpGet",
+      "name": "httpGet",
+      "file": "server/routes.test.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/task-store.test.mjs:makeStore",
+      "name": "makeStore",
+      "file": "server/task-store.test.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
       "id": "server/tool-engine/provider.mjs:_llmLog",
       "name": "_llmLog",
+      "file": "server/tool-engine/provider.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/tool-engine/provider.mjs:stableStringify",
+      "name": "stableStringify",
+      "file": "server/tool-engine/provider.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/tool-engine/provider.mjs:sortKeysDeep",
+      "name": "sortKeysDeep",
       "file": "server/tool-engine/provider.mjs",
       "line": 0,
       "kind": "function",
@@ -337,6 +297,14 @@
       "async": false
     },
     {
+      "id": "server/tool-loader.mjs:safeResolve",
+      "name": "safeResolve",
+      "file": "server/tool-loader.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
       "id": "server/tool-loader.mjs:loadAllTools",
       "name": "loadAllTools",
       "file": "server/tool-loader.mjs",
@@ -351,6 +319,22 @@
       "line": 0,
       "kind": "arrow",
       "async": true
+    },
+    {
+      "id": "server/tool-registry.test.mjs:makeRegistry",
+      "name": "makeRegistry",
+      "file": "server/tool-registry.test.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "server/tool-registry.test.mjs:sampleEntry",
+      "name": "sampleEntry",
+      "file": "server/tool-registry.test.mjs",
+      "line": 0,
+      "kind": "function",
+      "async": false
     },
     {
       "id": "tools/docs/handler.mjs:parseFrontmatter",
@@ -785,36 +769,172 @@
       "async": false
     },
     {
-      "id": "ui/src/App.tsx:closeTab",
-      "name": "closeTab",
-      "file": "ui/src/App.tsx",
-      "line": 0,
-      "kind": "arrow",
-      "async": false
-    },
-    {
-      "id": "ui/src/App.tsx:Dot",
-      "name": "Dot",
-      "file": "ui/src/App.tsx",
-      "line": 0,
-      "kind": "function",
-      "async": false
-    },
-    {
-      "id": "ui/src/App.tsx:ToolCard",
-      "name": "ToolCard",
-      "file": "ui/src/App.tsx",
-      "line": 0,
-      "kind": "function",
-      "async": false
-    },
-    {
-      "id": "ui/src/App.tsx:test",
-      "name": "test",
+      "id": "ui/src/App.tsx:check",
+      "name": "check",
       "file": "ui/src/App.tsx",
       "line": 0,
       "kind": "arrow",
       "async": true
+    },
+    {
+      "id": "ui/src/components/Sidebar.test.tsx:defaultProps",
+      "name": "defaultProps",
+      "file": "ui/src/components/Sidebar.test.tsx",
+      "line": 0,
+      "kind": "arrow",
+      "async": false
+    },
+    {
+      "id": "ui/src/components/Sidebar.tsx:Sidebar",
+      "name": "Sidebar",
+      "file": "ui/src/components/Sidebar.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/components/StatusBadge.tsx:StatusBadge",
+      "name": "StatusBadge",
+      "file": "ui/src/components/StatusBadge.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/ConsolePage.tsx:ConsolePage",
+      "name": "ConsolePage",
+      "file": "ui/src/pages/ConsolePage.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/HomePage.test.tsx:mockFetchSuccess",
+      "name": "mockFetchSuccess",
+      "file": "ui/src/pages/HomePage.test.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/HomePage.test.tsx:mockFetchFailure",
+      "name": "mockFetchFailure",
+      "file": "ui/src/pages/HomePage.test.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/HomePage.tsx:HomePage",
+      "name": "HomePage",
+      "file": "ui/src/pages/HomePage.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/HomePage.tsx:StatCard",
+      "name": "StatCard",
+      "file": "ui/src/pages/HomePage.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/Placeholder.tsx:Placeholder",
+      "name": "Placeholder",
+      "file": "ui/src/pages/Placeholder.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/TaskManagementPage.tsx:TaskManagementPage",
+      "name": "TaskManagementPage",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/TaskManagementPage.tsx:EmptyState",
+      "name": "EmptyState",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/TaskManagementPage.tsx:Field",
+      "name": "Field",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/TaskManagementPage.tsx:LinesField",
+      "name": "LinesField",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/TaskManagementPage.tsx:ToolPicker",
+      "name": "ToolPicker",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/pages/ToolsPage.tsx:ToolsPage",
+      "name": "ToolsPage",
+      "file": "ui/src/pages/ToolsPage.tsx",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/types.ts:emptyTaskDraft",
+      "name": "emptyTaskDraft",
+      "file": "ui/src/types.ts",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/types.ts:linesToText",
+      "name": "linesToText",
+      "file": "ui/src/types.ts",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/types.ts:textToLines",
+      "name": "textToLines",
+      "file": "ui/src/types.ts",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/types.ts:getProvider",
+      "name": "getProvider",
+      "file": "ui/src/types.ts",
+      "line": 0,
+      "kind": "function",
+      "async": false
+    },
+    {
+      "id": "ui/src/types.ts:formatUptime",
+      "name": "formatUptime",
+      "file": "ui/src/types.ts",
+      "line": 0,
+      "kind": "function",
+      "async": false
     }
   ],
   "edges": [
@@ -837,12 +957,6 @@
       "resolved": false
     },
     {
-      "caller": "server/mcp-client.mjs:handler",
-      "callee": "client.callTool",
-      "type": "method",
-      "resolved": false
-    },
-    {
       "caller": "server/routes.mjs:onToolCall",
       "callee": "console.log",
       "type": "method",
@@ -861,110 +975,27 @@
       "resolved": false
     },
     {
-      "caller": "ui/src/App.tsx:closeTab",
-      "callee": "e.stopPropagation",
-      "type": "method",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:closeTab",
-      "callee": "chatTabs.filter",
-      "type": "method",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:closeTab",
-      "callee": "setChatTabs",
-      "type": "direct",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:closeTab",
-      "callee": "setActiveTabIdx",
-      "type": "direct",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:closeTab",
-      "callee": "Math.max",
-      "type": "method",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:closeTab",
-      "callee": "setActiveTabIdx",
-      "type": "direct",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:closeTab",
-      "callee": "setActiveTabIdx",
-      "type": "direct",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "setTesting",
-      "type": "direct",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "setResult",
-      "type": "direct",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "JSON.parse",
-      "type": "method",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:test",
+      "caller": "ui/src/App.tsx:check",
       "callee": "fetch",
       "type": "direct",
       "resolved": false
     },
     {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "encodeURIComponent",
+      "caller": "ui/src/App.tsx:check",
+      "callee": "setHealthStatus",
       "type": "direct",
       "resolved": false
     },
     {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "JSON.stringify",
+      "caller": "ui/src/App.tsx:check",
+      "callee": "setHealthStatus",
+      "type": "direct",
+      "resolved": false
+    },
+    {
+      "caller": "ui/src/components/Sidebar.test.tsx:defaultProps",
+      "callee": "vi.fn",
       "type": "method",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "server/routes.mjs:json",
-      "type": "method"
-    },
-    {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "setResult",
-      "type": "direct",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "JSON.stringify",
-      "type": "method",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "setResult",
-      "type": "direct",
-      "resolved": false
-    },
-    {
-      "caller": "ui/src/App.tsx:test",
-      "callee": "setTesting",
-      "type": "direct",
       "resolved": false
     }
   ],
@@ -974,12 +1005,7 @@
       "server/agent-loop.mjs:send"
     ],
     "JSON.stringify": [
-      "server/agent-loop.mjs:send",
-      "ui/src/App.tsx:test",
-      "ui/src/App.tsx:test"
-    ],
-    "client.callTool": [
-      "server/mcp-client.mjs:handler"
+      "server/agent-loop.mjs:send"
     ],
     "console.log": [
       "server/routes.mjs:onToolCall"
@@ -990,43 +1016,15 @@
     "handler": [
       "server/tool-loader.mjs:wrappedHandler"
     ],
-    "e.stopPropagation": [
-      "ui/src/App.tsx:closeTab"
-    ],
-    "chatTabs.filter": [
-      "ui/src/App.tsx:closeTab"
-    ],
-    "setChatTabs": [
-      "ui/src/App.tsx:closeTab"
-    ],
-    "setActiveTabIdx": [
-      "ui/src/App.tsx:closeTab",
-      "ui/src/App.tsx:closeTab",
-      "ui/src/App.tsx:closeTab"
-    ],
-    "Math.max": [
-      "ui/src/App.tsx:closeTab"
-    ],
-    "setTesting": [
-      "ui/src/App.tsx:test",
-      "ui/src/App.tsx:test"
-    ],
-    "setResult": [
-      "ui/src/App.tsx:test",
-      "ui/src/App.tsx:test",
-      "ui/src/App.tsx:test"
-    ],
-    "JSON.parse": [
-      "ui/src/App.tsx:test"
-    ],
     "fetch": [
-      "ui/src/App.tsx:test"
+      "ui/src/App.tsx:check"
     ],
-    "encodeURIComponent": [
-      "ui/src/App.tsx:test"
+    "setHealthStatus": [
+      "ui/src/App.tsx:check",
+      "ui/src/App.tsx:check"
     ],
-    "server/routes.mjs:json": [
-      "ui/src/App.tsx:test"
+    "vi.fn": [
+      "ui/src/components/Sidebar.test.tsx:defaultProps"
     ]
   },
   "calleesOf": {
@@ -1035,9 +1033,6 @@
       "res.write",
       "JSON.stringify"
     ],
-    "server/mcp-client.mjs:handler": [
-      "client.callTool"
-    ],
     "server/routes.mjs:onToolCall": [
       "console.log",
       "result.slice"
@@ -1045,33 +1040,19 @@
     "server/tool-loader.mjs:wrappedHandler": [
       "handler"
     ],
-    "ui/src/App.tsx:closeTab": [
-      "e.stopPropagation",
-      "chatTabs.filter",
-      "setChatTabs",
-      "setActiveTabIdx",
-      "Math.max",
-      "setActiveTabIdx",
-      "setActiveTabIdx"
-    ],
-    "ui/src/App.tsx:test": [
-      "setTesting",
-      "setResult",
-      "JSON.parse",
+    "ui/src/App.tsx:check": [
       "fetch",
-      "encodeURIComponent",
-      "JSON.stringify",
-      "server/routes.mjs:json",
-      "setResult",
-      "JSON.stringify",
-      "setResult",
-      "setTesting"
+      "setHealthStatus",
+      "setHealthStatus"
+    ],
+    "ui/src/components/Sidebar.test.tsx:defaultProps": [
+      "vi.fn"
     ]
   },
   "stats": {
-    "totalFunctions": 102,
-    "totalCalls": 25,
-    "resolvedCalls": 1,
-    "unresolvedCalls": 24
+    "totalFunctions": 117,
+    "totalCalls": 10,
+    "resolvedCalls": 0,
+    "unresolvedCalls": 10
   }
 }

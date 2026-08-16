@@ -19,10 +19,6 @@
       ],
       "importedBy": [
         {
-          "source": "server/mcp-server.mjs",
-          "names": []
-        },
-        {
           "source": "server/routes.mjs",
           "names": []
         }
@@ -47,6 +43,10 @@
         {
           "source": "server/agent-loop.mjs",
           "names": []
+        },
+        {
+          "source": "server/llm.test.mjs",
+          "names": []
         }
       ],
       "exports": [
@@ -63,19 +63,15 @@
           "names": []
         },
         {
-          "source": "server/mcp-client.mjs",
-          "names": []
-        },
-        {
-          "source": "server/mcp-server.mjs",
-          "names": []
-        },
-        {
           "source": "server/routes.mjs",
           "names": []
         },
         {
           "source": "server/tool-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "server/tool-registry.test.mjs",
           "names": []
         }
       ],
@@ -109,6 +105,10 @@
       ],
       "importedBy": [
         {
+          "source": "server/config.test.mjs",
+          "names": []
+        },
+        {
           "source": "server/index.mjs",
           "names": []
         },
@@ -123,6 +123,26 @@
         "resolveLLM",
         "PORT"
       ]
+    },
+    "server/config.test.mjs": {
+      "path": "server/config.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./config.mjs",
+          "resolved": true,
+          "targetFile": "server/config.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
     },
     "server/conversation.mjs": {
       "path": "server/conversation.mjs",
@@ -149,7 +169,7 @@
       ],
       "importedBy": [
         {
-          "source": "server/mcp-server.mjs",
+          "source": "server/conversation.test.mjs",
           "names": []
         },
         {
@@ -164,6 +184,44 @@
         "listArchives",
         "loadArchive"
       ]
+    },
+    "server/conversation.test.mjs": {
+      "path": "server/conversation.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./conversation.mjs",
+          "resolved": true,
+          "targetFile": "server/conversation.mjs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
     },
     "server/crew-loader.mjs": {
       "path": "server/crew-loader.mjs",
@@ -191,14 +249,6 @@
       "importedBy": [
         {
           "source": "server/index.mjs",
-          "names": []
-        },
-        {
-          "source": "server/mcp-server.mjs",
-          "names": []
-        },
-        {
-          "source": "server/mcp-server.mjs",
           "names": []
         },
         {
@@ -244,12 +294,6 @@
           "source": "./routes.mjs",
           "resolved": true,
           "targetFile": "server/routes.mjs",
-          "names": []
-        },
-        {
-          "source": "./mcp-client.mjs",
-          "resolved": true,
-          "targetFile": "server/mcp-client.mjs",
           "names": []
         },
         {
@@ -309,11 +353,20 @@
           "names": []
         },
         {
-          "source": "server/mcp-server.mjs",
+          "source": "server/routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/routes.test.mjs",
+          "names": []
+        },
+        {
+          "source": "server/tool-loader.test.mjs",
           "names": []
         }
       ],
       "exports": [
+        "safeResolve",
         "loadAllTools"
       ]
     },
@@ -340,9 +393,21 @@
           "names": []
         },
         {
+          "source": "./tool-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-loader.mjs",
+          "names": []
+        },
+        {
           "source": "./conversation.mjs",
           "resolved": true,
           "targetFile": "server/conversation.mjs",
+          "names": []
+        },
+        {
+          "source": "./task-store.mjs",
+          "resolved": true,
+          "targetFile": "server/task-store.mjs",
           "names": []
         },
         {
@@ -367,6 +432,10 @@
       "importedBy": [
         {
           "source": "server/index.mjs",
+          "names": []
+        },
+        {
+          "source": "server/routes.test.mjs",
           "names": []
         }
       ],
@@ -374,18 +443,64 @@
         "registerRoutes"
       ]
     },
-    "server/mcp-client.mjs": {
-      "path": "server/mcp-client.mjs",
+    "server/llm.test.mjs": {
+      "path": "server/llm.test.mjs",
       "language": "javascript",
       "imports": [
         {
-          "source": "child_process",
+          "source": "vitest",
           "resolved": false,
           "targetFile": null,
           "names": []
         },
         {
-          "source": "fs",
+          "source": "./llm.mjs",
+          "resolved": true,
+          "targetFile": "server/llm.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/task-store.mjs": {
+      "path": "server/task-store.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "crypto",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/task-store.test.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "taskStore",
+        "taskStore"
+      ]
+    },
+    "server/routes.test.mjs": {
+      "path": "server/routes.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "http",
           "resolved": false,
           "targetFile": null,
           "names": []
@@ -403,31 +518,9 @@
           "names": []
         },
         {
-          "source": "./tool-registry.mjs",
+          "source": "./routes.mjs",
           "resolved": true,
-          "targetFile": "server/tool-registry.mjs",
-          "names": []
-        }
-      ],
-      "importedBy": [
-        {
-          "source": "server/index.mjs",
-          "names": []
-        }
-      ],
-      "exports": [
-        "connectAllMCPServers",
-        "disconnectAllMCPClients"
-      ]
-    },
-    "server/mcp-server.mjs": {
-      "path": "server/mcp-server.mjs",
-      "language": "javascript",
-      "imports": [
-        {
-          "source": "http",
-          "resolved": false,
-          "targetFile": null,
+          "targetFile": "server/routes.mjs",
           "names": []
         },
         {
@@ -435,35 +528,25 @@
           "resolved": true,
           "targetFile": "server/tool-loader.mjs",
           "names": []
-        },
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/task-store.test.mjs": {
+      "path": "server/task-store.test.mjs",
+      "language": "javascript",
+      "imports": [
         {
-          "source": "./crew-loader.mjs",
-          "resolved": true,
-          "targetFile": "server/crew-loader.mjs",
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
           "names": []
         },
         {
-          "source": "./tool-registry.mjs",
+          "source": "./task-store.mjs",
           "resolved": true,
-          "targetFile": "server/tool-registry.mjs",
-          "names": []
-        },
-        {
-          "source": "./agent-loop.mjs",
-          "resolved": true,
-          "targetFile": "server/agent-loop.mjs",
-          "names": []
-        },
-        {
-          "source": "./crew-loader.mjs",
-          "resolved": true,
-          "targetFile": "server/crew-loader.mjs",
-          "names": []
-        },
-        {
-          "source": "./conversation.mjs",
-          "resolved": true,
-          "targetFile": "server/conversation.mjs",
+          "targetFile": "server/task-store.mjs",
           "names": []
         }
       ],
@@ -504,6 +587,70 @@
         "OpenAICompatibleAdapter",
         "createProviderAdapter"
       ]
+    },
+    "server/tool-loader.test.mjs": {
+      "path": "server/tool-loader.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/tool-registry.test.mjs": {
+      "path": "server/tool-registry.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
     },
     "tools/docs/handler.mjs": {
       "path": "tools/docs/handler.mjs",
@@ -727,6 +874,48 @@
           "resolved": false,
           "targetFile": null,
           "names": []
+        },
+        {
+          "source": "./components/Sidebar",
+          "resolved": true,
+          "targetFile": "ui/src/components/Sidebar.tsx",
+          "names": []
+        },
+        {
+          "source": "./pages/HomePage",
+          "resolved": true,
+          "targetFile": "ui/src/pages/HomePage.tsx",
+          "names": []
+        },
+        {
+          "source": "./pages/ConsolePage",
+          "resolved": true,
+          "targetFile": "ui/src/pages/ConsolePage.tsx",
+          "names": []
+        },
+        {
+          "source": "./pages/ToolsPage",
+          "resolved": true,
+          "targetFile": "ui/src/pages/ToolsPage.tsx",
+          "names": []
+        },
+        {
+          "source": "./pages/TaskManagementPage",
+          "resolved": true,
+          "targetFile": "ui/src/pages/TaskManagementPage.tsx",
+          "names": []
+        },
+        {
+          "source": "./pages/Placeholder",
+          "resolved": true,
+          "targetFile": "ui/src/pages/Placeholder.tsx",
+          "names": []
+        },
+        {
+          "source": "./types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
         }
       ],
       "importedBy": [
@@ -738,6 +927,337 @@
       "exports": [
         "App"
       ]
+    },
+    "ui/src/components/Sidebar.tsx": {
+      "path": "ui/src/components/Sidebar.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        },
+        {
+          "source": "./StatusBadge",
+          "resolved": true,
+          "targetFile": "ui/src/components/StatusBadge.tsx",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "ui/src/App.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/components/Sidebar.test.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "Sidebar"
+      ]
+    },
+    "ui/src/pages/HomePage.tsx": {
+      "path": "ui/src/pages/HomePage.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "ui/src/App.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/HomePage.test.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "HomePage"
+      ]
+    },
+    "ui/src/pages/ConsolePage.tsx": {
+      "path": "ui/src/pages/ConsolePage.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "react-markdown",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "remark-gfm",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "ui/src/App.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "ConsolePage"
+      ]
+    },
+    "ui/src/pages/ToolsPage.tsx": {
+      "path": "ui/src/pages/ToolsPage.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "ui/src/App.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "ToolsPage"
+      ]
+    },
+    "ui/src/pages/TaskManagementPage.tsx": {
+      "path": "ui/src/pages/TaskManagementPage.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "ui/src/App.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "TaskManagementPage"
+      ]
+    },
+    "ui/src/pages/Placeholder.tsx": {
+      "path": "ui/src/pages/Placeholder.tsx",
+      "language": "tsx",
+      "imports": [],
+      "importedBy": [
+        {
+          "source": "ui/src/App.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "Placeholder"
+      ]
+    },
+    "ui/src/types.ts": {
+      "path": "ui/src/types.ts",
+      "language": "typescript",
+      "imports": [],
+      "importedBy": [
+        {
+          "source": "ui/src/App.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/components/Sidebar.test.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/components/Sidebar.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/ConsolePage.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/HomePage.test.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/HomePage.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/HomePage.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/TaskManagementPage.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/TaskManagementPage.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/ToolsPage.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/ToolsPage.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/types.test.ts",
+          "names": []
+        }
+      ],
+      "exports": [
+        "emptyTaskDraft",
+        "linesToText",
+        "textToLines",
+        "getProvider",
+        "formatUptime"
+      ]
+    },
+    "ui/src/components/Sidebar.test.tsx": {
+      "path": "ui/src/components/Sidebar.test.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "@testing-library/react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "@testing-library/user-event",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./Sidebar",
+          "resolved": true,
+          "targetFile": "ui/src/components/Sidebar.tsx",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "ui/src/components/StatusBadge.tsx": {
+      "path": "ui/src/components/StatusBadge.tsx",
+      "language": "tsx",
+      "imports": [],
+      "importedBy": [
+        {
+          "source": "ui/src/components/Sidebar.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/components/StatusBadge.test.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "StatusBadge"
+      ]
+    },
+    "ui/src/components/StatusBadge.test.tsx": {
+      "path": "ui/src/components/StatusBadge.test.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "@testing-library/react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./StatusBadge",
+          "resolved": true,
+          "targetFile": "ui/src/components/StatusBadge.tsx",
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
     },
     "ui/src/main.tsx": {
       "path": "ui/src/main.tsx",
@@ -765,6 +1285,90 @@
           "source": "./index.css",
           "resolved": false,
           "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "ui/src/pages/HomePage.test.tsx": {
+      "path": "ui/src/pages/HomePage.test.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "@testing-library/react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "@testing-library/user-event",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./HomePage",
+          "resolved": true,
+          "targetFile": "ui/src/pages/HomePage.tsx",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "ui/src/test/setup.ts": {
+      "path": "ui/src/test/setup.ts",
+      "language": "typescript",
+      "imports": [
+        {
+          "source": "@testing-library/jest-dom/vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "@testing-library/react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "ui/src/types.test.ts": {
+      "path": "ui/src/types.test.ts",
+      "language": "typescript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
           "names": []
         }
       ],
@@ -802,6 +1406,20 @@
       ],
       "importedBy": [],
       "exports": []
+    },
+    "vitest.config.mjs": {
+      "path": "vitest.config.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest/config",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
     }
   },
   "edges": [
@@ -813,6 +1431,16 @@
     {
       "from": "server/agent-loop.mjs",
       "to": "server/tool-registry.mjs",
+      "names": []
+    },
+    {
+      "from": "server/config.test.mjs",
+      "to": "server/config.mjs",
+      "names": []
+    },
+    {
+      "from": "server/conversation.test.mjs",
+      "to": "server/conversation.mjs",
       "names": []
     },
     {
@@ -836,72 +1464,72 @@
       "names": []
     },
     {
-      "from": "server/index.mjs",
-      "to": "server/mcp-client.mjs",
-      "names": []
-    },
-    {
       "from": "server/llm.mjs",
       "to": "server/config.mjs",
       "names": []
     },
     {
-      "from": "server/mcp-client.mjs",
+      "from": "server/llm.test.mjs",
+      "to": "server/llm.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/crew-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/agent-loop.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
       "to": "server/tool-registry.mjs",
       "names": []
     },
     {
-      "from": "server/mcp-server.mjs",
+      "from": "server/routes.mjs",
       "to": "server/tool-loader.mjs",
       "names": []
     },
     {
-      "from": "server/mcp-server.mjs",
-      "to": "server/crew-loader.mjs",
-      "names": []
-    },
-    {
-      "from": "server/mcp-server.mjs",
-      "to": "server/tool-registry.mjs",
-      "names": []
-    },
-    {
-      "from": "server/mcp-server.mjs",
-      "to": "server/agent-loop.mjs",
-      "names": []
-    },
-    {
-      "from": "server/mcp-server.mjs",
-      "to": "server/crew-loader.mjs",
-      "names": []
-    },
-    {
-      "from": "server/mcp-server.mjs",
-      "to": "server/conversation.mjs",
-      "names": []
-    },
-    {
-      "from": "server/routes.mjs",
-      "to": "server/crew-loader.mjs",
-      "names": []
-    },
-    {
-      "from": "server/routes.mjs",
-      "to": "server/agent-loop.mjs",
-      "names": []
-    },
-    {
-      "from": "server/routes.mjs",
-      "to": "server/tool-registry.mjs",
-      "names": []
-    },
-    {
       "from": "server/routes.mjs",
       "to": "server/conversation.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/task-store.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.test.mjs",
+      "to": "server/routes.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.test.mjs",
+      "to": "server/tool-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/task-store.test.mjs",
+      "to": "server/task-store.mjs",
       "names": []
     },
     {
       "from": "server/tool-loader.mjs",
+      "to": "server/tool-registry.mjs",
+      "names": []
+    },
+    {
+      "from": "server/tool-loader.test.mjs",
+      "to": "server/tool-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/tool-registry.test.mjs",
       "to": "server/tool-registry.mjs",
       "names": []
     },
@@ -911,15 +1539,125 @@
       "names": []
     },
     {
+      "from": "ui/src/App.tsx",
+      "to": "ui/src/components/Sidebar.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/App.tsx",
+      "to": "ui/src/pages/HomePage.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/App.tsx",
+      "to": "ui/src/pages/ConsolePage.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/App.tsx",
+      "to": "ui/src/pages/ToolsPage.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/App.tsx",
+      "to": "ui/src/pages/TaskManagementPage.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/App.tsx",
+      "to": "ui/src/pages/Placeholder.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/App.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/components/Sidebar.test.tsx",
+      "to": "ui/src/components/Sidebar.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/components/Sidebar.test.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/components/Sidebar.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/components/Sidebar.tsx",
+      "to": "ui/src/components/StatusBadge.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/components/StatusBadge.test.tsx",
+      "to": "ui/src/components/StatusBadge.tsx",
+      "names": []
+    },
+    {
       "from": "ui/src/main.tsx",
       "to": "ui/src/App.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/ConsolePage.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/HomePage.test.tsx",
+      "to": "ui/src/pages/HomePage.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/HomePage.test.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/HomePage.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/HomePage.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/TaskManagementPage.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/TaskManagementPage.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/ToolsPage.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/ToolsPage.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/types.test.ts",
+      "to": "ui/src/types.ts",
       "names": []
     }
   ],
   "stats": {
-    "totalFiles": 25,
-    "totalEdges": 22,
-    "resolvedImports": 22,
-    "unresolvedImports": 54
+    "totalFiles": 45,
+    "totalEdges": 46,
+    "resolvedImports": 46,
+    "unresolvedImports": 86
   }
 }

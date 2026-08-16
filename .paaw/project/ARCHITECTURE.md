@@ -1,25 +1,21 @@
-# Architecture Map — `agent-sre`
+# Architecture Map — agent-sre
 
-> **Note on confidence:** The file-tree scan failed (unescaped parens in `find`), so paths, export names, and dependency edges below are inferred from the git log and the JSON scan summary. Treat the graph as a working hypothesis to verify against real source.
+> **Data provenance note:** The automated file-tree scan failed (`find` command shell error), and no Tree-sitter source analysis or `package.json` content was delivered. This map is reconstructed from the git history (20 commits), naming conventions visible in commits (`llm.mjs`, `provider.mjs`, `tool-loader`), and the `.paaw/` ADR references. Items marked **(inferred)** have not been verified against actual file contents. A re-scan with a corrected `find` expression (quoting the `\( ... \)` group) is recommended to validate paths.
 
 ---
 
 ## 1. System Overview
 
-**agent-sre** is a standalone Site Reliability Engineering agent platform. It exposes operational tools — currently **Grafana** (6 tools: dashboards, alerts, metrics queries, etc.) and **Telegram chat** (3 tools for sending/reading/managing messages, renamed `telegram_*` → `tchat_*`) — via the **Model Context Protocol (MCP)**. An SRE "crew" orchestrates multiple agent roles for incident response and observability workflows, coordinating tool calls through an MCP client. A React-based web UI provides a multi-tab chat interface with a model selector, backed by a small HTTP API that proxies chat and tool-testing requests to the MCP layer.
+**agent-sre** is a standalone multi-agent SRE (Site Reliability Engineering) assistant platform. It was extracted from a parent platform (PAAW) into an independent repository and rewritten to have zero PAAW dependency. The system runs an LLM-driven "agent crew" that can be orchestrated to perform SRE tasks, with tool capabilities provided via the Model Context Protocol (MCP) — currently Grafana (6 tools: dashboards/alerts/metrics) and a chat/messaging provider, `tchat` (3 tools, renamed from Telegram). Users interact with the system through a React web console featuring multi-tab chat with a model selector, a 7-view navigation shell, and a Task management CRUD interface backed by dedicated API endpoints.
 
-The project is a **fully standalone rewrite** (per commit `70820ee`), with **zero dependency on PAAW**. The frontend deliberately matches the PAAW stack (React + Vite + Tailwind) for visual/ergonomic consistency.
+**Tech stack:**
+- **Language:** JavaScript (ES Modules, `.mjs` files) for the server; JSX/React for the UI
+- **Runtime:** Node.js (server), browser (UI)
+- **UI:** React + Vite + Tailwind CSS (explicitly matched to the PAAW stack)
+- **Key libraries:** MCP SDK (server + client), `json-stable-stringify` (seen in security fixes)
+- **External services:** LLM provider APIs, Grafana API, Telegram/chat API
 
-**Tech Stack**
-- **Language:** TypeScript (Node.js + browser)
-- **Frontend:** React, Vite, Tailwind CSS
-- **Backend:** Node.js HTTP server (`src/server.ts`)
-- **Protocol:** Model Context Protocol (MCP) — custom server + client implementation
-- **Integrations:** Grafana API, Telegram Bot API
-- **Build:** Vite (UI), `tsc`/`tsx` (server, inferred)
-- **Persistence:** None — in-memory only
-
-**Architecture Style:** **Modular monolith** with a clear internal plugin (tool-provider) pattern. Frontend and backend live in the same repository (single-package, not a formal monorepo). MCP acts as the internal RPC seam between the chat UI / crew orchestration and the tool providers.
+**Architecture style:** Modular monolith in a single repository — a Node.js API server plus a React SPA, with a plugin-style MCP tool-provider layer. Not a monorepo with separate packages; server and UI live in one repo with an embedded knowledge base (`.paaw/`).
 
 ---
 
@@ -27,143 +23,90 @@ The project is a **fully standalone rewrite** (per commit `70820ee`), with **zer
 
 ```
 Presentation Layer
-  - React App root         (src/web/main.tsx)
-  - App shell              (src/web → App)
-  - Multi-tab Chat         (src/web → ChatTab)
-  - Model Selector         (src/web → ModelSelector)
-  - Shared UI types        (src/web/types.ts)
+  - Web Console (React + Vite + Tailwind) — directory (inferred): web/ or ui/
+    - 7-view navigation shell
+    - Platform home page
+    - Multi-tab Chat view + model selector        (commit 6f00301)
+    - Task management page (CRUD UI)               (commit b655bc1)
 
-API Layer (HTTP)
-  - Routes                 (src/server.ts)
-      • POST /api/chat
-      • GET  /api/tools
-      • POST /api/tools/test
-  - Middleware             (inferred inline in server.ts; no formal chain)
-  - No request/response schemas, no error-code mapping
+API Layer
+  - HTTP server, Node.js ES modules                (entry inferred: server.mjs / index.mjs)
+  - Chat/session endpoints                         (edf2daa — chat send/response + error display fixes)
+  - Task management CRUD endpoints                 (commit 80b15a1)
+  - Tool test endpoint                             (commit 1ca8dfa)
 
-MCP Protocol Layer
-  - MCP Server             (src/mcp/server → McpServer, startServer)
-  - MCP Client             (src/mcp/client → McpClient, listTools, callTool)
-  - MCP types              (src/mcp/types.ts → McpTool)
+Agent / Orchestration Layer
+  - Multi-agent crew orchestration                 (.paaw/ ADR-002)
+  - LLM abstraction — llm.mjs                      (commit c895498)
+  - Provider abstraction — provider.mjs            (commit c895498)
 
-Tool Provider Layer (plugins registered with MCP server)
-  - Grafana Provider       (src/tools/grafana → grafanaTools, GrafanaProvider) — 6 tools
-  - Tchat Provider         (src/tools/tchat → tchatTools, TchatProvider) — 3 tools
-
-Business Logic / Orchestration Layer
-  - SRE Crew               (src/crew → SreCrew, runCrew)
-      coordinates multi-role agents for incident response
+Tool Layer (MCP)
+  - MCP server + MCP client support                (commit c936d78)
+  - Tool loader — tool-loader (fs ops, hardened
+    against path traversal)                        (commit f072911)
+  - Grafana MCP tool provider (6 tools)            (commit 55cc035)
+  - tchat MCP tool provider (3 tools, ex-Telegram) (commits 795e8f0, 017f00a, 27db224)
 
 Data Layer
-  - In-memory state only
-      • ChatMessage  { id, role, content, timestamp, model, tabId }
-      • ChatTab      { id, title, messages, model }
-      • McpTool      { name, description, inputSchema, provider }
-  - External Systems
-      • Grafana HTTP API
-      • Telegram Bot API
+  - Task store (CRUD persistence — mechanism unverified: file or in-memory)
+  - File storage (tool definitions/configs read by tool-loader)
+  - External APIs: Grafana, Telegram/tchat, LLM providers
+
+Knowledge / Governance
+  - .paaw/ — ADRs (ADR-002: multi-agent orchestration architecture)
+  - data/semgrep-rules/ — security scanning rules
 ```
 
 ---
 
 ## 3. Module Dependencies
 
-### Internal dependency graph
+**Internal dependency flow (inferred from commit topology):**
 
-```
-                        ┌──────────────┐
-                        │   web-ui     │  (React: App, ChatTab, ModelSelector)
-                        └──────┬───────┘
-                               │ uses
-                               ▼
-                        ┌──────────────┐
-                        │  mcp-client  │  (McpClient, listTools, callTool)
-                        └──────┬───────┘
-                               │ connects to
-                               ▼
-        ┌──────────────────────────────────────────┐
-        │                mcp-server                │
-        │        (McpServer, startServer)          │
-        └──────────┬────────────────────┬──────────┘
-                   │ registers          │ registers
-                   ▼                    ▼
-          ┌────────────────┐    ┌────────────────┐
-          │  tool-grafana  │    │   tool-tchat   │
-          │ (6 tools)      │    │ (3 tools)      │
-          └────────────────┘    └────────────────┘
-                   ▲                    ▲
-                   │                    │
-                   └─────────┬──────────┘
-                             │ orchestrates
-                             ▼
-                        ┌──────────────┐
-                        │   sre-crew   │  (SreCrew, runCrew)
-                        │  also → mcp-client
-                        └──────────────┘
+- **Web Console → API Server** — UI consumes chat, task, and tool-test endpoints over HTTP.
+- **API Layer → Agent/Orchestration Layer** — chat endpoints drive the agent crew; task endpoints persist task data.
+- **Orchestration → `llm.mjs` → `provider.mjs`** — LLM calls are abstracted through a provider layer (multi-model support, consistent with the UI's model selector). `llm.mjs` and `provider.mjs` are tightly coupled (patched together in c895498).
+- **Orchestration → tool-loader → MCP client → Tool Providers** — tools are dynamically loaded; the loader performs filesystem operations (now path-traversal-blocked) and hands off to MCP.
+- **Tool Providers → External Services** — Grafana provider → Grafana API; tchat provider → chat/Telegram API.
 
-  HTTP entry:  src/server.ts  → mcp-server, sre-crew, mcp-client (chat proxy)
-  CLI/primary: src/index.ts   → (inferred) boots mcp-server and/or crew
-```
+**Circular dependencies:** None observed in the available evidence. Closest coupling is `llm.mjs` ↔ `provider.mjs`, which change as a unit — worth verifying for a shared abstraction leak.
 
-**Edge summary**
-- `web-ui` → `mcp-client`
-- `mcp-client` → `mcp-server` (runtime, via MCP transport)
-- `mcp-server` ← `tool-grafana`, `tool-tchat` (providers register themselves)
-- `sre-crew` → `mcp-client`, `tool-grafana`, `tool-tchat`
-- `src/server.ts` (HTTP) wires the API layer to `mcp-client` / `sre-crew`
-- `src/index.ts` (inferred bootstrap) → `mcp-server`, `sre-crew`
-
-**Circular dependencies**
-- None detected from the import graph in the scan summary. Worth re-verifying: `tool-grafana`/`tool-tchat` declare `dependsOn: ["mcp-server"]`, while `mcp-server` registration implies a *runtime* (not import-time) reference back to providers — this is a plugin inversion, not a cycle, **provided** providers receive the server via DI rather than importing it directly.
-
-**External dependencies (inferred)**
-- **MCP runtime** (custom in-repo implementation of Model Context Protocol)
-- **Grafana API client** (HTTP; exact lib unknown)
-- **Telegram Bot API client** (`node-telegram-bot-api`, `telegraf`, or raw HTTP — unconfirmed)
-- **React / ReactDOM**, **Vite**, **Tailwind CSS**
-- An LLM client library for the chat/crew layer (not visible in scan — possibly OpenAI SDK or similar, given "model selector")
+**External dependencies:**
+- MCP SDK (server + client modes)
+- `json-stable-stringify` (deterministic JSON serialization in LLM/provider paths)
+- LLM provider APIs (model selector in UI implies ≥2 models/providers)
+- Grafana HTTP API
+- Telegram/chat API
+- React, Vite, Tailwind (UI build chain)
 
 ---
 
 ## 4. Key Patterns
 
-| Concern | Pattern / Approach |
-|---|---|
-| **Overall architecture** | Modular monolith with a **plugin (tool-provider)** model behind an MCP RPC seam |
-| **RPC protocol** | **Model Context Protocol** — server registers tools, client discovers & invokes |
-| **Tool providers** | Provider pattern (`GrafanaProvider`, `TchatProvider`) — each exports a `*Tools` registry + a class/factory |
-| **Orchestration** | **Crew pattern** (`SreCrew`, `runCrew`) — multi-role agent coordination for incident response |
-| **API style** | Thin REST handlers in a single `server.ts` (no router module, no middleware framework visible) |
-| **State management** | In-memory only; React component state (no Redux/Zustand flagged). Tab + message state lost on restart |
-| **Routing (UI)** | Vite SPA — no client-side router mentioned; tab switching is component-state driven |
-| **Routing (server)** | Inline path dispatch in `src/server.ts`; three endpoints only |
-| **Validation** | **None** — `hasRequestSchema: false`, `hasResponseSchema: false` on all routes (tech-debt flag) |
-| **Error handling** | **Ad hoc** — no error-code taxonomy, no centralized mapper (tech-debt flag) |
-| **Persistence** | None — all data models marked `persistence: memory` |
-| **Build** | Vite for the browser bundle; server presumed `tsx`/`tsc` |
+- **Provider / Adapter pattern** — two applications: `provider.mjs` abstracts LLM backends (enables the UI model selector), and MCP tool providers wrap external systems behind a uniform tool interface.
+- **Plugin architecture** — tools are loaded dynamically via `tool-loader`; providers (Grafana, tchat) are additive, as shown by sequential provider commits. Renaming `tg_*` → `tchat_*` (3 commits) suggests a tool-name registry/namespacing convention.
+- **Multi-agent orchestration ("crew" pattern)** — formalized in ADR-002; multiple cooperating agents rather than a single chat loop.
+- **MCP client/server duality** — the system both *consumes* external tools (client) and *exposes* its own tools (server).
+- **CRUD REST** — conventional resource-oriented endpoints for Task management (server endpoints + matching UI page, added in paired commits).
+- **State management (UI)** — no evidence of Redux/Zustand et al.; likely React local state given the app's size **(inferred)**.
+- **Routing (UI)** — client-side view routing for the 7-view shell (mechanism unverified — React Router vs. custom shell).
+- **Error handling** — errors surfaced to the chat UI (fixed in edf2daa); security-focused error rejection in `tool-loader` (path traversal). No evidence of a centralized error-code map.
+- **Governance** — ADR-driven decisions in `.paaw/`; security scanning via semgrep rules.
 
 ---
 
 ## 5. Entry Points
 
-| Entry | Path | Role |
+| Entry Point | Path | Status |
 |---|---|---|
-| **Primary / CLI bootstrap** | `src/index.ts` | Likely boots the MCP server and/or SRE crew as a long-running process (inferred — needs source verification) |
-| **HTTP API server** | `src/server.ts` | Node HTTP server exposing `/api/chat`, `/api/tools`, `/api/tools/test`; bridges the web UI to the MCP client + crew |
-| **UI bootstrap (browser)** | `src/web/main.tsx` | React root mount (Vite dev + production bundle entry) |
-| **Build config** | `vite.config.ts` | Vite configuration for the frontend bundle |
-
-**Boot flow (hypothesized):**
-1. `src/index.ts` (or `src/server.ts` directly) starts the HTTP server.
-2. Server starts `McpServer` (`startServer`), which registers `GrafanaProvider` and `TchatProvider`.
-3. On a `/api/chat` request, the server uses `McpClient` (and optionally `SreCrew`) to dispatch tool calls.
-4. The browser loads `src/web/main.tsx` → `App`, which renders `ChatTab`s + `ModelSelector` and calls back into the HTTP API.
+| **API server** | `server.mjs` or `index.mjs` at repo root **(inferred)** | Unverified — file scan failed |
+| **Web UI** | Vite standard: `index.html` → `src/main.jsx|tsx` under `web/` or `ui/` **(inferred)** | Unverified — file scan failed |
+| **CLI** | No evidence of a CLI entry point in git history | Likely none |
 
 ---
 
-### Verification checklist (re-run scan with escaped parens)
-- [ ] Confirm exact file paths under `src/mcp/`, `src/tools/`, `src/crew/`, `src/web/`
-- [ ] Confirm whether `src/index.ts` vs `src/server.ts` is the true process entry
-- [ ] Verify there are no import-time circular deps between providers and the MCP server
-- [ ] Enumerate actual `package.json` dependencies (the scan returned an empty dependency list — likely a parse gap)
-- [ ] Inspect error-handling patterns inside tool providers (the `errorCodes: []` result may be a scan artifact, not reality)
+### Recommended Follow-ups
+1. Re-run the file scan with escaped `find` predicates: `find . -type f \( -name '*.mjs' -o ... \)` — the unquoted parentheses caused the shell syntax error.
+2. Verify the true server entry point and whether the HTTP layer uses a framework (Express/Fastify) or raw `http`.
+3. Confirm Task persistence mechanism (file vs. in-memory) — affects the Data Layer description.
+4. Resolve the module boundary between `llm.mjs` and `provider.mjs` to rule out hidden coupling.

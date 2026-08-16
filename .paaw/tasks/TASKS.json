@@ -1,38 +1,69 @@
 {
   "tasks": [
     {
-      "id": "TASK-003",
-      "title": "Remove MCP server/client code from project",
-      "type": "refactor",
+      "id": "TASK-001",
+      "title": "[P1] agent-store.mjs — file-based Agent Registry 持久化",
+      "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
-      "priority": "medium",
+      "status": "resolved",
+      "priority": "critical",
       "effort": null,
       "labels": [
-        "refactor",
-        "cleanup"
+        "phase-1",
+        "agent-registry",
+        "ADR-003"
       ],
-      "assignee": null,
-      "description": "專案已決定不走 MCP（ADR-003），改用 direct tool implementation。需要移除所有 MCP 相關程式碼。\n\n## 要做的事\n\n### 1. 刪除檔案（3 個）\n- `server/mcp-server.mjs` — MCP Server，對外暴露 tools/crews 的 stdio/SSE server\n- `server/mcp-client.mjs` — MCP Client，連接外部 MCP server 並註冊工具\n- `config/mcp-servers.example.json` — MCP server 設定範例\n\n### 2. 修改 `server/index.mjs`\n- 移除 `import { connectAllMCPServers, disconnectAllMCPClients } from \"./mcp-client.mjs\"`\n- 移除第 59-63 行：MCP servers 連線區塊（`connectAllMCPServers()` 及 log）\n- 移除 signal handlers 裡的 `disconnectAllMCPClients(mcpClients)` 呼叫（第 81, 85 行）\n- 移除第 75 行 help 文字裡的 MCP 提示\n\n### 3. 修改 UI（3 個檔案）\n- `ui/src/pages/HomePage.tsx` — 第 194 行 \"MCP Tools\" → \"Tools\"\n- `ui/src/pages/ToolsPage.tsx` — 第 4 行註解、第 71 行標題 \"MCP Tools\" → \"Tools\"\n- `ui/src/pages/HomePage.test.tsx` — 第 148, 159 行測試斷言 \"MCP Tools\" → \"Tools\"\n\n### 4. 驗證\n- `node server/index.mjs` 正常啟動，無 MCP 相關 import error\n- `GET /api/tools` 仍正常回傳工具列表（不靠 MCP）\n- Chat 功能正常（agent-loop 不依賴 MCP）\n- UI 首頁顯示 \"Tools\" 而非 \"MCP Tools\"\n\n## 不需要動的\n- `server/tool-registry.mjs` — 保留，這是 direct tool 機制的核心\n- `server/tool-loader.mjs` — 保留，自動掃描 `tools/` 註冊\n- `tools/` 目錄下所有 handler — 保留，都是 direct implementation\n- `server/routes.mjs` — 保留，不直接引用 MCP",
+      "assignee": "developer",
+      "description": "依 conversation.mjs 的 file-based 模式，實作 server/agent-store.mjs。Schema：{ id, name, description, context, agentRules, prompt, allowedTools[], schedule (cron expression 或 null 表示僅手動), notifyTarget: { targetType: \"user\"|\"channel\", targetId }, cooldownMinutes (可選，預設 30), enabled, createdAt, updatedAt }。存 agents/*.json，safeResolve 防 path traversal（比照 tool-loader 模式）。read-only export：listAgents, getAgent, saveAgent, deleteAgent。附 vitest 測試（server/agent-store.test.mjs）。注意：TaskStore 概念合一，本 store 是 TaskStore 的取代者。",
       "relatedFiles": [],
-      "notes": [],
-      "executionResult": null,
-      "createdAt": "2026-08-02T09:27:50.466Z",
-      "updatedAt": "2026-08-02T09:27:50.466Z",
-      "resolvedAt": null,
+      "notes": [
+        {
+          "text": "SA review 設計結論（2026-08-15，architect 林曉薇）：\n\n【架構定位】agent-store 是純資料層（單一真相來源 agents/*.json），不含 scheduler/notify 邏輯，那些是後續 task。\n\n【Schema 驗證】\n- name: 必填非空（trim 後 ≥1，上限 100）；description/context/prompt: 選填預設 \"\"\n- agentRules: {guardrails[], redirectRules[], refuseTopics[]} 沿用 task-store typedef，三陣列 string[]，未知鍵忽略\n- allowedTools: string[] 預設 []，存檔時對 toolRegistry 驗證存在 → 不存在 warn 不擋\n- schedule: string|null 預設 null，非 null 必須是合法 cron，無效 → throw\n- notifyTarget: 必填 {targetType: \"user\"|\"channel\", targetId: 非空 string}，enum 外 → throw\n- cooldownMinutes: number 預設 30，正整數，0/負/小數 → throw（0 等於無 cooldown 會打爆防洗爆）\n- enabled: boolean 預設 true\n- createdAt/updatedAt: store 產生 ISO，呼叫端不可覆寫\n- 驗證錯誤一律 throw new Error，routes 層負責轉 400，store 不含 HTTP 概念\n\n【id 與檔名】\n- id 由 store 產生（randomUUID），呼叫端不可指定；檔名 = agents/<id>.json，1:1\n- getAgent/deleteAgent 的 id 來自外部 → 必須過 safeResolve + 檔名白名單 regex ^[a-zA-Z0-9_-]+$（比照 conversation.mjs sanitizeId），雙層防護\n\n【safeResolve】\n- import { safeResolve } from \"./tool-loader.mjs\"，不要複製貼上\n- AGENTS_DIR = safeResolve(ROOT, \"agents\")；所有檔案路徑組裝必走 safeResolve，無例外\n- listAgents 只 readdir 只吃 .json 副檔名\n\n【與 conversation.mjs 一致性 + 刻意偏離】\n- 模組級 ROOT/AGENTS_DIR 常數、export 4 個獨立 function（非 class singleton）、JSDoc typedef — 沿用 conversation 風格\n- ⚠️ 刻意偏離 1：必須 atomic write（writeFileSync(tmp) → renameSync）— scheduler tick 讀到半成品 JSON 會炸 watchdog run，conversation 沒此風險；理由寫進 JSDoc\n- ⚠️ 刻意偏離 2：讀取容錯不對稱 — listAgents 檔不存在回 []、parse 失敗 warn+skip 不 throw；getAgent 檔不存在回 null（routes 轉 404）、parse 失敗 throw\n- 存放位置：agents/ 在 repo root（與 tools/ 同層），不是 data/agents/ — agents 是 config-as-code 要進版本控制 review/diff，data/ 是 runtime 產物\n\n【TaskStore 過渡（ADR-003 明定）】\n- task-store.mjs 保留不刪、舊 /api/tasks 路由不動（可加 Deprecation header）、task-store.test.mjs 保留\n- 新 /api/agents 路由是後續 task，TASK-001 不碰 routes.mjs\n- phase-2 UI 遷移到 /api/agents 後才刪 task-store.mjs + 舊路由\n- 新端點回 { agents: [...] }，不回 tasks 鍵，不搞相容層\n\n【測試覆蓋（8 案例）】\n1. CRUD 往返 + list createdAt asc + update 只變 updatedAt\n2. defaults 填充（cooldown 30/enabled true/agentRules 三陣列）\n3. 驗證規則 throw 案例（name 空、targetType enum 外、cooldown 0/負/小數、無效 cron）\n4. path traversal（../、絕對路徑、%2e%2e、空字串）對 getAgent/deleteAgent throw — 注意 store 拿到的是未 decode 的 raw id\n5. atomic write 間接驗證 + tmp 檔不被 listAgents 讀到\n6. 髒資料：壞 JSON → listAgents skip 不 throw、getAgent throw\n7. delete 不存在回 null/false 不 throw\n8. update 不產生新檔/孤兒檔\n測試隔離：建議 tmpdir() 或注入 base dir，避免汙染版本控制的 agents/（conversation.test 直接寫 data/ 是可接受差異，這裡不行因為 agents/ 進 git）\n\n【紅線】只 export 4 函式；saveAgent 區分 create（無 id）/update（有 id），update 不存在 throw 404 語意；不碰 routes.mjs/TaskManagementPage；cooldown 預設 30 寫在 store default 層。",
+          "at": "2026-08-15T13:44:21.663Z",
+          "by": "agent"
+        },
+        {
+          "text": "Developer 實作完成（2026-08-15）：\n\n【完成項目】\n- server/agent-store.mjs：4 函式 export、schema 驗證、手寫 5 欄位數字版 cron validator、safeResolve+白名單雙層防護、atomic write（tmp→rename）、讀取容錯不對稱（list skip 壞檔 / get throw）\n- server/agent-store.test.mjs：architect 定義 8 大類案例，63 tests 全綠\n- agents/README.md：目錄用途說明（config-as-code）\n- 全套 vitest 214/214 綠，無 regression\n\n【實作決策（偏離或補充 SA notes 的地方）】\n1. cron validator 只支援數字格式：不支援 JAN/mon 命名值、不支援 Quartz 6 欄位/L/W/?。查過 package.json 無 cron lib（僅 vitest），故手寫。\n2. saveAgent update 採 partial patch merge 語意（agentRules per-key merge，比照 task-store update），非全量取代。後續接 routes 時 caller 傳什麼就覆寫什麼。\n3. 新增 SRE_AGENTS_DIR 環境變數（絕對路徑才生效）讓測試隔離用，比照 config.mjs env 慣例。\n4. listAgents 只認 ^[a-zA-Z0-9_-]+\\.json$ 檔名（.tmp、README.md、dotfile 都忽略）。\n\n【未動項目】routes.mjs / TaskManagementPage / task-store.mjs 皆未碰，照紅線。",
+          "at": "2026-08-15T13:54:13.744Z",
+          "by": "agent"
+        },
+        {
+          "text": "收尾確認完成：QA 先前只將三個檔案 stage 並未真正 commit（git log 對三檔無任何歷史紀錄）。已用 pathspec commit 單獨提交：f3e68fc \"feat(agent-store): add file-based Agent Registry with atomic writes and traversal guards\"（server/agent-store.mjs 354 行、server/agent-store.test.mjs 270 行、agents/README.md 12 行，共 636 insertions）。TASK-005/006/007 的 staged 變更（conversation/routes/tool-loader 及其測試）完整保留在 index，未動、未 commit。未 push。",
+          "at": "2026-08-15T14:06:32.096Z",
+          "by": "agent"
+        }
+      ],
+      "executionResult": {
+        "summary": "## TASK-001 收尾確認結果\n\n### ❌ 發現問題：QA 並未真正 commit\n\n`git log -- server/agent-store.mjs server/agent-store.test.mjs agents/README.md` **零輸出** → 三個檔案從未進入任何 commit，QA 只做了 `git add`（staged）就誤以為完成。\n\n### ✅ 已修正\n\n",
+        "filesChanged": [],
+        "success": true
+      },
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.040Z",
+      "updatedAt": "2026-08-15T14:06:45.952Z",
+      "resolvedAt": "2026-08-15T14:06:45.952Z",
       "createdBy": "agent",
       "pipeline": {
         "spec": {
           "status": "done",
           "by": "agent",
-          "at": "2026-08-02T09:27:50.466Z"
+          "at": "2026-08-15T13:05:41.040Z"
         },
         "implement": {
           "status": "pending"
         },
         "review": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T14:04:10.731Z",
+          "result": {
+            "qaVerdict": "pass",
+            "tests": "63/63 module, 214/214 full suite",
+            "critical": 0,
+            "major": 0,
+            "minor": 2
+          }
         },
         "test": {
           "status": "pending"
@@ -47,27 +78,17 @@
           "status": "pending"
         }
       },
+      "loopModeOverride": null,
       "source": {
         "type": "manual"
       },
       "spec": {
-        "description": "專案已決定不走 MCP（ADR-003），改用 direct tool implementation。需要移除所有 MCP 相關程式碼。\n\n## 要做的事\n\n### 1. 刪除檔案（3 個）\n- `server/mcp-server.mjs` — MCP Server，對外暴露 tools/crews 的 stdio/SSE server\n- `server/mcp-client.mjs` — MCP Client，連接外部 MCP server 並註冊工具\n- `config/mcp-servers.example.json` — MCP server 設定範例\n\n### 2. 修改 `server/index.mjs`\n- 移除 `import { connectAllMCPServers, disconnectAllMCPClients } from \"./mcp-client.mjs\"`\n- 移除第 59-63 行：MCP servers 連線區塊（`connectAllMCPServers()` 及 log）\n- 移除 signal handlers 裡的 `disconnectAllMCPClients(mcpClients)` 呼叫（第 81, 85 行）\n- 移除第 75 行 help 文字裡的 MCP 提示\n\n### 3. 修改 UI（3 個檔案）\n- `ui/src/pages/HomePage.tsx` — 第 194 行 \"MCP Tools\" → \"Tools\"\n- `ui/src/pages/ToolsPage.tsx` — 第 4 行註解、第 71 行標題 \"MCP Tools\" → \"Tools\"\n- `ui/src/pages/HomePage.test.tsx` — 第 148, 159 行測試斷言 \"MCP Tools\" → \"Tools\"\n\n### 4. 驗證\n- `node server/index.mjs` 正常啟動，無 MCP 相關 import error\n- `GET /api/tools` 仍正常回傳工具列表（不靠 MCP）\n- Chat 功能正常（agent-loop 不依賴 MCP）\n- UI 首頁顯示 \"Tools\" 而非 \"MCP Tools\"\n\n## 不需要動的\n- `server/tool-registry.mjs` — 保留，這是 direct tool 機制的核心\n- `server/tool-loader.mjs` — 保留，自動掃描 `tools/` 註冊\n- `tools/` 目錄下所有 handler — 保留，都是 direct implementation\n- `server/routes.mjs` — 保留，不直接引用 MCP",
-        "acceptanceCriteria": [
-          "3 個 MCP 檔案已刪除",
-          "server/index.mjs 啟動無 MCP import error",
-          "GET /api/tools 正常運作",
-          "Chat 功能正常",
-          "UI 不再顯示 MCP Tools 字樣",
-          "首頁測試通過"
-        ],
+        "description": "依 conversation.mjs 的 file-based 模式，實作 server/agent-store.mjs。Schema：{ id, name, description, context, agentRules, prompt, allowedTools[], schedule (cron expression 或 null 表示僅手動), notifyTarget: { targetType: \"user\"|\"channel\", targetId }, cooldownMinutes (可選，預設 30), enabled, createdAt, updatedAt }。存 agents/*.json，safeResolve 防 path traversal（比照 tool-loader 模式）。read-only export：listAgents, getAgent, saveAgent, deleteAgent。附 vitest 測試（server/agent-store.test.mjs）。注意：TaskStore 概念合一，本 store 是 TaskStore 的取代者。",
+        "acceptanceCriteria": [],
         "fileScope": [
-          "server/mcp-server.mjs",
-          "server/mcp-client.mjs",
-          "config/mcp-servers.example.json",
-          "server/index.mjs",
-          "ui/src/pages/HomePage.tsx",
-          "ui/src/pages/ToolsPage.tsx",
-          "ui/src/pages/HomePage.test.tsx"
+          "server/agent-store.mjs",
+          "server/agent-store.test.mjs",
+          "agents/"
         ],
         "outOfScope": []
       },
@@ -84,56 +105,39 @@
       },
       "testResult": null,
       "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
       "overnight": null
     },
     {
-      "id": "TASK-004",
-      "title": "Task 管理介面 — 新增/編輯 Task（含工具選擇、Agent 規則、Context、Prompt 設定）",
+      "id": "TASK-002",
+      "title": "[P1] /api/agents CRUD endpoints",
       "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
       "status": "open",
       "priority": "high",
-      "parentId": null,
-      "description": "## 需求概述\n\n建立一個 Task 管理介面，讓使用者可以：\n1. **新增 Task** — 定義一個可執行的 SRE 任務\n2. **選擇工具** — 從已註冊的 27 個 tool 中勾選這個 task 可以使用哪些\n3. **設定 Agent 規則** — guardrails、redirect rules、refuse topics\n4. **設定 Context** — 額外注入的專案背景知識\n5. **設定 Prompt** — system prompt / role prompt\n\nTask 的本質 = **一個 Agent 配置 + 可用工具集合 + 執行規則 + 排程設定**\n\n## 目前系統現況\n\n- **Agent/Crew 定義**：`crews/*.json`（6 個 agent，手動編輯 JSON）\n- **Tool 定義**：`tools/*/tools/*.json`（27 個 tool，已註冊在 toolRegistry）\n- **Agent 如何知道用哪些 tool**：crew JSON 裡的 `toolGroups` 欄位（如 `[\"core-read\", \"memory\", \"sre-prometheus\"]`）\n- **UI 現況**：Tasks 頁面目前是 Placeholder（`ui/src/pages/Placeholder.tsx`），顯示 \"Phase 6\"\n\n## Task 資料模型\n\n```jsonc\n{\n  \"id\": \"task.payment-health-check\",\n  \"name\": \"Payment Service 健康巡檢\",\n  \"description\": \"每 5 分鐘檢查 payment service 的 dashboard，異常時通知值班\",\n\n  // ── Agent 設定 ──\n  \"agent\": {\n    \"crewId\": \"sre.metrics\",           // 基於哪個既有 agent 角色\n    \"systemPrompt\": \"你是 Metrics...\", // 可覆寫 / 補充的 prompt\n    \"additionalContext\": \"Payment service 用 Go 寫的...\", // 額外 context\n    \"guardrails\": {\n      \"redirectRules\": \"查 log → 趙明軒\\n執行處置 → 黃志強\",\n      \"refuseTopics\": \"寫程式碼\\n架構設計\"\n    },\n    \"chatConfig\": {\n      \"temperature\": 0.3,\n      \"maxTokens\": 4096\n    }\n  },\n\n  // ── 可用工具 ──\n  \"tools\": [\n    \"grafana_list_dashboards\",\n    \"grafana_get_dashboard\",\n    \"grafana_query_panel\",\n    \"grafana_list_alerts\",\n    \"tchat_send\"\n  ],\n\n  // ── 排程（Phase B 才接上 Scheduler）──\n  \"schedule\": {\n    \"enabled\": true,\n    \"interval\": \"5m\",                   // 5m / 1h / 1d\n    \"cron\": \"\"                          // 進階用 cron（可選）\n  },\n\n  // ── 狀態 ──\n  \"status\": \"draft\",                    // draft / active / paused\n  \"lastRunAt\": null,\n  \"createdAt\": \"2026-08-02T...\"\n}\n```\n\n## 需要實作的內容\n\n### 1. Backend API（server/）\n\n| Endpoint | Method | 用途 |\n|---|---|---|\n| `/api/tasks` | GET | 列出所有 task |\n| `/api/tasks` | POST | 新增 task |\n| `/api/tasks/:id` | GET | 取得單一 task |\n| `/api/tasks/:id` | PUT | 更新 task |\n| `/api/tasks/:id` | DELETE | 刪除 task |\n| `/api/tasks/:id/run` | POST | 手動執行 task（Phase B） |\n\n**檔案：**\n- `server/task-store.mjs`（新）— Task 的 file-based CRUD（存 `tasks/*.json`，仿 `conversation.mjs` 模式）\n- `server/routes.mjs`（改）— 加上 6 個新 route\n\n### 2. Frontend UI（ui/src/）\n\n**取代現有的 Tasks Placeholder**，變成完整的 Task 管理介面：\n\n- `ui/src/pages/TasksPage.tsx`（新）— Task 列表 + 新增按鈕\n- `ui/src/pages/TaskEditor.tsx`（新）— Task 編輯器（表單）：\n  - **基本資訊**：名稱、描述\n  - **Agent 設定**：選擇 crew → 編輯 prompt / context / guardrails\n  - **工具選擇**：從 `/api/tools` 載入可用工具清單，checkbox 多選\n  - **排程設定**：開關 + interval 選擇\n- `ui/src/pages/TaskCard.tsx`（新）— Task 卡片（列表中每個 task 的顯示）\n- `ui/src/types.ts`（改）— 加上 Task 相關 type\n- `ui/src/App.tsx`（改）— Tasks 從 Placeholder 換成 TasksPage\n\n### 3. 儲存格式\n\nTask 存為 `tasks/*.json`，每個 task 一個檔案：\n```\ntasks/\n  task.payment-health-check.json\n  task.k8s-resource-audit.json\n  ...\n```\n\n## 驗收標準\n\n1. ✅ 可以在 UI 上點「新增 Task」打開編輯器\n2. ✅ 編輯器能選擇 Agent（下拉選現有 crew）\n3. ✅ 編輯器能從 27 個 tool 中勾選可用工具（按 provider 分組顯示）\n4. ✅ 可以編輯 system prompt、additional context、guardrails\n5. ✅ 可以設定排程（interval）\n6. ✅ 儲存後 task 出現在列表中\n7. ✅ 可以編輯已存在的 task\n8. ✅ 可以刪除 task\n9. ✅ Task JSON 正確存到 `tasks/*.json`\n10. ✅ 工具選擇時，已選工具在列表中高亮顯示\n",
+      "effort": null,
       "labels": [
-        "ui",
-        "task-management",
-        "phase-2"
+        "phase-1",
+        "api",
+        "ADR-003"
       ],
       "assignee": null,
-      "createdAt": "2026-08-02T09:34:30.139Z",
-      "updatedAt": "2026-08-02T09:34:30.139Z",
+      "description": "在 server/routes.mjs 加 GET /api/agents（列表）、POST /api/agents（建立，server 產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。錯誤處理沿用現有慣例：400（缺必填欄位：name、prompt）、404（id 不存在）、500（server error），error body { \"error\": \"...\" }。舊 /api/tasks endpoints 保留但回應加 \"deprecated\": true 標記（過渡期並存，之後移除）。agent 更新時通知 scheduler 重排（scheduler 尚未存在時以事件/callback hook 預留介面，本 task 只埋 call site）。附 routes.test.mjs 擴充。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.041Z",
+      "updatedAt": "2026-08-15T13:05:41.041Z",
+      "resolvedAt": null,
       "createdBy": "agent",
-      "source": {
-        "type": "manual"
-      },
-      "spec": {
-        "description": "## 需求概述\n\n建立一個 Task 管理介面，讓使用者可以：\n1. **新增 Task** — 定義一個可執行的 SRE 任務\n2. **選擇工具** — 從已註冊的 27 個 tool 中勾選這個 task 可以使用哪些\n3. **設定 Agent 規則** — guardrails、redirect rules、refuse topics\n4. **設定 Context** — 額外注入的專案背景知識\n5. **設定 Prompt** — system prompt / role prompt\n\nTask 的本質 = **一個 Agent 配置 + 可用工具集合 + 執行規則 + 排程設定**\n\n## 目前系統現況\n\n- **Agent/Crew 定義**：`crews/*.json`（6 個 agent，手動編輯 JSON）\n- **Tool 定義**：`tools/*/tools/*.json`（27 個 tool，已註冊在 toolRegistry）\n- **Agent 如何知道用哪些 tool**：crew JSON 裡的 `toolGroups` 欄位（如 `[\"core-read\", \"memory\", \"sre-prometheus\"]`）\n- **UI 現況**：Tasks 頁面目前是 Placeholder（`ui/src/pages/Placeholder.tsx`），顯示 \"Phase 6\"\n\n## Task 資料模型\n\n```jsonc\n{\n  \"id\": \"task.payment-health-check\",\n  \"name\": \"Payment Service 健康巡檢\",\n  \"description\": \"每 5 分鐘檢查 payment service 的 dashboard，異常時通知值班\",\n\n  // ── Agent 設定 ──\n  \"agent\": {\n    \"crewId\": \"sre.metrics\",           // 基於哪個既有 agent 角色\n    \"systemPrompt\": \"你是 Metrics...\", // 可覆寫 / 補充的 prompt\n    \"additionalContext\": \"Payment service 用 Go 寫的...\", // 額外 context\n    \"guardrails\": {\n      \"redirectRules\": \"查 log → 趙明軒\\n執行處置 → 黃志強\",\n      \"refuseTopics\": \"寫程式碼\\n架構設計\"\n    },\n    \"chatConfig\": {\n      \"temperature\": 0.3,\n      \"maxTokens\": 4096\n    }\n  },\n\n  // ── 可用工具 ──\n  \"tools\": [\n    \"grafana_list_dashboards\",\n    \"grafana_get_dashboard\",\n    \"grafana_query_panel\",\n    \"grafana_list_alerts\",\n    \"tchat_send\"\n  ],\n\n  // ── 排程（Phase B 才接上 Scheduler）──\n  \"schedule\": {\n    \"enabled\": true,\n    \"interval\": \"5m\",                   // 5m / 1h / 1d\n    \"cron\": \"\"                          // 進階用 cron（可選）\n  },\n\n  // ── 狀態 ──\n  \"status\": \"draft\",                    // draft / active / paused\n  \"lastRunAt\": null,\n  \"createdAt\": \"2026-08-02T...\"\n}\n```\n\n## 需要實作的內容\n\n### 1. Backend API（server/）\n\n| Endpoint | Method | 用途 |\n|---|---|---|\n| `/api/tasks` | GET | 列出所有 task |\n| `/api/tasks` | POST | 新增 task |\n| `/api/tasks/:id` | GET | 取得單一 task |\n| `/api/tasks/:id` | PUT | 更新 task |\n| `/api/tasks/:id` | DELETE | 刪除 task |\n| `/api/tasks/:id/run` | POST | 手動執行 task（Phase B） |\n\n**檔案：**\n- `server/task-store.mjs`（新）— Task 的 file-based CRUD（存 `tasks/*.json`，仿 `conversation.mjs` 模式）\n- `server/routes.mjs`（改）— 加上 6 個新 route\n\n### 2. Frontend UI（ui/src/）\n\n**取代現有的 Tasks Placeholder**，變成完整的 Task 管理介面：\n\n- `ui/src/pages/TasksPage.tsx`（新）— Task 列表 + 新增按鈕\n- `ui/src/pages/TaskEditor.tsx`（新）— Task 編輯器（表單）：\n  - **基本資訊**：名稱、描述\n  - **Agent 設定**：選擇 crew → 編輯 prompt / context / guardrails\n  - **工具選擇**：從 `/api/tools` 載入可用工具清單，checkbox 多選\n  - **排程設定**：開關 + interval 選擇\n- `ui/src/pages/TaskCard.tsx`（新）— Task 卡片（列表中每個 task 的顯示）\n- `ui/src/types.ts`（改）— 加上 Task 相關 type\n- `ui/src/App.tsx`（改）— Tasks 從 Placeholder 換成 TasksPage\n\n### 3. 儲存格式\n\nTask 存為 `tasks/*.json`，每個 task 一個檔案：\n```\ntasks/\n  task.payment-health-check.json\n  task.k8s-resource-audit.json\n  ...\n```\n\n## 驗收標準\n\n1. ✅ 可以在 UI 上點「新增 Task」打開編輯器\n2. ✅ 編輯器能選擇 Agent（下拉選現有 crew）\n3. ✅ 編輯器能從 27 個 tool 中勾選可用工具（按 provider 分組顯示）\n4. ✅ 可以編輯 system prompt、additional context、guardrails\n5. ✅ 可以設定排程（interval）\n6. ✅ 儲存後 task 出現在列表中\n7. ✅ 可以編輯已存在的 task\n8. ✅ 可以刪除 task\n9. ✅ Task JSON 正確存到 `tasks/*.json`\n10. ✅ 工具選擇時，已選工具在列表中高亮顯示\n",
-        "acceptanceCriteria": [
-          "UI 上可新增 Task，打開編輯器",
-          "編輯器能下拉選擇現有 crew 作為 Agent",
-          "編輯器能從 /api/tools 載入全部工具，按 provider 分組 checkbox 多選",
-          "可編輯 system prompt / additional context / guardrails",
-          "可設定排程 interval",
-          "儲存後 task 存成 tasks/*.json，列表顯示",
-          "可編輯、刪除已存在的 task",
-          "已選工具在工具清單中高亮標示"
-        ],
-        "fileScope": [
-          "server/task-store.mjs",
-          "server/routes.mjs",
-          "ui/src/pages/TasksPage.tsx",
-          "ui/src/pages/TaskEditor.tsx",
-          "ui/src/pages/TaskCard.tsx",
-          "ui/src/types.ts",
-          "ui/src/App.tsx"
-        ],
-        "outOfScope": []
-      },
       "pipeline": {
         "spec": {
           "status": "done",
           "by": "agent",
-          "at": "2026-08-02T09:34:30.139Z"
+          "at": "2026-08-15T13:05:41.041Z"
         },
         "implement": {
           "status": "pending"
@@ -154,6 +158,25 @@
           "status": "pending"
         }
       },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "在 server/routes.mjs 加 GET /api/agents（列表）、POST /api/agents（建立，server 產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。錯誤處理沿用現有慣例：400（缺必填欄位：name、prompt）、404（id 不存在）、500（server error），error body { \"error\": \"...\" }。舊 /api/tasks endpoints 保留但回應加 \"deprecated\": true 標記（過渡期並存，之後移除）。agent 更新時通知 scheduler 重排（scheduler 尚未存在時以事件/callback hook 預留介面，本 task 只埋 call site）。附 routes.test.mjs 擴充。",
+        "acceptanceCriteria": [
+          "GET /api/agents 回傳完整列表",
+          "POST/PUT 有驗證（缺 name 或 prompt 回 400 + {error})",
+          "PUT/DELETE 不存在的 id 回 404",
+          "GET /api/tasks 仍可用但回應含 deprecated 標記",
+          "routes.test.mjs 全綠"
+        ],
+        "fileScope": [
+          "server/routes.mjs",
+          "server/routes.test.mjs"
+        ],
+        "outOfScope": []
+      },
       "changes": {
         "filesAdded": [],
         "filesModified": [],
@@ -165,9 +188,1113 @@
         "staged": false,
         "committedSha": null
       },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-003",
+      "title": "[P1] TaskManagementPage 升級為 AgentsPage",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "medium",
+      "effort": null,
+      "labels": [
+        "phase-1",
+        "ui",
+        "ADR-003"
+      ],
+      "assignee": null,
+      "description": "升級 ui/src/pages/TaskManagementPage.tsx 成 AgentsPage：欄位擴充 schedule（cron 輸入 + 說明提示）、notifyTarget（targetType select + targetId）、cooldownMinutes、enabled toggle。頁面與 sidebar 選單文字從 Task 改為 Agent。沿用現有 Field/LinesField/ToolPicker 元件模式與 Tailwind 樣式慣例。串接新 /api/agents endpoints。",
+      "relatedFiles": [],
       "notes": [],
-      "discussion": []
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.042Z",
+      "updatedAt": "2026-08-15T13:05:41.042Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.042Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "升級 ui/src/pages/TaskManagementPage.tsx 成 AgentsPage：欄位擴充 schedule（cron 輸入 + 說明提示）、notifyTarget（targetType select + targetId）、cooldownMinutes、enabled toggle。頁面與 sidebar 選單文字從 Task 改為 Agent。沿用現有 Field/LinesField/ToolPicker 元件模式與 Tailwind 樣式慣例。串接新 /api/agents endpoints。",
+        "acceptanceCriteria": [
+          "可建立含 schedule/notifyTarget/enabled 的 agent",
+          "enabled 有明顯開關切換",
+          "表單驗證與 API 400 錯誤有顯示",
+          "現有 TaskManagementPage 測試更新後全綠"
+        ],
+        "fileScope": [
+          "ui/src/pages/TaskManagementPage.tsx",
+          "ui/src/components/Sidebar.tsx",
+          "ui/src/App.tsx"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-004",
+      "title": "[P2] run-store.mjs + /api/runs 查詢 endpoints",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "high",
+      "effort": null,
+      "labels": [
+        "phase-2",
+        "run-history",
+        "ADR-003"
+      ],
+      "assignee": null,
+      "description": "server/run-store.mjs：每次執行存 runs/&lt;agentId&gt;/&lt;timestamp&gt;.json。記錄：{ id, agentId, status: \"running\"|\"success\"|\"failed\", startedAt, finishedAt, durationMs, summary（LLM 最終結論摘要）, notified: true/false/null（null=未觸發通知場景）, notifyError（tchat 失敗時的錯誤）, fingerprint（異常指紋，供 cooldown 用）, error, toolCalls 摘要（名稱+耗時，不含參數內容避免存 secret） }。API：GET /api/runs?agentId=&amp;limit=（列表回摘要不含完整輸出）、GET /api/runs/:id（完整）。run 檔案保留策略：每 agent 保留最近 200 瀏覽run，超過刪最舊。附測試。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.043Z",
+      "updatedAt": "2026-08-15T13:05:41.043Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.043Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "server/run-store.mjs：每次執行存 runs/&lt;agentId&gt;/&lt;timestamp&gt;.json。記錄：{ id, agentId, status: \"running\"|\"success\"|\"failed\", startedAt, finishedAt, durationMs, summary（LLM 最終結論摘要）, notified: true/false/null（null=未觸發通知場景）, notifyError（tchat 失敗時的錯誤）, fingerprint（異常指紋，供 cooldown 用）, error, toolCalls 摘要（名稱+耗時，不含參數內容避免存 secret） }。API：GET /api/runs?agentId=&amp;limit=（列表回摘要不含完整輸出）、GET /api/runs/:id（完整）。run 檔案保留策略：每 agent 保留最近 200 瀏覽run，超過刪最舊。附測試。",
+        "acceptanceCriteria": [
+          "每次 run 落一個 runs/<agentId>/<ts>.json",
+          "run 記錄含 status/duration/summary/notified/fingerprint",
+          "GET /api/runs?agentId= 過濾正確",
+          "GET /api/runs/:id 回完整記錄",
+          "並發寫入不互相覆蓋"
+        ],
+        "fileScope": [
+          "server/run-store.mjs",
+          "server/run-store.test.mjs",
+          "server/routes.mjs"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-005",
+      "title": "[P2] scheduler.mjs — node-cron 排程引擎",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "high",
+      "effort": null,
+      "labels": [
+        "phase-2",
+        "scheduler",
+        "ADR-003"
+      ],
+      "assignee": null,
+      "description": "server/scheduler.mjs：用 node-cron（新增 devDependency）。startScheduler() 在 server/index.mjs 啟動時：讀取所有 enabled 且 schedule 非空的 agent 註冊 cron job。到點執行：getAgent → 組裝 crew 物件（prompt/context/agentRules/allowedTools，比照 crew-loader 產出的形狀，確保能餵進現有 runAgentLoop）→ 執行 → 寫 run-store。約束：1) 同一 agent 同時只跑一個 run（in-flight map 擋重入）；2) 單次 run timeout 5 分鐘，超時記 failed；3) agent 被 PUT/DELETE 時動態重排（由 T2 埋的 hook 呼叫 rescheduleAgent/rescheduleAll）；4) agent loop 的 system prompt 注入 notifyTarget 資訊讓 LLM 知道通知目標。附 vitest 測試（fake timers）。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.044Z",
+      "updatedAt": "2026-08-15T13:05:41.044Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.044Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "server/scheduler.mjs：用 node-cron（新增 devDependency）。startScheduler() 在 server/index.mjs 啟動時：讀取所有 enabled 且 schedule 非空的 agent 註冊 cron job。到點執行：getAgent → 組裝 crew 物件（prompt/context/agentRules/allowedTools，比照 crew-loader 產出的形狀，確保能餵進現有 runAgentLoop）→ 執行 → 寫 run-store。約束：1) 同一 agent 同時只跑一個 run（in-flight map 擋重入）；2) 單次 run timeout 5 分鐘，超時記 failed；3) agent 被 PUT/DELETE 時動態重排（由 T2 埋的 hook 呼叫 rescheduleAgent/rescheduleAll）；4) agent loop 的 system prompt 注入 notifyTarget 資訊讓 LLM 知道通知目標。附 vitest 測試（fake timers）。",
+        "acceptanceCriteria": [
+          "新增依賴 node-cron 並在 index.mjs 初始化",
+          "enabled 且有 schedule 的 agent 到點執行",
+          "PUT/DELETE agent 後排程即時反映",
+          "同 agent 進行中不會併發重入",
+          "超過 5 分鐘的 run 標記 failed",
+          "fake timer 測試覆蓋觸發與重排"
+        ],
+        "fileScope": [
+          "server/scheduler.mjs",
+          "server/scheduler.test.mjs",
+          "server/index.mjs",
+          "package.json"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-006",
+      "title": "[P2] POST /api/agents/:id/run 手動觸發",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "medium",
+      "effort": null,
+      "labels": [
+        "phase-2",
+        "api",
+        "ADR-003"
+      ],
+      "assignee": null,
+      "description": "routes.mjs 加 POST /api/agents/:id/run：立即以 scheduler 同款的執行路徑跑一次（不經 cron 排程、不受 enabled 限制），回 202 + { runId }。供 UI「立即測試」按鈕與驗收 demo 使用。若該 agent 已有 run 進行中，回 409 { error: \"agent is already running\" }。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.046Z",
+      "updatedAt": "2026-08-15T13:05:41.046Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.046Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "routes.mjs 加 POST /api/agents/:id/run：立即以 scheduler 同款的執行路徑跑一次（不經 cron 排程、不受 enabled 限制），回 202 + { runId }。供 UI「立即測試」按鈕與驗收 demo 使用。若該 agent 已有 run 進行中，回 409 { error: \"agent is already running\" }。",
+        "acceptanceCriteria": [
+          "回傳 202 + runId",
+          "agent 不存在回 404",
+          "可從 GET /api/runs/:id 查到結果",
+          "不經 cron 直接執行成功"
+        ],
+        "fileScope": [
+          "server/routes.mjs",
+          "server/routes.test.mjs"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-007",
+      "title": "[M] tchat transport 抽層 + 契約 v0（ports &amp; adapters）",
+      "type": "refactor",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "high",
+      "effort": null,
+      "labels": [
+        "mock-infra",
+        "tchat",
+        "ADR-004"
+      ],
+      "assignee": null,
+      "description": "依 ADR-004 拆 tools/tchat/handler.mjs：(1) 工具層 tchat_send_message({ targetType: \"user\"|\"channel\", targetId, text }) 保持 LLM 介面不變，負責驗證與錯誤格式化；(2) 新增 tools/tchat/client.mjs transport 層實作契約 v0：POST {api_url}/api/messages，body { targetType, targetId, text }，200 { ok: true, messageId } / 4xx-5xx { ok: false, error }。config.json 支援 api_url 欄位。tchat_read_history 與 tchat_next_unread 標記 deprecated（schema description 加註，功能保留但契約未定），本期不納入契約。契約文件寫 specs/tchat-contract.md（含進公司 swap 清單：僅換 client.mjs + config）。重構 handler 現有測試並補 client 層測試（可用 mock server 或 fetch stub）。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.047Z",
+      "updatedAt": "2026-08-15T13:05:41.047Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.047Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "依 ADR-004 拆 tools/tchat/handler.mjs：(1) 工具層 tchat_send_message({ targetType: \"user\"|\"channel\", targetId, text }) 保持 LLM 介面不變，負責驗證與錯誤格式化；(2) 新增 tools/tchat/client.mjs transport 層實作契約 v0：POST {api_url}/api/messages，body { targetType, targetId, text }，200 { ok: true, messageId } / 4xx-5xx { ok: false, error }。config.json 支援 api_url 欄位。tchat_read_history 與 tchat_next_unread 標記 deprecated（schema description 加註，功能保留但契約未定），本期不納入契約。契約文件寫 specs/tchat-contract.md（含進公司 swap 清單：僅換 client.mjs + config）。重構 handler 現有測試並補 client 層測試（可用 mock server 或 fetch stub）。",
+        "acceptanceCriteria": [],
+        "fileScope": [
+          "tools/tchat/handler.mjs",
+          "tools/tchat/client.mjs",
+          "tools/tchat/config.json",
+          "specs/tchat-contract.md"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-008",
+      "title": "[M] Grafana mock server（dev fixture）",
+      "type": "chore",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "high",
+      "effort": null,
+      "labels": [
+        "mock-infra",
+        "grafana",
+        "dev-fixture"
+      ],
+      "assignee": null,
+      "description": "dev/mocks/grafana-mock.mjs：標準 Node http server（port 3001），實作 grafana handler 用到的 endpoint：GET /api/search、GET /api/dashboards/uid/:uid、POST /api/ds/query、GET /api/prometheus/grafana/api/v1/rules（alerts）、GET /api/datasources。回 canned 資料（2-3 個 dashboard、panels、metric 序列）。核心：POST /__scenario { \"name\": \"healthy\" | \"firing\" | \"api-error\" | \"slow\" } 切換情境 — firing 讓 rules endpoint 回 firing 狀態的 alert、api-error 回 500、slow 延遲 8s。package.json 加 script：npm run mock:grafana。屬 dev fixture，不進 production 路徑。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.048Z",
+      "updatedAt": "2026-08-15T13:05:41.048Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.048Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "dev/mocks/grafana-mock.mjs：標準 Node http server（port 3001），實作 grafana handler 用到的 endpoint：GET /api/search、GET /api/dashboards/uid/:uid、POST /api/ds/query、GET /api/prometheus/grafana/api/v1/rules（alerts）、GET /api/datasources。回 canned 資料（2-3 個 dashboard、panels、metric 序列）。核心：POST /__scenario { \"name\": \"healthy\" | \"firing\" | \"api-error\" | \"slow\" } 切換情境 — firing 讓 rules endpoint 回 firing 狀態的 alert、api-error 回 500、slow 延遲 8s。package.json 加 script：npm run mock:grafana。屬 dev fixture，不進 production 路徑。",
+        "acceptanceCriteria": [
+          "五個 endpoint 回應格式符合 Grafana API",
+          "POST /__scenario 切換情境立即生效",
+          "四種情境（healthy/firing/api-error/slow）皆可切換",
+          "npm run mock:grafana 可啟動於 3001"
+        ],
+        "fileScope": [
+          "dev/mocks/grafana-mock.mjs",
+          "package.json"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-009",
+      "title": "[M] tchat mock server（照契約 v0）",
+      "type": "chore",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "medium",
+      "effort": null,
+      "labels": [
+        "mock-infra",
+        "tchat",
+        "ADR-004",
+        "dev-fixture"
+      ],
+      "assignee": null,
+      "description": "dev/mocks/tchat-mock.mjs：port 3002，實作契約 v0 的 POST /api/messages（回 { ok: true, messageId }）。每筆收到的訊息 append 到 dev/mocks/tchat-sent.jsonl（{ ts, targetType, targetId, text }）— 驗證 agent 通知行為就是讀這個檔。POST /__scenario 支援：ok（正常）、reject（回 4xx 模擬公司 API 拒絕）、down（不回應模擬斷線）— 用於驗證 run 記錄 notifyError 路徑。package.json 加 npm run mock:tchat。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.049Z",
+      "updatedAt": "2026-08-15T13:05:41.049Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.049Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "dev/mocks/tchat-mock.mjs：port 3002，實作契約 v0 的 POST /api/messages（回 { ok: true, messageId }）。每筆收到的訊息 append 到 dev/mocks/tchat-sent.jsonl（{ ts, targetType, targetId, text }）— 驗證 agent 通知行為就是讀這個檔。POST /__scenario 支援：ok（正常）、reject（回 4xx 模擬公司 API 拒絕）、down（不回應模擬斷線）— 用於驗證 run 記錄 notifyError 路徑。package.json 加 npm run mock:tchat。",
+        "acceptanceCriteria": [
+          "POST /api/messages 依契約 v0 格式互動",
+          "訊息落 tchat-sent.jsonl 可供驗收讀取",
+          "ok/reject/down 三情境可切換",
+          "npm run mock:tchat 可啟動於 3002"
+        ],
+        "fileScope": [
+          "dev/mocks/tchat-mock.mjs",
+          "package.json"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-010",
+      "title": "[P2] Watchdog 範本 agent（seed + 驗收）",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "high",
+      "effort": null,
+      "labels": [
+        "phase-2",
+        "watchdog",
+        "ADR-003",
+        "ADR-004"
+      ],
+      "assignee": null,
+      "description": "建立第一個 watchdog agent（agents/ 目錄 seed 一個範例 JSON + 文件說明）。allowedTools: grafana 系列 + tchat_send_message。context 寫明判斷準則：以 Grafana alerts API 客觀狀態為準（state=firing 才通知，pending 僅觀察並記錄），LLM 負責綜合與措辭，不憑 metric 單點猜測。prompt 教流程：grafana_list_alerts →（必要時 grafana_query 補細節）→ 判斷 → 異常時 tchat_send_message 到 notifyTarget（targetType/targetId 由 system 注入，LLM 只需引用）。schedule 例：*/5 * * * *。驗收流程（全 mock）：切 healthy→run 綠燈且 tchat-sent.jsonl 無新訊息；切 firing→通知送達 jsonl。依賴 T4/T5/T6/T-M1/T-M2/T-M3 全部完成。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.050Z",
+      "updatedAt": "2026-08-15T13:05:41.050Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.050Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "建立第一個 watchdog agent（agents/ 目錄 seed 一個範例 JSON + 文件說明）。allowedTools: grafana 系列 + tchat_send_message。context 寫明判斷準則：以 Grafana alerts API 客觀狀態為準（state=firing 才通知，pending 僅觀察並記錄），LLM 負責綜合與措辭，不憑 metric 單點猜測。prompt 教流程：grafana_list_alerts →（必要時 grafana_query 補細節）→ 判斷 → 異常時 tchat_send_message 到 notifyTarget（targetType/targetId 由 system 注入，LLM 只需引用）。schedule 例：*/5 * * * *。驗收流程（全 mock）：切 healthy→run 綠燈且 tchat-sent.jsonl 無新訊息；切 firing→通知送達 jsonl。依賴 T4/T5/T6/T-M1/T-M2/T-M3 全部完成。",
+        "acceptanceCriteria": [
+          "healthy 情境 run 為 success 且 tchat-sent.jsonl 無新訊息",
+          "firing 情境 run 通知且 jsonl 有訊息",
+          "整流程零真實 infra 依賴",
+          "seed 檔可直接複製到 agents/ 啟用"
+        ],
+        "fileScope": [
+          "agents/watchdog.example.json",
+          "docs/watchdog-setup.md"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-011",
+      "title": "[P3] datasource-store.mjs + /api/datasources CRUD（key mask）",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "medium",
+      "effort": null,
+      "labels": [
+        "phase-3",
+        "datasource",
+        "secrets"
+      ],
+      "assignee": null,
+      "description": "server/datasource-store.mjs + routes：管理 datasource 設定（例 grafana: { url, token }），存 datasources/*.json。API：GET /api/datasources 回傳時 token 一律 mask 成 ***（永不回明文）、POST/PUT 寫入明文、PUT 若 token 欄為 *** 或缺空則保留原值不覆蓋。串接：datasource 變更時同步更新對應 tools/&lt;name&gt;/config.json（grafana handler 讀的是該檔）。secret 不寫進 run log、不進 agent prompt。⚠️ 前置：T12 API auth 必須先完成（本 endpoint 管理 secrets）。附測試。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.051Z",
+      "updatedAt": "2026-08-15T13:05:41.051Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.051Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "server/datasource-store.mjs + routes：管理 datasource 設定（例 grafana: { url, token }），存 datasources/*.json。API：GET /api/datasources 回傳時 token 一律 mask 成 ***（永不回明文）、POST/PUT 寫入明文、PUT 若 token 欄為 *** 或缺空則保留原值不覆蓋。串接：datasource 變更時同步更新對應 tools/&lt;name&gt;/config.json（grafana handler 讀的是該檔）。secret 不寫進 run log、不進 agent prompt。⚠️ 前置：T12 API auth 必須先完成（本 endpoint 管理 secrets）。附測試。",
+        "acceptanceCriteria": [
+          "API key 任何回應路徑都不出現明文",
+          "未改 key 的更新不覆蓋原值",
+          "CRUD 全綠含 mask 驗證測試",
+          "tool config 變更後 handler 讀到新值"
+        ],
+        "fileScope": [
+          "server/datasource-store.mjs",
+          "server/datasource-store.test.mjs",
+          "server/routes.mjs"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-012",
+      "title": "[P3] DatasourcesPage UI",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "low",
+      "effort": null,
+      "labels": [
+        "phase-3",
+        "ui"
+      ],
+      "assignee": null,
+      "description": "ui/src/pages/ 新增 DatasourcesPage：列表（名稱/type/url/token 顯示 ***）、新增、編輯（token 欄留空或 *** 表示不變更）、刪除（confirm 對話框）。註冊進 sidebar 導覽。沿用現有 Tailwind 慣例。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.053Z",
+      "updatedAt": "2026-08-15T13:05:41.053Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.053Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "ui/src/pages/ 新增 DatasourcesPage：列表（名稱/type/url/token 顯示 ***）、新增、編輯（token 欄留空或 *** 表示不變更）、刪除（confirm 對話框）。註冊進 sidebar 導覽。沿用現有 Tailwind 慣例。",
+        "acceptanceCriteria": [
+          "列表/新增/編輯/刪除可用",
+          "token 欄永遠顯示 *** 不可見明文",
+          "編輯不改 token 時原值保留",
+          "串接 /api/datasources 全綠"
+        ],
+        "fileScope": [
+          "ui/src/pages/DatasourcesPage.tsx",
+          "ui/src/components/Sidebar.tsx",
+          "ui/src/App.tsx"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-013",
+      "title": "[P3] Cooldown / fingerprint 防重複通知",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "medium",
+      "effort": null,
+      "labels": [
+        "phase-3",
+        "cooldown",
+        "ADR-003"
+      ],
+      "assignee": null,
+      "description": "run 結果產生 alert fingerprint（例：sorting 過的 alert names+state 雜湊）。通知前檢查：同 agent 同 fingerprint 若在 cooldownMinutes（agent 可覆寫，預設 30）內已通知過，跳過 tchat 發送並在 run 記 notified: false, skippedByCooldown: true。fingerprint 狀態存 runs/ 目錄旁（例 runs/&lt;agentId&gt;/cooldown-state.json，重啟存活）。實作位置：scheduler 執行路徑（包在 runAgentLoop 外圍，非改 agent-loop 本身）。驗收用 mock：firing 連跑兩次 → 第二次 jsonl 無新訊息；過 cooldown 再跑 → 重新通知。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.054Z",
+      "updatedAt": "2026-08-15T13:05:41.054Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.054Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "run 結果產生 alert fingerprint（例：sorting 過的 alert names+state 雜湊）。通知前檢查：同 agent 同 fingerprint 若在 cooldownMinutes（agent 可覆寫，預設 30）內已通知過，跳過 tchat 發送並在 run 記 notified: false, skippedByCooldown: true。fingerprint 狀態存 runs/ 目錄旁（例 runs/&lt;agentId&gt;/cooldown-state.json，重啟存活）。實作位置：scheduler 執行路徑（包在 runAgentLoop 外圍，非改 agent-loop 本身）。驗收用 mock：firing 連跑兩次 → 第二次 jsonl 無新訊息；過 cooldown 再跑 → 重新通知。",
+        "acceptanceCriteria": [
+          "firing 連跑兩次只有第一次通知",
+          "cooldown 過後同 fingerprint 重新通知",
+          "不同 fingerprint 不互相干擾",
+          "記錄 notified:false/skippedByCooldown"
+        ],
+        "fileScope": [
+          "server/scheduler.mjs",
+          "server/scheduler.test.mjs"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-014",
+      "title": "[P3] RunsPage UI — 執行歷史檢視",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "medium",
+      "effort": null,
+      "labels": [
+        "phase-3",
+        "ui"
+      ],
+      "assignee": null,
+      "description": "ui/src/pages/ 新增 RunsPage：GET /api/runs 列表（時間、agent 名、status badge、耗時、notified 欄）、按 agent 過濾、點單筆展開 GET /api/runs/:id 完整記錄（summary、tool call 摘要、notifyError、error）。StatusBadge 元件可沿用/擴充現有 ui/src/components/StatusBadge.tsx。failed 與 notifyError 要有明顯紅色警示。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.055Z",
+      "updatedAt": "2026-08-15T13:05:41.055Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.055Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "ui/src/pages/ 新增 RunsPage：GET /api/runs 列表（時間、agent 名、status badge、耗時、notified 欄）、按 agent 過濾、點單筆展開 GET /api/runs/:id 完整記錄（summary、tool call 摘要、notifyError、error）。StatusBadge 元件可沿用/擴充現有 ui/src/components/StatusBadge.tsx。failed 與 notifyError 要有明顯紅色警示。",
+        "acceptanceCriteria": [
+          "列表欄位齊全且最新在前",
+          "點列展開完整輸出與 tool call 摘要",
+          "failed/notifyError 有明顯紅色標示",
+          "未觸發通知顯示中性樣式"
+        ],
+        "fileScope": [
+          "ui/src/pages/RunsPage.tsx",
+          "ui/src/components/StatusBadge.tsx",
+          "ui/src/App.tsx"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
+    },
+    {
+      "id": "TASK-015",
+      "title": "[X] API auth — X-API-Token（T8 之前必須完成）",
+      "type": "feature",
+      "parentId": null,
+      "linkedIssueId": null,
+      "status": "open",
+      "priority": "high",
+      "effort": null,
+      "labels": [
+        "security",
+        "auth",
+        "phase-3"
+      ],
+      "assignee": null,
+      "description": "⚠️ 前置於 T8（datasource CRUD 管理 secrets）。最小可行方案：所有 /api/* 加 X-API-Token header 檢查（值從 env AGENT_SRE_API_TOKEN 讀），用 crypto.timingSafeEqual 常數時間比對，失敗回 401 { error }。UI 端把 token 存 localStorage 並在 fetch wrapper 統一帶上（ui/src 內集中一個 api client 模組）。未設 env 時 server 啟動 log 明確警告（本地開發模式）。優先序理由：T8 起 API 具備讀寫 secret 能力，任何非 localhost 暴露都必須先有 auth。",
+      "relatedFiles": [],
+      "notes": [],
+      "executionResult": null,
+      "timeoutSeconds": 0,
+      "createdAt": "2026-08-15T13:05:41.057Z",
+      "updatedAt": "2026-08-15T13:05:41.057Z",
+      "resolvedAt": null,
+      "createdBy": "agent",
+      "pipeline": {
+        "spec": {
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-15T13:05:41.057Z"
+        },
+        "implement": {
+          "status": "pending"
+        },
+        "review": {
+          "status": "pending"
+        },
+        "test": {
+          "status": "pending"
+        },
+        "qa": {
+          "status": "pending"
+        },
+        "docs": {
+          "status": "pending"
+        },
+        "commit": {
+          "status": "pending"
+        }
+      },
+      "loopModeOverride": null,
+      "source": {
+        "type": "manual"
+      },
+      "spec": {
+        "description": "⚠️ 前置於 T8（datasource CRUD 管理 secrets）。最小可行方案：所有 /api/* 加 X-API-Token header 檢查（值從 env AGENT_SRE_API_TOKEN 讀），用 crypto.timingSafeEqual 常數時間比對，失敗回 401 { error }。UI 端把 token 存 localStorage 並在 fetch wrapper 統一帶上（ui/src 內集中一個 api client 模組）。未設 env 時 server 啟動 log 明確警告（本地開發模式）。優先序理由：T8 起 API 具備讀寫 secret 能力，任何非 localhost 暴露都必須先有 auth。",
+        "acceptanceCriteria": [
+          "無 token 請求回 401 { error }",
+          "X-API-Token 正確時全 API 可用",
+          "常數時間比對（timing safe）",
+          "現有測試補 token header 後全綠"
+        ],
+        "fileScope": [
+          "server/routes.mjs",
+          "server/routes.test.mjs",
+          "ui/src/api.ts"
+        ],
+        "outOfScope": []
+      },
+      "changes": {
+        "filesAdded": [],
+        "filesModified": [],
+        "filesDeleted": []
+      },
+      "git": {
+        "baseCommit": null,
+        "branch": null,
+        "staged": false,
+        "committedSha": null
+      },
+      "testResult": null,
+      "qaResult": null,
+      "docsResult": null,
+      "repairLoop": null,
+      "overnight": null
     }
   ],
-  "updatedAt": "2026-08-02T09:34:30.139Z"
+  "updatedAt": "2026-08-15T14:06:45.952Z",
+  "loopMode": "mini"
 }

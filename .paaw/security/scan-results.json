@@ -51,9 +51,9 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 24,
+      "line": 33,
       "column": 30,
-      "endLine": 24,
+      "endLine": 33,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -71,9 +71,9 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 25,
+      "line": 34,
       "column": 27,
-      "endLine": 25,
+      "endLine": 34,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -91,9 +91,9 @@
       ],
       "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 26,
+      "line": 35,
       "column": 19,
-      "endLine": 26,
+      "endLine": 35,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -110,29 +110,9 @@
         "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
-      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 28,
-      "column": 42,
-      "endLine": 28,
-      "snippet": "requires login",
-      "fix": null,
-      "references": [
-        "https://owasp.org/www-community/attacks/Path_Traversal"
-      ]
-    },
-    {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.path-traversal.path-join-resolve-traversal",
-      "severity": "WARNING",
-      "rawSeverity": "WARNING",
-      "confidence": "LOW",
-      "category": "security",
-      "cwe": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
       "line": 37,
-      "column": 30,
+      "column": 42,
       "endLine": 37,
       "snippet": "requires login",
       "fix": null,
@@ -141,26 +121,6 @@
       ]
     },
     {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
-      "severity": "WARNING",
-      "rawSeverity": "WARNING",
-      "confidence": "LOW",
-      "category": "security",
-      "cwe": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
-      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 39,
-      "column": 17,
-      "endLine": 39,
-      "snippet": "requires login",
-      "fix": null,
-      "references": [
-        "https://owasp.org/www-community/attacks/Path_Traversal"
-      ]
-    },
-    {
       "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.path-traversal.path-join-resolve-traversal",
       "severity": "WARNING",
       "rawSeverity": "WARNING",
@@ -171,49 +131,9 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 39,
-      "column": 22,
-      "endLine": 39,
-      "snippet": "requires login",
-      "fix": null,
-      "references": [
-        "https://owasp.org/www-community/attacks/Path_Traversal"
-      ]
-    },
-    {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.path-traversal.path-join-resolve-traversal",
-      "severity": "WARNING",
-      "rawSeverity": "WARNING",
-      "confidence": "LOW",
-      "category": "security",
-      "cwe": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
-      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 44,
+      "line": 47,
       "column": 30,
-      "endLine": 44,
-      "snippet": "requires login",
-      "fix": null,
-      "references": [
-        "https://owasp.org/www-community/attacks/Path_Traversal"
-      ]
-    },
-    {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.path-traversal.path-join-resolve-traversal",
-      "severity": "WARNING",
-      "rawSeverity": "WARNING",
-      "confidence": "LOW",
-      "category": "security",
-      "cwe": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
-      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 45,
-      "column": 27,
-      "endLine": 45,
+      "endLine": 47,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -231,9 +151,9 @@
       ],
       "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 46,
-      "column": 19,
-      "endLine": 46,
+      "line": 49,
+      "column": 17,
+      "endLine": 49,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -252,68 +172,8 @@
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
       "line": 49,
-      "column": 28,
+      "column": 22,
       "endLine": 49,
-      "snippet": "requires login",
-      "fix": null,
-      "references": [
-        "https://owasp.org/www-community/attacks/Path_Traversal"
-      ]
-    },
-    {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
-      "severity": "WARNING",
-      "rawSeverity": "WARNING",
-      "confidence": "LOW",
-      "category": "security",
-      "cwe": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
-      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 51,
-      "column": 31,
-      "endLine": 51,
-      "snippet": "requires login",
-      "fix": null,
-      "references": [
-        "https://owasp.org/www-community/attacks/Path_Traversal"
-      ]
-    },
-    {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
-      "severity": "WARNING",
-      "rawSeverity": "WARNING",
-      "confidence": "LOW",
-      "category": "security",
-      "cwe": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
-      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 52,
-      "column": 19,
-      "endLine": 52,
-      "snippet": "requires login",
-      "fix": null,
-      "references": [
-        "https://owasp.org/www-community/attacks/Path_Traversal"
-      ]
-    },
-    {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
-      "severity": "WARNING",
-      "rawSeverity": "WARNING",
-      "confidence": "LOW",
-      "category": "security",
-      "cwe": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
-      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 53,
-      "column": 19,
-      "endLine": 53,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -331,8 +191,88 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 62,
+      "line": 55,
       "column": 30,
+      "endLine": 55,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://owasp.org/www-community/attacks/Path_Traversal"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.path-traversal.path-join-resolve-traversal",
+      "severity": "WARNING",
+      "rawSeverity": "WARNING",
+      "confidence": "LOW",
+      "category": "security",
+      "cwe": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
+      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
+      "line": 56,
+      "column": 27,
+      "endLine": 56,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://owasp.org/www-community/attacks/Path_Traversal"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
+      "severity": "WARNING",
+      "rawSeverity": "WARNING",
+      "confidence": "LOW",
+      "category": "security",
+      "cwe": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
+      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
+      "line": 57,
+      "column": 19,
+      "endLine": 57,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://owasp.org/www-community/attacks/Path_Traversal"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.path-traversal.path-join-resolve-traversal",
+      "severity": "WARNING",
+      "rawSeverity": "WARNING",
+      "confidence": "LOW",
+      "category": "security",
+      "cwe": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
+      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
+      "line": 60,
+      "column": 28,
+      "endLine": 60,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://owasp.org/www-community/attacks/Path_Traversal"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
+      "severity": "WARNING",
+      "rawSeverity": "WARNING",
+      "confidence": "LOW",
+      "category": "security",
+      "cwe": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
+      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
+      "line": 62,
+      "column": 31,
       "endLine": 62,
       "snippet": "requires login",
       "fix": null,
@@ -372,8 +312,28 @@
       "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
       "line": 64,
-      "column": 22,
+      "column": 19,
       "endLine": 64,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://owasp.org/www-community/attacks/Path_Traversal"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.path-traversal.path-join-resolve-traversal",
+      "severity": "WARNING",
+      "rawSeverity": "WARNING",
+      "confidence": "LOW",
+      "category": "security",
+      "cwe": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
+      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
+      "line": 74,
+      "column": 30,
+      "endLine": 74,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -391,9 +351,49 @@
       ],
       "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 68,
+      "line": 75,
+      "column": 19,
+      "endLine": 75,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://owasp.org/www-community/attacks/Path_Traversal"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
+      "severity": "WARNING",
+      "rawSeverity": "WARNING",
+      "confidence": "LOW",
+      "category": "security",
+      "cwe": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
+      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
+      "line": 76,
+      "column": 22,
+      "endLine": 76,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://owasp.org/www-community/attacks/Path_Traversal"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
+      "severity": "WARNING",
+      "rawSeverity": "WARNING",
+      "confidence": "LOW",
+      "category": "security",
+      "cwe": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
+      "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
+      "line": 80,
       "column": 46,
-      "endLine": 68,
+      "endLine": 80,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -411,9 +411,9 @@
       ],
       "message": "Detected that function argument `f` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 68,
+      "line": 80,
       "column": 46,
-      "endLine": 68,
+      "endLine": 80,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -431,9 +431,9 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 68,
+      "line": 80,
       "column": 51,
-      "endLine": 68,
+      "endLine": 80,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -451,9 +451,9 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 68,
+      "line": 80,
       "column": 56,
-      "endLine": 68,
+      "endLine": 80,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -471,9 +471,9 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 85,
+      "line": 99,
       "column": 30,
-      "endLine": 85,
+      "endLine": 99,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -491,9 +491,9 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 86,
+      "line": 100,
       "column": 21,
-      "endLine": 86,
+      "endLine": 100,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -511,9 +511,9 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 86,
+      "line": 100,
       "column": 26,
-      "endLine": 86,
+      "endLine": 100,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -531,9 +531,9 @@
       ],
       "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 87,
+      "line": 101,
       "column": 19,
-      "endLine": 87,
+      "endLine": 101,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -551,9 +551,9 @@
       ],
       "message": "Detected that function argument `sessionId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 87,
+      "line": 101,
       "column": 19,
-      "endLine": 87,
+      "endLine": 101,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -571,9 +571,9 @@
       ],
       "message": "Detected that function argument `crewId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 89,
+      "line": 103,
       "column": 42,
-      "endLine": 89,
+      "endLine": 103,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -591,9 +591,9 @@
       ],
       "message": "Detected that function argument `sessionId` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/conversation.mjs",
-      "line": 89,
+      "line": 103,
       "column": 42,
-      "endLine": 89,
+      "endLine": 103,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -609,9 +609,9 @@
       "cwe": [],
       "message": "JSON stringify does not produce a stable key ordering, and should not be relied on for producing object keys. Consider using json-stable-stringify instead.",
       "file": "/Users/steward/App/agent-sre/server/llm.mjs",
-      "line": 79,
+      "line": 81,
       "column": 22,
-      "endLine": 79,
+      "endLine": 81,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -620,7 +620,7 @@
       ]
     },
     {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.path-traversal.path-join-resolve-traversal",
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
       "severity": "WARNING",
       "rawSeverity": "WARNING",
       "confidence": "LOW",
@@ -628,11 +628,11 @@
       "cwe": [
         "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
-      "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
+      "message": "Detected that function argument `req` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/routes.mjs",
-      "line": 167,
-      "column": 42,
-      "endLine": 167,
+      "line": 218,
+      "column": 26,
+      "endLine": 218,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -650,29 +650,9 @@
       ],
       "message": "Detected that function argument `req` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
       "file": "/Users/steward/App/agent-sre/server/routes.mjs",
-      "line": 168,
-      "column": 55,
-      "endLine": 168,
-      "snippet": "requires login",
-      "fix": null,
-      "references": [
-        "https://owasp.org/www-community/attacks/Path_Traversal"
-      ]
-    },
-    {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
-      "severity": "WARNING",
-      "rawSeverity": "WARNING",
-      "confidence": "LOW",
-      "category": "security",
-      "cwe": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "message": "Detected that function argument `req` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
-      "file": "/Users/steward/App/agent-sre/server/routes.mjs",
-      "line": 171,
-      "column": 32,
-      "endLine": 171,
+      "line": 221,
+      "column": 34,
+      "endLine": 221,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -688,34 +668,14 @@
       "cwe": [],
       "message": "JSON stringify does not produce a stable key ordering, and should not be relied on for producing object keys. Consider using json-stable-stringify instead.",
       "file": "/Users/steward/App/agent-sre/server/tool-engine/provider.mjs",
-      "line": 171,
+      "line": 198,
       "column": 28,
-      "endLine": 171,
+      "endLine": 198,
       "snippet": "requires login",
       "fix": null,
       "references": [
         "https://www.npmjs.com/package/json-stable-stringify",
         "https://stackoverflow.com/a/16168003"
-      ]
-    },
-    {
-      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
-      "severity": "WARNING",
-      "rawSeverity": "WARNING",
-      "confidence": "LOW",
-      "category": "security",
-      "cwe": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "message": "Detected that function argument `f` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
-      "file": "/Users/steward/App/agent-sre/server/tool-loader.mjs",
-      "line": 27,
-      "column": 14,
-      "endLine": 27,
-      "snippet": "requires login",
-      "fix": null,
-      "references": [
-        "https://owasp.org/www-community/attacks/Path_Traversal"
       ]
     },
     {
@@ -729,9 +689,29 @@
       ],
       "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
       "file": "/Users/steward/App/agent-sre/server/tool-loader.mjs",
-      "line": 27,
-      "column": 30,
-      "endLine": 27,
+      "line": 34,
+      "column": 28,
+      "endLine": 34,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://owasp.org/www-community/attacks/Path_Traversal"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.javascript.lang.security.audit.detect-non-literal-fs-filename",
+      "severity": "WARNING",
+      "rawSeverity": "WARNING",
+      "confidence": "LOW",
+      "category": "security",
+      "cwe": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "message": "Detected that function argument `f` has entered the fs module. An attacker could potentially control the location of this file, to include going backwards in the directory with '../'. To address this, ensure that user-controlled variables in file paths are validated.",
+      "file": "/Users/steward/App/agent-sre/server/tool-loader.mjs",
+      "line": 51,
+      "column": 21,
+      "endLine": 51,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -1195,17 +1175,531 @@
       "references": []
     },
     {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 30,
+      "column": 25,
+      "endLine": 30,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 37,
+      "column": 25,
+      "endLine": 37,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 44,
+      "column": 25,
+      "endLine": 44,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 50,
+      "column": 25,
+      "endLine": 50,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 56,
+      "column": 25,
+      "endLine": 56,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 69,
+      "column": 25,
+      "endLine": 69,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 77,
+      "column": 25,
+      "endLine": 77,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 83,
+      "column": 25,
+      "endLine": 83,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 88,
+      "column": 25,
+      "endLine": 88,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 94,
+      "column": 25,
+      "endLine": 94,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 99,
+      "column": 46,
+      "endLine": 99,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 101,
+      "column": 27,
+      "endLine": 101,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.best-practice.react-props-spreading",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "best-practice",
+      "cwe": [],
+      "message": "It's best practice to explicitly pass props to an HTML component rather than use the spread operator. The spread operator risks passing invalid HTML props to an HTML element, which can cause console warnings or worse, give malicious actors a way to inject unexpected attributes.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "line": 106,
+      "column": 25,
+      "endLine": 106,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spreading.md"
+      ]
+    },
+    {
       "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
       "severity": "INFO",
       "rawSeverity": "INFO",
       "confidence": "UNKNOWN",
       "category": "portability",
       "cwe": [],
-      "message": "JSX element not internationalized: 'Crew'.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
-      "file": "/Users/steward/App/agent-sre/ui/src/App.tsx",
-      "line": 149,
+      "message": "JSX element not internationalized: '\n          Agent SRE\n        '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/components/Sidebar.tsx",
+      "line": 44,
+      "column": 9,
+      "endLine": 46,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n          Agents\n        '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/ConsolePage.tsx",
+      "line": 239,
+      "column": 9,
+      "endLine": 241,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: 'Enter 發送 · Shift+Enter 換行'.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/ConsolePage.tsx",
+      "line": 347,
+      "column": 15,
+      "endLine": 347,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n            Agent Team\n          '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/HomePage.tsx",
+      "line": 205,
       "column": 11,
-      "endLine": 149,
+      "endLine": 207,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n            View all →\n          '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/HomePage.tsx",
+      "line": 208,
+      "column": 11,
+      "endLine": 221,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n            Tools\n          '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/HomePage.tsx",
+      "line": 261,
+      "column": 11,
+      "endLine": 263,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n            View all →\n          '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/HomePage.tsx",
+      "line": 264,
+      "column": 11,
+      "endLine": 277,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n            Tasks\n          '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/TaskManagementPage.tsx",
+      "line": 259,
+      "column": 11,
+      "endLine": 261,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n              No tasks yet. Click '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/TaskManagementPage.tsx",
+      "line": 279,
+      "column": 33,
+      "endLine": 283,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n                Agent Rules\n              '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/TaskManagementPage.tsx",
+      "line": 406,
+      "column": 15,
+      "endLine": 408,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n                Created '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/TaskManagementPage.tsx",
+      "line": 527,
+      "column": 46,
+      "endLine": 534,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: 'Select a Task'.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/TaskManagementPage.tsx",
+      "line": 551,
+      "column": 7,
+      "endLine": 551,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n        Pick a task from the list to edit it, or create a new one.\n      '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/TaskManagementPage.tsx",
+      "line": 552,
+      "column": 7,
+      "endLine": 554,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: '\n        No tools registered. Start the server to load tools.\n      '.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/TaskManagementPage.tsx",
+      "line": 652,
+      "column": 12,
+      "endLine": 656,
+      "snippet": "requires login",
+      "fix": null,
+      "references": [
+        "https://www.notion.so/hendyirawan/Internationalization-Localization-Policy-318c21674e5f44c48d6f136a6eb2e024",
+        "https://mui.com/",
+        "https://react.i18next.com/"
+      ]
+    },
+    {
+      "id": "Users.steward.App.tPAAW.data.semgrep-rules.typescript.react.portability.i18next.jsx-not-internationalized",
+      "severity": "INFO",
+      "rawSeverity": "INFO",
+      "confidence": "UNKNOWN",
+      "category": "portability",
+      "cwe": [],
+      "message": "JSX element not internationalized: 'Tools'.  You should support different languages in your website or app with internationalization. Instead, use packages such as `i18next` in order to internationalize your elements.",
+      "file": "/Users/steward/App/agent-sre/ui/src/pages/ToolsPage.tsx",
+      "line": 71,
+      "column": 9,
+      "endLine": 71,
       "snippet": "requires login",
       "fix": null,
       "references": [
@@ -1216,29 +1710,36 @@
     }
   ],
   "stats": {
-    "total": 62,
+    "total": 88,
     "bySeverity": {
-      "WARNING": 37,
-      "INFO": 25
+      "WARNING": 36,
+      "INFO": 52
     },
     "byCategory": {
-      "security": 35,
+      "security": 34,
       "correctness": 8,
-      "portability": 19
+      "portability": 33,
+      "best-practice": 13
     },
     "filesScanned": [
       "/Users/steward/App/agent-sre/server/agent-loop.mjs",
       "/Users/steward/App/agent-sre/server/config.mjs",
+      "/Users/steward/App/agent-sre/server/config.test.mjs",
       "/Users/steward/App/agent-sre/server/conversation.mjs",
+      "/Users/steward/App/agent-sre/server/conversation.test.mjs",
       "/Users/steward/App/agent-sre/server/crew-loader.mjs",
       "/Users/steward/App/agent-sre/server/index.mjs",
       "/Users/steward/App/agent-sre/server/llm.mjs",
-      "/Users/steward/App/agent-sre/server/mcp-client.mjs",
-      "/Users/steward/App/agent-sre/server/mcp-server.mjs",
+      "/Users/steward/App/agent-sre/server/llm.test.mjs",
       "/Users/steward/App/agent-sre/server/routes.mjs",
+      "/Users/steward/App/agent-sre/server/routes.test.mjs",
+      "/Users/steward/App/agent-sre/server/task-store.mjs",
+      "/Users/steward/App/agent-sre/server/task-store.test.mjs",
       "/Users/steward/App/agent-sre/server/tool-engine/provider.mjs",
       "/Users/steward/App/agent-sre/server/tool-loader.mjs",
+      "/Users/steward/App/agent-sre/server/tool-loader.test.mjs",
       "/Users/steward/App/agent-sre/server/tool-registry.mjs",
+      "/Users/steward/App/agent-sre/server/tool-registry.test.mjs",
       "/Users/steward/App/agent-sre/tools/docs/handler.mjs",
       "/Users/steward/App/agent-sre/tools/grafana/handler.mjs",
       "/Users/steward/App/agent-sre/tools/k8s/handler.mjs",
@@ -1251,11 +1752,24 @@
       "/Users/steward/App/agent-sre/ui/SREDashboard.tsx",
       "/Users/steward/App/agent-sre/ui/postcss.config.js",
       "/Users/steward/App/agent-sre/ui/src/App.tsx",
+      "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+      "/Users/steward/App/agent-sre/ui/src/components/Sidebar.tsx",
+      "/Users/steward/App/agent-sre/ui/src/components/StatusBadge.test.tsx",
+      "/Users/steward/App/agent-sre/ui/src/components/StatusBadge.tsx",
       "/Users/steward/App/agent-sre/ui/src/main.tsx",
+      "/Users/steward/App/agent-sre/ui/src/pages/ConsolePage.tsx",
+      "/Users/steward/App/agent-sre/ui/src/pages/HomePage.test.tsx",
+      "/Users/steward/App/agent-sre/ui/src/pages/HomePage.tsx",
+      "/Users/steward/App/agent-sre/ui/src/pages/Placeholder.tsx",
+      "/Users/steward/App/agent-sre/ui/src/pages/TaskManagementPage.tsx",
+      "/Users/steward/App/agent-sre/ui/src/pages/ToolsPage.tsx",
+      "/Users/steward/App/agent-sre/ui/src/types.test.ts",
+      "/Users/steward/App/agent-sre/ui/src/types.ts",
       "/Users/steward/App/agent-sre/ui/tailwind.config.js",
-      "/Users/steward/App/agent-sre/ui/vite.config.ts"
+      "/Users/steward/App/agent-sre/ui/vite.config.ts",
+      "/Users/steward/App/agent-sre/vitest.config.mjs"
     ],
-    "filesAffected": 10,
+    "filesAffected": 15,
     "rulesRun": 3,
     "rulePacks": [
       "/Users/steward/App/tPAAW/data/semgrep-rules/javascript",
@@ -1269,16 +1783,22 @@
       "scanned": [
         "/Users/steward/App/agent-sre/server/agent-loop.mjs",
         "/Users/steward/App/agent-sre/server/config.mjs",
+        "/Users/steward/App/agent-sre/server/config.test.mjs",
         "/Users/steward/App/agent-sre/server/conversation.mjs",
+        "/Users/steward/App/agent-sre/server/conversation.test.mjs",
         "/Users/steward/App/agent-sre/server/crew-loader.mjs",
         "/Users/steward/App/agent-sre/server/index.mjs",
         "/Users/steward/App/agent-sre/server/llm.mjs",
-        "/Users/steward/App/agent-sre/server/mcp-client.mjs",
-        "/Users/steward/App/agent-sre/server/mcp-server.mjs",
+        "/Users/steward/App/agent-sre/server/llm.test.mjs",
         "/Users/steward/App/agent-sre/server/routes.mjs",
+        "/Users/steward/App/agent-sre/server/routes.test.mjs",
+        "/Users/steward/App/agent-sre/server/task-store.mjs",
+        "/Users/steward/App/agent-sre/server/task-store.test.mjs",
         "/Users/steward/App/agent-sre/server/tool-engine/provider.mjs",
         "/Users/steward/App/agent-sre/server/tool-loader.mjs",
+        "/Users/steward/App/agent-sre/server/tool-loader.test.mjs",
         "/Users/steward/App/agent-sre/server/tool-registry.mjs",
+        "/Users/steward/App/agent-sre/server/tool-registry.test.mjs",
         "/Users/steward/App/agent-sre/tools/docs/handler.mjs",
         "/Users/steward/App/agent-sre/tools/grafana/handler.mjs",
         "/Users/steward/App/agent-sre/tools/k8s/handler.mjs",
@@ -1291,9 +1811,22 @@
         "/Users/steward/App/agent-sre/ui/SREDashboard.tsx",
         "/Users/steward/App/agent-sre/ui/postcss.config.js",
         "/Users/steward/App/agent-sre/ui/src/App.tsx",
+        "/Users/steward/App/agent-sre/ui/src/components/Sidebar.test.tsx",
+        "/Users/steward/App/agent-sre/ui/src/components/Sidebar.tsx",
+        "/Users/steward/App/agent-sre/ui/src/components/StatusBadge.test.tsx",
+        "/Users/steward/App/agent-sre/ui/src/components/StatusBadge.tsx",
         "/Users/steward/App/agent-sre/ui/src/main.tsx",
+        "/Users/steward/App/agent-sre/ui/src/pages/ConsolePage.tsx",
+        "/Users/steward/App/agent-sre/ui/src/pages/HomePage.test.tsx",
+        "/Users/steward/App/agent-sre/ui/src/pages/HomePage.tsx",
+        "/Users/steward/App/agent-sre/ui/src/pages/Placeholder.tsx",
+        "/Users/steward/App/agent-sre/ui/src/pages/TaskManagementPage.tsx",
+        "/Users/steward/App/agent-sre/ui/src/pages/ToolsPage.tsx",
+        "/Users/steward/App/agent-sre/ui/src/types.test.ts",
+        "/Users/steward/App/agent-sre/ui/src/types.ts",
         "/Users/steward/App/agent-sre/ui/tailwind.config.js",
-        "/Users/steward/App/agent-sre/ui/vite.config.ts"
+        "/Users/steward/App/agent-sre/ui/vite.config.ts",
+        "/Users/steward/App/agent-sre/vitest.config.mjs"
       ]
     }
   }

@@ -8,6 +8,20 @@
       "testCount": 6
     },
     {
+      "testFile": "server/config.test.mjs",
+      "productionFile": "server/config.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 0
+    },
+    {
+      "testFile": "server/conversation.test.mjs",
+      "productionFile": "server/conversation.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 0
+    },
+    {
       "testFile": "server/index.mjs",
       "productionFile": "server/config.mjs",
       "matchType": "import",
@@ -22,18 +36,11 @@
       "testCount": 5
     },
     {
-      "testFile": "server/mcp-client.mjs",
-      "productionFile": "server/tool-registry.mjs",
-      "matchType": "import",
+      "testFile": "server/llm.test.mjs",
+      "productionFile": "server/llm.mjs",
+      "matchType": "naming",
       "testedFunctions": [],
-      "testCount": 4
-    },
-    {
-      "testFile": "server/mcp-server.mjs",
-      "productionFile": "server/tool-loader.mjs",
-      "matchType": "import",
-      "testedFunctions": [],
-      "testCount": 8
+      "testCount": 2
     },
     {
       "testFile": "server/routes.mjs",
@@ -43,9 +50,37 @@
       "testCount": 4
     },
     {
+      "testFile": "server/routes.test.mjs",
+      "productionFile": "server/routes.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
+      "testFile": "server/task-store.test.mjs",
+      "productionFile": "server/task-store.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
       "testFile": "server/tool-loader.mjs",
       "productionFile": "server/tool-registry.mjs",
       "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 3
+    },
+    {
+      "testFile": "server/tool-loader.test.mjs",
+      "productionFile": "server/tool-loader.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 0
+    },
+    {
+      "testFile": "server/tool-registry.test.mjs",
+      "productionFile": "server/tool-registry.mjs",
+      "matchType": "naming",
       "testedFunctions": [],
       "testCount": 2
     },
@@ -57,16 +92,86 @@
       "testCount": 1
     },
     {
+      "testFile": "ui/src/App.tsx",
+      "productionFile": "ui/src/components/Sidebar.tsx",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 2
+    },
+    {
+      "testFile": "ui/src/components/Sidebar.test.tsx",
+      "productionFile": "ui/src/components/Sidebar.tsx",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
+      "testFile": "ui/src/components/Sidebar.tsx",
+      "productionFile": "ui/src/types.ts",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
+      "testFile": "ui/src/components/StatusBadge.test.tsx",
+      "productionFile": "ui/src/components/StatusBadge.tsx",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 0
+    },
+    {
       "testFile": "ui/src/main.tsx",
       "productionFile": "ui/src/App.tsx",
       "matchType": "import",
       "testedFunctions": [],
       "testCount": 0
+    },
+    {
+      "testFile": "ui/src/pages/ConsolePage.tsx",
+      "productionFile": "ui/src/types.ts",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
+      "testFile": "ui/src/pages/HomePage.test.tsx",
+      "productionFile": "ui/src/pages/HomePage.tsx",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 2
+    },
+    {
+      "testFile": "ui/src/pages/HomePage.tsx",
+      "productionFile": "ui/src/types.ts",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 2
+    },
+    {
+      "testFile": "ui/src/pages/TaskManagementPage.tsx",
+      "productionFile": "ui/src/types.ts",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 5
+    },
+    {
+      "testFile": "ui/src/pages/ToolsPage.tsx",
+      "productionFile": "ui/src/types.ts",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
+      "testFile": "ui/src/types.test.ts",
+      "productionFile": "ui/src/types.ts",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 0
     }
   ],
   "stats": {
-    "totalTestFiles": 0,
-    "matchedTests": 9,
+    "totalTestFiles": 11,
+    "matchedTests": 24,
     "totalTestedFunctions": 0
   }
 }

@@ -1,14 +1,403 @@
 {
-  "testFiles": [],
-  "testToCode": [],
-  "codeToTest": {},
-  "whatToRun": {},
-  "coverageGaps": [
+  "testFiles": [
     {
-      "file": "server/mcp-server.mjs",
-      "functionCount": 8,
-      "exportCount": 0
+      "file": "server/config.test.mjs",
+      "type": "unit",
+      "functionCount": 0,
+      "functionNames": []
     },
+    {
+      "file": "server/conversation.test.mjs",
+      "type": "unit",
+      "functionCount": 0,
+      "functionNames": []
+    },
+    {
+      "file": "server/llm.test.mjs",
+      "type": "unit",
+      "functionCount": 2,
+      "functionNames": [
+        "jsonResponse",
+        "streamResponse"
+      ]
+    },
+    {
+      "file": "server/routes.test.mjs",
+      "type": "unit",
+      "functionCount": 1,
+      "functionNames": [
+        "httpGet"
+      ]
+    },
+    {
+      "file": "server/task-store.test.mjs",
+      "type": "unit",
+      "functionCount": 1,
+      "functionNames": [
+        "makeStore"
+      ]
+    },
+    {
+      "file": "server/tool-loader.test.mjs",
+      "type": "unit",
+      "functionCount": 0,
+      "functionNames": []
+    },
+    {
+      "file": "server/tool-registry.test.mjs",
+      "type": "unit",
+      "functionCount": 2,
+      "functionNames": [
+        "makeRegistry",
+        "sampleEntry"
+      ]
+    },
+    {
+      "file": "ui/src/components/Sidebar.test.tsx",
+      "type": "unit",
+      "functionCount": 1,
+      "functionNames": [
+        "defaultProps"
+      ]
+    },
+    {
+      "file": "ui/src/components/StatusBadge.test.tsx",
+      "type": "unit",
+      "functionCount": 0,
+      "functionNames": []
+    },
+    {
+      "file": "ui/src/pages/HomePage.test.tsx",
+      "type": "unit",
+      "functionCount": 2,
+      "functionNames": [
+        "mockFetchSuccess",
+        "mockFetchFailure"
+      ]
+    },
+    {
+      "file": "ui/src/test/setup.ts",
+      "type": "unit",
+      "functionCount": 0,
+      "functionNames": []
+    },
+    {
+      "file": "ui/src/types.test.ts",
+      "type": "unit",
+      "functionCount": 0,
+      "functionNames": []
+    }
+  ],
+  "testToCode": [
+    {
+      "testFile": "server/config.test.mjs",
+      "testType": "unit",
+      "functionCount": 0,
+      "matches": [
+        {
+          "productionFile": "server/config.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "server/conversation.test.mjs",
+      "testType": "unit",
+      "functionCount": 0,
+      "matches": [
+        {
+          "productionFile": "server/conversation.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "server/llm.test.mjs",
+      "testType": "unit",
+      "functionCount": 2,
+      "matches": [
+        {
+          "productionFile": "server/llm.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "server/routes.test.mjs",
+      "testType": "unit",
+      "functionCount": 1,
+      "matches": [
+        {
+          "productionFile": "server/routes.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "server/task-store.test.mjs",
+      "testType": "unit",
+      "functionCount": 1,
+      "matches": [
+        {
+          "productionFile": "server/task-store.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "server/tool-loader.test.mjs",
+      "testType": "unit",
+      "functionCount": 0,
+      "matches": [
+        {
+          "productionFile": "server/tool-loader.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "server/tool-registry.test.mjs",
+      "testType": "unit",
+      "functionCount": 2,
+      "matches": [
+        {
+          "productionFile": "server/tool-registry.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "ui/src/components/Sidebar.test.tsx",
+      "testType": "unit",
+      "functionCount": 1,
+      "matches": [
+        {
+          "productionFile": "ui/src/components/Sidebar.tsx",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "ui/src/components/StatusBadge.test.tsx",
+      "testType": "unit",
+      "functionCount": 0,
+      "matches": [
+        {
+          "productionFile": "ui/src/components/StatusBadge.tsx",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "ui/src/pages/HomePage.test.tsx",
+      "testType": "unit",
+      "functionCount": 2,
+      "matches": [
+        {
+          "productionFile": "ui/src/pages/HomePage.tsx",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "ui/src/test/setup.ts",
+      "testType": "unit",
+      "functionCount": 0,
+      "matches": []
+    },
+    {
+      "testFile": "ui/src/types.test.ts",
+      "testType": "unit",
+      "functionCount": 0,
+      "matches": [
+        {
+          "productionFile": "ui/src/types.ts",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    }
+  ],
+  "codeToTest": {
+    "server/config.mjs": [
+      {
+        "testFile": "server/config.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "server/conversation.mjs": [
+      {
+        "testFile": "server/conversation.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "server/llm.mjs": [
+      {
+        "testFile": "server/llm.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "server/routes.mjs": [
+      {
+        "testFile": "server/routes.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "server/task-store.mjs": [
+      {
+        "testFile": "server/task-store.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "server/tool-loader.mjs": [
+      {
+        "testFile": "server/tool-loader.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "server/tool-registry.mjs": [
+      {
+        "testFile": "server/tool-registry.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "ui/src/components/Sidebar.tsx": [
+      {
+        "testFile": "ui/src/components/Sidebar.test.tsx",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "ui/src/components/StatusBadge.tsx": [
+      {
+        "testFile": "ui/src/components/StatusBadge.test.tsx",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "ui/src/pages/HomePage.tsx": [
+      {
+        "testFile": "ui/src/pages/HomePage.test.tsx",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "ui/src/types.ts": [
+      {
+        "testFile": "ui/src/types.test.ts",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ]
+  },
+  "whatToRun": {
+    "server/config.mjs": [
+      {
+        "testFile": "server/config.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "server/conversation.mjs": [
+      {
+        "testFile": "server/conversation.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "server/llm.mjs": [
+      {
+        "testFile": "server/llm.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "server/routes.mjs": [
+      {
+        "testFile": "server/routes.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "server/task-store.mjs": [
+      {
+        "testFile": "server/task-store.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "server/tool-loader.mjs": [
+      {
+        "testFile": "server/tool-loader.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "server/tool-registry.mjs": [
+      {
+        "testFile": "server/tool-registry.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "ui/src/components/Sidebar.tsx": [
+      {
+        "testFile": "ui/src/components/Sidebar.test.tsx",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "ui/src/components/StatusBadge.tsx": [
+      {
+        "testFile": "ui/src/components/StatusBadge.test.tsx",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "ui/src/pages/HomePage.tsx": [
+      {
+        "testFile": "ui/src/pages/HomePage.test.tsx",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "ui/src/types.ts": [
+      {
+        "testFile": "ui/src/types.test.ts",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ]
+  },
+  "coverageGaps": [
     {
       "file": "tools/grafana/handler.mjs",
       "functionCount": 7,
@@ -30,11 +419,6 @@
       "exportCount": 2
     },
     {
-      "file": "server/conversation.mjs",
-      "functionCount": 6,
-      "exportCount": 5
-    },
-    {
       "file": "tools/security/handler.mjs",
       "functionCount": 6,
       "exportCount": 1
@@ -45,9 +429,9 @@
       "exportCount": 1
     },
     {
-      "file": "server/llm.mjs",
+      "file": "server/tool-engine/provider.mjs",
       "functionCount": 5,
-      "exportCount": 1
+      "exportCount": 2
     },
     {
       "file": "tools/docs/handler.mjs",
@@ -65,18 +449,8 @@
       "exportCount": 1
     },
     {
-      "file": "ui/src/App.tsx",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
       "functionCount": 5,
-      "exportCount": 1
-    },
-    {
-      "file": "server/mcp-client.mjs",
-      "functionCount": 4,
-      "exportCount": 2
-    },
-    {
-      "file": "server/routes.mjs",
-      "functionCount": 4,
       "exportCount": 1
     },
     {
@@ -90,17 +464,7 @@
       "exportCount": 3
     },
     {
-      "file": "server/tool-engine/provider.mjs",
-      "functionCount": 3,
-      "exportCount": 2
-    },
-    {
-      "file": "server/config.mjs",
-      "functionCount": 2,
-      "exportCount": 4
-    },
-    {
-      "file": "server/tool-loader.mjs",
+      "file": "ui/src/App.tsx",
       "functionCount": 2,
       "exportCount": 1
     },
@@ -115,9 +479,19 @@
       "exportCount": 1
     },
     {
-      "file": "server/tool-registry.mjs",
-      "functionCount": 0,
-      "exportCount": 2
+      "file": "ui/src/pages/ConsolePage.tsx",
+      "functionCount": 1,
+      "exportCount": 1
+    },
+    {
+      "file": "ui/src/pages/Placeholder.tsx",
+      "functionCount": 1,
+      "exportCount": 1
+    },
+    {
+      "file": "ui/src/pages/ToolsPage.tsx",
+      "functionCount": 1,
+      "exportCount": 1
     },
     {
       "file": "ui/src/main.tsx",
@@ -128,19 +502,104 @@
       "file": "ui/vite.config.ts",
       "functionCount": 0,
       "exportCount": 0
+    },
+    {
+      "file": "vitest.config.mjs",
+      "functionCount": 0,
+      "exportCount": 0
     }
   ],
-  "featureToTests": [],
+  "featureToTests": [
+    {
+      "featureId": "F-002",
+      "featureName": "API Route Layer",
+      "tests": [
+        "server/routes.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-004",
+      "featureName": "LLM Client",
+      "tests": [
+        "server/llm.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-006",
+      "featureName": "Configuration Management",
+      "tests": [
+        "server/config.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-008",
+      "featureName": "Conversation Persistence & Archive",
+      "tests": [
+        "server/conversation.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-009",
+      "featureName": "Task Management",
+      "tests": [
+        "server/task-store.test.mjs",
+        "server/routes.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-010",
+      "featureName": "Tool Registry & Tool API",
+      "tests": [
+        "server/tool-registry.test.mjs",
+        "server/routes.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-011",
+      "featureName": "Tool Loader (Secure Dynamic Loading)",
+      "tests": [
+        "server/tool-loader.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-022",
+      "featureName": "App Shell & 7-View Navigation",
+      "tests": [
+        "ui/src/components/Sidebar.test.tsx"
+      ]
+    },
+    {
+      "featureId": "F-023",
+      "featureName": "Home Page (Platform Dashboard)",
+      "tests": [
+        "ui/src/pages/HomePage.test.tsx"
+      ]
+    },
+    {
+      "featureId": "F-027",
+      "featureName": "Status Badge Component",
+      "tests": [
+        "ui/src/components/StatusBadge.test.tsx"
+      ]
+    },
+    {
+      "featureId": "F-028",
+      "featureName": "Shared UI Types & Utilities",
+      "tests": [
+        "ui/src/types.test.ts"
+      ]
+    }
+  ],
   "stats": {
-    "totalTestFiles": 0,
+    "totalTestFiles": 12,
     "byType": {
-      "unit": 0,
+      "unit": 12,
       "integration": 0,
       "e2e": 0
     },
-    "totalMappings": 0,
-    "coverageGapFiles": 25,
-    "coverageRate": "0.0%",
-    "featureTestCoverage": 0
+    "totalMappings": 11,
+    "coverageGapFiles": 22,
+    "coverageRate": "33.3%",
+    "featureTestCoverage": 11
   }
 }

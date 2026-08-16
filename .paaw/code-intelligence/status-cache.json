@@ -1,5 +1,5 @@
 {
-  "timestamp": 1785665592138,
+  "timestamp": 1786850553495,
   "data": {
     "architecture": {
       "score": 75,
@@ -12,7 +12,7 @@
         {
           "name": "Architecture Map",
           "status": "ok",
-          "detail": "9038 chars"
+          "detail": "7225 chars"
         },
         {
           "name": "Decision Records",
@@ -32,7 +32,7 @@
         {
           "name": "API Contract",
           "status": "ok",
-          "detail": "13669 chars"
+          "detail": "17301 chars"
         },
         {
           "name": "Error Mapping",
@@ -52,7 +52,7 @@
       ]
     },
     "test": {
-      "score": 0,
+      "score": 35,
       "items": [
         {
           "name": "API Test Payloads",
@@ -61,8 +61,13 @@
         },
         {
           "name": "Unit Tests",
-          "status": "missing",
-          "detail": "None found"
+          "status": "ok",
+          "detail": "Coverage: 33.3% (12 files)"
+        },
+        {
+          "name": "Coverage Gaps",
+          "status": "warn",
+          "detail": "22 untested file(s)"
         },
         {
           "name": "E2E Tests",
@@ -77,7 +82,7 @@
         {
           "name": "README",
           "status": "ok",
-          "detail": "1d ago"
+          "detail": "13d ago"
         },
         {
           "name": "FAQ",
@@ -92,7 +97,7 @@
         {
           "name": "Tracked Files",
           "status": "info",
-          "detail": "86 files"
+          "detail": "97 files"
         }
       ]
     },
@@ -107,7 +112,7 @@
         {
           "name": "Git Status",
           "status": "warn",
-          "detail": "14 uncommitted"
+          "detail": "74 uncommitted"
         },
         {
           "name": "Error Handling",
@@ -117,7 +122,7 @@
         {
           "name": "Dependencies",
           "status": "info",
-          "detail": "0 packages"
+          "detail": "1 packages"
         }
       ]
     }

@@ -1,7 +1,135 @@
 {
-  "generatedAt": "2026-08-01T03:07:54.443Z",
+  "generatedAt": "2026-08-15T11:22:28.277Z",
   "period": "30 days",
   "commits": [
+    {
+      "hash": "b655bc1",
+      "author": "LoveFleming",
+      "date": "2026-08-02T14:41:11.000Z",
+      "subject": "feat(ui): add Task management page with CRUD UI",
+      "fileCount": 3,
+      "files": [
+        "ui/src/App.tsx",
+        "ui/src/pages/TaskManagementPage.tsx",
+        "ui/src/types.ts"
+      ]
+    },
+    {
+      "hash": "80b15a1",
+      "author": "LoveFleming",
+      "date": "2026-08-02T14:34:51.000Z",
+      "subject": "feat(server): add Task management CRUD API endpoints",
+      "fileCount": 29,
+      "files": [
+        ".paaw/CHANGELOG.md",
+        ".paaw/DECISIONS.md",
+        ".paaw/INSPECTION-DESIGN.md",
+        ".paaw/code-intelligence/status-cache.json",
+        ".paaw/coding-memory/actions.jsonl",
+        ".paaw/coding-memory/conversations/coding.architect/active.json",
+        ".paaw/coding-memory/conversations/coding.em/active.json",
+        ".paaw/coding-memory/conversations/coding.em/s-2026-08-02T10-02-07.json",
+        ".paaw/coding-memory/dispatch-log.jsonl",
+        ".paaw/night-shift/config.json"
+      ]
+    },
+    {
+      "hash": "c895498",
+      "author": "LoveFleming",
+      "date": "2026-08-02T10:16:15.000Z",
+      "subject": "fix(security): resolve json-stable-stringify warnings in llm.mjs and provider.mjs",
+      "fileCount": 2,
+      "files": [
+        "server/llm.mjs",
+        "server/tool-engine/provider.mjs"
+      ]
+    },
+    {
+      "hash": "f072911",
+      "author": "LoveFleming",
+      "date": "2026-08-02T10:08:45.000Z",
+      "subject": "fix(security): block path traversal in tool-loader fs operations",
+      "fileCount": 1,
+      "files": [
+        "server/tool-loader.mjs"
+      ]
+    },
+    {
+      "hash": "dd893ba",
+      "author": "LoveFleming",
+      "date": "2026-08-02T07:27:48.000Z",
+      "subject": "staged changes json",
+      "fileCount": 1,
+      "files": [
+        ".paaw/staged-changes.json"
+      ]
+    },
+    {
+      "hash": "6c5dec0",
+      "author": "LoveFleming",
+      "date": "2026-08-02T07:26:04.000Z",
+      "subject": "docs(paaw): add ADR-002 for multi-agent orchestration architecture",
+      "fileCount": 30,
+      "files": [
+        ".paaw/DECISIONS.md",
+        ".paaw/PHASE-0-DESIGN.md",
+        ".paaw/action-log/2026-08-02.json",
+        ".paaw/code-intelligence/status-cache.json",
+        ".paaw/coding-memory/actions.jsonl",
+        ".paaw/coding-memory/conversations/coding.architect/active.json",
+        ".paaw/coding-memory/conversations/coding.architect/s-2026-08-02T05-44-24.json",
+        ".paaw/coding-memory/conversations/coding.developer/active.json",
+        ".paaw/coding-memory/conversations/coding.developer/s-2026-08-01T14-06-39.json",
+        ".paaw/coding-memory/conversations/coding.developer/s-2026-08-02T03-10-51.json"
+      ]
+    },
+    {
+      "hash": "edf2daa",
+      "author": "LoveFleming",
+      "date": "2026-08-01T14:11:51.000Z",
+      "subject": "fix(console): chat send no response + error not displayed",
+      "fileCount": 2,
+      "files": [
+        "server/agent-loop.mjs",
+        "ui/src/pages/ConsolePage.tsx"
+      ]
+    },
+    {
+      "hash": "aa12aa1",
+      "author": "LoveFleming",
+      "date": "2026-08-01T14:03:35.000Z",
+      "subject": "add paaw files and package-lock.json",
+      "fileCount": 44,
+      "files": [
+        ".paaw/DECISIONS.md",
+        ".paaw/PHASE-1-DESIGN.md",
+        ".paaw/PLATFORM-ROADMAP.md",
+        ".paaw/agents/_config.json",
+        ".paaw/agents/coding.architect.json",
+        ".paaw/agents/coding.developer.json",
+        ".paaw/agents/coding.doc-writer.json",
+        ".paaw/agents/coding.em.json",
+        ".paaw/agents/coding.helpdesk.json",
+        ".paaw/agents/coding.qa.json"
+      ]
+    },
+    {
+      "hash": "e7f7dc4",
+      "author": "LoveFleming",
+      "date": "2026-08-01T11:18:37.000Z",
+      "subject": "feat(ui): add 7-view navigation shell + platform home page",
+      "fileCount": 8,
+      "files": [
+        "ui/src/App.tsx",
+        "ui/src/components/Sidebar.tsx",
+        "ui/src/components/StatusBadge.tsx",
+        "ui/src/pages/ConsolePage.tsx",
+        "ui/src/pages/HomePage.tsx",
+        "ui/src/pages/Placeholder.tsx",
+        "ui/src/pages/ToolsPage.tsx",
+        "ui/src/types.ts"
+      ]
+    },
     {
       "hash": "6f00301",
       "author": "LoveFleming",
@@ -157,11 +285,790 @@
   "recentFiles": [
     {
       "file": "ui/src/App.tsx",
-      "changeCount": 2,
-      "lastChanged": "2026-07-31T14:29:27.000Z",
+      "changeCount": 4,
+      "lastChanged": "2026-08-02T14:41:11.000Z",
       "commits": [
+        "b655bc1",
+        "e7f7dc4",
         "6f00301",
         "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:41:11.000Z",
+      "commits": [
+        "b655bc1"
+      ]
+    },
+    {
+      "file": "ui/src/types.ts",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T14:41:11.000Z",
+      "commits": [
+        "b655bc1",
+        "e7f7dc4"
+      ]
+    },
+    {
+      "file": ".paaw/CHANGELOG.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1"
+      ]
+    },
+    {
+      "file": ".paaw/DECISIONS.md",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "6c5dec0",
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/INSPECTION-DESIGN.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1"
+      ]
+    },
+    {
+      "file": ".paaw/code-intelligence/status-cache.json",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "6c5dec0",
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/actions.jsonl",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "6c5dec0",
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/conversations/coding.architect/active.json",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "6c5dec0",
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/conversations/coding.em/active.json",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "6c5dec0",
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/conversations/coding.em/s-2026-08-02T10-02-07.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/dispatch-log.jsonl",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "6c5dec0",
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/night-shift/config.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1"
+      ]
+    },
+    {
+      "file": ".paaw/night-shift/status.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1"
+      ]
+    },
+    {
+      "file": ".paaw/sessions/2026-08-02-task.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1"
+      ]
+    },
+    {
+      "file": ".paaw/staged-changes.json",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "dd893ba",
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": ".paaw/tasks/TASKS.json",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": "README.md",
+      "changeCount": 4,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "c936d78",
+        "70820ee",
+        "e95687c"
+      ]
+    },
+    {
+      "file": "config/mcp-servers.example.json",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "c936d78"
+      ]
+    },
+    {
+      "file": "package-lock.json",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": "package.json",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "c6a0c48",
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/index.mjs",
+      "changeCount": 4,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "1ca8dfa",
+        "c936d78",
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/mcp-client.mjs",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "c936d78"
+      ]
+    },
+    {
+      "file": "server/mcp-server.mjs",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "c936d78"
+      ]
+    },
+    {
+      "file": "server/routes.mjs",
+      "changeCount": 4,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "c6a0c48",
+        "1ca8dfa",
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/task-store.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1"
+      ]
+    },
+    {
+      "file": "server/tool-loader.mjs",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "f072911",
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/tool-loader.test.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1"
+      ]
+    },
+    {
+      "file": "ui/src/pages/HomePage.test.tsx",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": "ui/src/pages/HomePage.tsx",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "6c5dec0",
+        "e7f7dc4"
+      ]
+    },
+    {
+      "file": "ui/src/pages/ToolsPage.tsx",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1",
+        "e7f7dc4"
+      ]
+    },
+    {
+      "file": "vitest.config.mjs",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T14:34:51.000Z",
+      "commits": [
+        "80b15a1"
+      ]
+    },
+    {
+      "file": "server/llm.mjs",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T10:16:15.000Z",
+      "commits": [
+        "c895498",
+        "70820ee"
+      ]
+    },
+    {
+      "file": "server/tool-engine/provider.mjs",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T10:16:15.000Z",
+      "commits": [
+        "c895498",
+        "e95687c"
+      ]
+    },
+    {
+      "file": ".paaw/PHASE-0-DESIGN.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": ".paaw/action-log/2026-08-02.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/conversations/coding.architect/s-2026-08-02T05-44-24.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/conversations/coding.developer/active.json",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0",
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/conversations/coding.developer/s-2026-08-01T14-06-39.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/conversations/coding.developer/s-2026-08-02T03-10-51.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/conversations/coding.developer/s-2026-08-02T05-50-14.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": ".paaw/coding-memory/conversations/coding.tester/active.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": "config/providers.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": "ui/package-lock.json",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0",
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/package.json",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0",
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/src/components/Sidebar.test.tsx",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": "ui/src/components/Sidebar.tsx",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0",
+        "e7f7dc4"
+      ]
+    },
+    {
+      "file": "ui/src/components/StatusBadge.test.tsx",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": "ui/src/components/StatusBadge.tsx",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0",
+        "e7f7dc4"
+      ]
+    },
+    {
+      "file": "ui/src/index.css",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0",
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "ui/src/pages/ConsolePage.tsx",
+      "changeCount": 3,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0",
+        "edf2daa",
+        "e7f7dc4"
+      ]
+    },
+    {
+      "file": "ui/src/test/setup.ts",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": "ui/src/types.test.ts",
+      "changeCount": 1,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0"
+      ]
+    },
+    {
+      "file": "ui/vite.config.ts",
+      "changeCount": 2,
+      "lastChanged": "2026-08-02T07:26:04.000Z",
+      "commits": [
+        "6c5dec0",
+        "c6a0c48"
+      ]
+    },
+    {
+      "file": "server/agent-loop.mjs",
+      "changeCount": 2,
+      "lastChanged": "2026-08-01T14:11:51.000Z",
+      "commits": [
+        "edf2daa",
+        "70820ee"
+      ]
+    },
+    {
+      "file": ".paaw/PHASE-1-DESIGN.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/PLATFORM-ROADMAP.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/agents/_config.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/agents/coding.architect.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/agents/coding.developer.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/agents/coding.doc-writer.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/agents/coding.em.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/agents/coding.helpdesk.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/agents/coding.qa.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/agents/coding.tester.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/changelog/CHANGELOG.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/changes/change-intelligence.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/code-intelligence/api-function-map.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/code-intelligence/call-graph.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/code-intelligence/dependency-graph.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/code-intelligence/file-map.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/code-intelligence/summary.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/code-intelligence/symbol-index.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/code-intelligence/test-code-map.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/code-intelligence/test-intelligence.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/cu-status.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/decisions/DECISIONS.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/em/config.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/features/FEATURES.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/features/FILE-FEATURES.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/features/tree-sitter-analysis.txt",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/logs/semgrep-2026-08-01T03-06-42-stdout.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/logs/semgrep-2026-08-01T03-06-42.sh",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/project/ARCHITECTURE.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/project/CODING-STANDARDS.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/project/PROJECT.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/scan.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/security/scan-results.json",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/specs/api-contract.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/specs/error-codes.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": ".paaw/standards/coding-style.md",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T14:03:35.000Z",
+      "commits": [
+        "aa12aa1"
+      ]
+    },
+    {
+      "file": "ui/src/pages/Placeholder.tsx",
+      "changeCount": 1,
+      "lastChanged": "2026-08-01T11:18:37.000Z",
+      "commits": [
+        "e7f7dc4"
       ]
     },
     {
@@ -174,25 +1081,6 @@
       ]
     },
     {
-      "file": "package.json",
-      "changeCount": 2,
-      "lastChanged": "2026-07-31T14:27:14.000Z",
-      "commits": [
-        "c6a0c48",
-        "70820ee"
-      ]
-    },
-    {
-      "file": "server/routes.mjs",
-      "changeCount": 3,
-      "lastChanged": "2026-07-31T14:27:14.000Z",
-      "commits": [
-        "c6a0c48",
-        "1ca8dfa",
-        "70820ee"
-      ]
-    },
-    {
       "file": "ui/index.html",
       "changeCount": 2,
       "lastChanged": "2026-07-31T14:27:14.000Z",
@@ -202,31 +1090,7 @@
       ]
     },
     {
-      "file": "ui/package-lock.json",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T14:27:14.000Z",
-      "commits": [
-        "c6a0c48"
-      ]
-    },
-    {
-      "file": "ui/package.json",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T14:27:14.000Z",
-      "commits": [
-        "c6a0c48"
-      ]
-    },
-    {
       "file": "ui/postcss.config.js",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T14:27:14.000Z",
-      "commits": [
-        "c6a0c48"
-      ]
-    },
-    {
-      "file": "ui/src/index.css",
       "changeCount": 1,
       "lastChanged": "2026-07-31T14:27:14.000Z",
       "commits": [
@@ -255,24 +1119,6 @@
       "lastChanged": "2026-07-31T14:27:14.000Z",
       "commits": [
         "c6a0c48"
-      ]
-    },
-    {
-      "file": "ui/vite.config.ts",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T14:27:14.000Z",
-      "commits": [
-        "c6a0c48"
-      ]
-    },
-    {
-      "file": "server/index.mjs",
-      "changeCount": 3,
-      "lastChanged": "2026-07-31T14:22:21.000Z",
-      "commits": [
-        "1ca8dfa",
-        "c936d78",
-        "70820ee"
       ]
     },
     {
@@ -445,49 +1291,7 @@
       ]
     },
     {
-      "file": "README.md",
-      "changeCount": 3,
-      "lastChanged": "2026-07-31T13:46:52.000Z",
-      "commits": [
-        "c936d78",
-        "70820ee",
-        "e95687c"
-      ]
-    },
-    {
-      "file": "config/mcp-servers.example.json",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T13:46:52.000Z",
-      "commits": [
-        "c936d78"
-      ]
-    },
-    {
-      "file": "server/mcp-client.mjs",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T13:46:52.000Z",
-      "commits": [
-        "c936d78"
-      ]
-    },
-    {
-      "file": "server/mcp-server.mjs",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T13:46:52.000Z",
-      "commits": [
-        "c936d78"
-      ]
-    },
-    {
       "file": "config/providers.example.json",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T13:42:09.000Z",
-      "commits": [
-        "70820ee"
-      ]
-    },
-    {
-      "file": "server/agent-loop.mjs",
       "changeCount": 1,
       "lastChanged": "2026-07-31T13:42:09.000Z",
       "commits": [
@@ -519,28 +1323,12 @@
       ]
     },
     {
-      "file": "server/llm.mjs",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T13:42:09.000Z",
-      "commits": [
-        "70820ee"
-      ]
-    },
-    {
       "file": "server/sre.mjs",
       "changeCount": 2,
       "lastChanged": "2026-07-31T13:42:09.000Z",
       "commits": [
         "70820ee",
         "e95687c"
-      ]
-    },
-    {
-      "file": "server/tool-loader.mjs",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T13:42:09.000Z",
-      "commits": [
-        "70820ee"
       ]
     },
     {
@@ -612,14 +1400,6 @@
     },
     {
       "file": "crews/sre.security.json",
-      "changeCount": 1,
-      "lastChanged": "2026-07-31T13:32:24.000Z",
-      "commits": [
-        "e95687c"
-      ]
-    },
-    {
-      "file": "server/tool-engine/provider.mjs",
       "changeCount": 1,
       "lastChanged": "2026-07-31T13:32:24.000Z",
       "commits": [
@@ -829,80 +1609,242 @@
   ],
   "recentFeatures": [
     {
-      "id": "F-020",
-      "name": "Multi-Tab Chat Interface",
+      "id": "F-022",
+      "name": "App Shell & 7-View Navigation",
       "tags": [
         "ui",
-        "chat",
-        "frontend"
+        "core"
       ],
-      "changeCount": 2,
+      "changeCount": 4,
       "files": [
         "ui/src/App.tsx",
-        "server/routes.mjs"
+        "ui/src/components/Sidebar.test.tsx",
+        "ui/src/components/Sidebar.tsx",
+        "ui/src/main.tsx"
       ]
     },
     {
-      "id": "F-001",
-      "name": "HTTP API Server & Routing",
+      "id": "F-009",
+      "name": "Task Management",
       "tags": [
-        "core",
+        "data",
         "api",
-        "server"
+        "ui"
       ],
-      "changeCount": 2,
+      "changeCount": 3,
       "files": [
+        "ui/src/pages/TaskManagementPage.tsx",
         "server/routes.mjs",
-        "server/index.mjs"
+        "server/task-store.mjs"
       ]
     },
     {
-      "id": "F-021",
-      "name": "React App Bootstrap & Build Config",
+      "id": "F-029",
+      "name": "Test & Build Infrastructure",
       "tags": [
-        "ui",
-        "build",
-        "config"
+        "devx",
+        "tooling"
       ],
-      "changeCount": 2,
+      "changeCount": 3,
       "files": [
-        "ui/src/main.tsx",
+        "vitest.config.mjs",
+        "ui/src/test/setup.ts",
         "ui/vite.config.ts"
       ]
     },
     {
+      "id": "F-028",
+      "name": "Shared UI Types & Utilities",
+      "tags": [
+        "ui",
+        "utils"
+      ],
+      "changeCount": 2,
+      "files": [
+        "ui/src/types.ts",
+        "ui/src/types.test.ts"
+      ]
+    },
+    {
       "id": "F-003",
-      "name": "LLM Integration",
+      "name": "Agent Loop",
       "tags": [
         "ai",
         "core"
       ],
       "changeCount": 2,
       "files": [
-        "server/llm.mjs",
-        "server/tool-engine/provider.mjs"
+        "server/routes.mjs",
+        "server/agent-loop.mjs"
       ]
     },
     {
-      "id": "F-009",
-      "name": "Tool Registry & Loading",
+      "id": "F-007",
+      "name": "Crew Loader",
       "tags": [
-        "core",
-        "tooling"
+        "ai",
+        "orchestration"
       ],
       "changeCount": 2,
       "files": [
-        "server/tool-loader.mjs",
+        "server/routes.mjs",
+        "server/crew-loader.mjs"
+      ]
+    },
+    {
+      "id": "F-008",
+      "name": "Conversation Persistence & Archive",
+      "tags": [
+        "data",
+        "persistence"
+      ],
+      "changeCount": 2,
+      "files": [
+        "server/routes.mjs",
+        "server/conversation.mjs"
+      ]
+    },
+    {
+      "id": "F-010",
+      "name": "Tool Registry & Tool API",
+      "tags": [
+        "tooling",
+        "api"
+      ],
+      "changeCount": 2,
+      "files": [
+        "server/routes.mjs",
         "server/tool-registry.mjs"
       ]
     },
     {
-      "id": "F-016",
-      "name": "Telegram Chat Tool Provider",
+      "id": "F-011",
+      "name": "Tool Loader (Secure Dynamic Loading)",
       "tags": [
         "tooling",
-        "messaging",
+        "security"
+      ],
+      "changeCount": 2,
+      "files": [
+        "server/tool-loader.mjs",
+        "server/tool-loader.test.mjs"
+      ]
+    },
+    {
+      "id": "F-023",
+      "name": "Home Page (Platform Dashboard)",
+      "tags": [
+        "ui",
+        "dashboard"
+      ],
+      "changeCount": 2,
+      "files": [
+        "ui/src/pages/HomePage.test.tsx",
+        "ui/src/pages/HomePage.tsx"
+      ]
+    },
+    {
+      "id": "F-027",
+      "name": "Status Badge Component",
+      "tags": [
+        "ui",
+        "components"
+      ],
+      "changeCount": 2,
+      "files": [
+        "ui/src/components/StatusBadge.test.tsx",
+        "ui/src/components/StatusBadge.tsx"
+      ]
+    },
+    {
+      "id": "F-001",
+      "name": "HTTP Server Bootstrap",
+      "tags": [
+        "core",
+        "server"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/index.mjs"
+      ]
+    },
+    {
+      "id": "F-002",
+      "name": "API Route Layer",
+      "tags": [
+        "api",
+        "core"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/routes.mjs"
+      ]
+    },
+    {
+      "id": "F-025",
+      "name": "Tools Page",
+      "tags": [
+        "ui",
+        "tooling"
+      ],
+      "changeCount": 1,
+      "files": [
+        "ui/src/pages/ToolsPage.tsx"
+      ]
+    },
+    {
+      "id": "F-004",
+      "name": "LLM Client",
+      "tags": [
+        "ai",
+        "core"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/llm.mjs"
+      ]
+    },
+    {
+      "id": "F-005",
+      "name": "LLM Provider Adapter",
+      "tags": [
+        "ai",
         "integration"
+      ],
+      "changeCount": 1,
+      "files": [
+        "server/tool-engine/provider.mjs"
+      ]
+    },
+    {
+      "id": "F-024",
+      "name": "Console Page",
+      "tags": [
+        "ui",
+        "ai"
+      ],
+      "changeCount": 1,
+      "files": [
+        "ui/src/pages/ConsolePage.tsx"
+      ]
+    },
+    {
+      "id": "F-026",
+      "name": "Placeholder Views",
+      "tags": [
+        "ui"
+      ],
+      "changeCount": 1,
+      "files": [
+        "ui/src/pages/Placeholder.tsx"
+      ]
+    },
+    {
+      "id": "F-019",
+      "name": "tchat Messaging Tool",
+      "tags": [
+        "messaging",
+        "tool"
       ],
       "changeCount": 1,
       "files": [
@@ -910,12 +1852,11 @@
       ]
     },
     {
-      "id": "F-010",
-      "name": "Grafana Tool Provider",
+      "id": "F-012",
+      "name": "Grafana Tool",
       "tags": [
-        "tooling",
         "observability",
-        "integration"
+        "tool"
       ],
       "changeCount": 1,
       "files": [
@@ -923,45 +1864,7 @@
       ]
     },
     {
-      "id": "F-008",
-      "name": "MCP Client",
-      "tags": [
-        "mcp",
-        "protocol",
-        "client"
-      ],
-      "changeCount": 1,
-      "files": [
-        "server/mcp-client.mjs"
-      ]
-    },
-    {
-      "id": "F-007",
-      "name": "MCP Server",
-      "tags": [
-        "mcp",
-        "protocol",
-        "core"
-      ],
-      "changeCount": 1,
-      "files": [
-        "server/mcp-server.mjs"
-      ]
-    },
-    {
-      "id": "F-002",
-      "name": "Agent Loop",
-      "tags": [
-        "core",
-        "ai"
-      ],
-      "changeCount": 1,
-      "files": [
-        "server/agent-loop.mjs"
-      ]
-    },
-    {
-      "id": "F-004",
+      "id": "F-006",
       "name": "Configuration Management",
       "tags": [
         "config",
@@ -973,37 +1876,11 @@
       ]
     },
     {
-      "id": "F-005",
-      "name": "Conversation Persistence",
+      "id": "F-018",
+      "name": "Docs & Runbook Search Tool",
       "tags": [
-        "data",
-        "persistence"
-      ],
-      "changeCount": 1,
-      "files": [
-        "server/conversation.mjs"
-      ]
-    },
-    {
-      "id": "F-006",
-      "name": "Crew Orchestration",
-      "tags": [
-        "core",
-        "orchestration",
-        "ai"
-      ],
-      "changeCount": 1,
-      "files": [
-        "server/crew-loader.mjs"
-      ]
-    },
-    {
-      "id": "F-017",
-      "name": "Documentation & Runbook Search",
-      "tags": [
-        "tooling",
         "docs",
-        "sre"
+        "tool"
       ],
       "changeCount": 1,
       "files": [
@@ -1011,12 +1888,11 @@
       ]
     },
     {
-      "id": "F-011",
-      "name": "Kubernetes Tool Provider",
+      "id": "F-015",
+      "name": "Kubernetes (kubectl) Tool",
       "tags": [
-        "tooling",
-        "k8s",
-        "sre"
+        "infra",
+        "tool"
       ],
       "changeCount": 1,
       "files": [
@@ -1024,12 +1900,11 @@
       ]
     },
     {
-      "id": "F-012",
-      "name": "Loki Tool Provider",
+      "id": "F-014",
+      "name": "Loki Log Query Tool",
       "tags": [
-        "tooling",
         "observability",
-        "logging"
+        "tool"
       ],
       "changeCount": 1,
       "files": [
@@ -1038,11 +1913,10 @@
     },
     {
       "id": "F-013",
-      "name": "Prometheus Tool Provider",
+      "name": "Prometheus Tool",
       "tags": [
-        "tooling",
         "observability",
-        "metrics"
+        "tool"
       ],
       "changeCount": 1,
       "files": [
@@ -1050,12 +1924,11 @@
       ]
     },
     {
-      "id": "F-014",
-      "name": "Security Scanning Tool Provider",
+      "id": "F-017",
+      "name": "Security Scanning Tool",
       "tags": [
-        "tooling",
         "security",
-        "sre"
+        "tool"
       ],
       "changeCount": 1,
       "files": [
@@ -1063,12 +1936,11 @@
       ]
     },
     {
-      "id": "F-015",
-      "name": "Shell Command Tool Provider",
+      "id": "F-016",
+      "name": "Shell Execution Tool",
       "tags": [
-        "tooling",
-        "shell",
-        "sre"
+        "tool",
+        "security"
       ],
       "changeCount": 1,
       "files": [
@@ -1076,12 +1948,11 @@
       ]
     },
     {
-      "id": "F-018",
-      "name": "SRE Console UI",
+      "id": "F-020",
+      "name": "SRE Console (Legacy UI)",
       "tags": [
         "ui",
-        "sre",
-        "frontend"
+        "ai"
       ],
       "changeCount": 1,
       "files": [
@@ -1089,12 +1960,11 @@
       ]
     },
     {
-      "id": "F-019",
-      "name": "SRE Dashboard UI",
+      "id": "F-021",
+      "name": "SRE Dashboard (Legacy UI)",
       "tags": [
         "ui",
-        "sre",
-        "dashboard"
+        "observability"
       ],
       "changeCount": 1,
       "files": [
@@ -1113,42 +1983,60 @@
       "impactLevel": "low"
     },
     {
-      "changedFile": "server/routes.mjs",
+      "changedFile": "ui/src/pages/TaskManagementPage.tsx",
       "affectedFiles": [
-        "server/index.mjs"
+        "ui/src/App.tsx"
       ],
       "impactLevel": "low"
+    },
+    {
+      "changedFile": "ui/src/types.ts",
+      "affectedFiles": [
+        "ui/src/App.tsx",
+        "ui/src/components/Sidebar.test.tsx",
+        "ui/src/components/Sidebar.tsx",
+        "ui/src/pages/ConsolePage.tsx",
+        "ui/src/pages/HomePage.test.tsx",
+        "ui/src/pages/HomePage.tsx",
+        "ui/src/pages/HomePage.tsx",
+        "ui/src/pages/TaskManagementPage.tsx",
+        "ui/src/pages/TaskManagementPage.tsx",
+        "ui/src/pages/ToolsPage.tsx",
+        "ui/src/pages/ToolsPage.tsx",
+        "ui/src/types.test.ts"
+      ],
+      "impactLevel": "high"
     }
   ],
   "diffStat": "",
   "summary": {
     "period": "30 days",
-    "totalCommits": 10,
-    "totalFilesChanged": 82,
-    "totalFeaturesChanged": 21,
+    "totalCommits": 19,
+    "totalFilesChanged": 158,
+    "totalFeaturesChanged": 29,
     "totalApisChanged": 0,
     "totalDecisions": 0,
-    "highImpactChanges": 0,
+    "highImpactChanges": 1,
     "topChangedFiles": [
       {
         "file": "ui/src/App.tsx",
+        "changes": 4
+      },
+      {
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "changes": 1
+      },
+      {
+        "file": "ui/src/types.ts",
         "changes": 2
       },
       {
-        "file": ".gitignore",
-        "changes": 2
+        "file": ".paaw/CHANGELOG.md",
+        "changes": 1
       },
       {
-        "file": "package.json",
-        "changes": 2
-      },
-      {
-        "file": "server/routes.mjs",
+        "file": ".paaw/DECISIONS.md",
         "changes": 3
-      },
-      {
-        "file": "ui/index.html",
-        "changes": 2
       }
     ]
   }

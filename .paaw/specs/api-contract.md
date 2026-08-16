@@ -1,366 +1,452 @@
-# API Contract — `agent-sre`
+# API Contract — agent-sre
 
-> **Source confidence:** The project's file-tree scan failed (unescaped parens in `find`), so the following contract is reconstructed from the JSON scan summary, the architecture map, the git log, and standard MCP/HTTP patterns. The three HTTP endpoints (`POST /api/chat`, `GET /api/tools`, `POST /api/tools/test`) come directly from the scan; their schemas, status codes, and call chains are inferred from the data models (`ChatMessage`, `ChatTab`, `McpTool`) and the MCP server/client architecture. Verify against `src/server.ts` before publishing.
+> ## ⚠️ Provenance Warning
+> The automated file-tree scan **failed** (shell `find` syntax error), and no Tree-sitter source analysis or Feature Map was delivered with this run. This contract is reconstructed from **git history evidence** (commits `80b15a1`, `b655bc1`, `1ca8dfa`, `6f00301`, `edf2daa`, `f072911`) and the Architecture Map.
+>
+> **Confidence legend:**
+> - 🟢 **High** — endpoint explicitly referenced in a commit message
+> - 🟡 **Medium** — strongly implied by shipped features, path/shape unverified
+> - 🔴 **Low** — plausible convention, may not exist
+>
+> Handler names, exact paths, and field names marked *(inferred)* have **not** been verified against source. The API Tester should treat 404s on 🔴/🟡 endpoints as "path mismatch," not server failure. **Re-run the scan with a quoted `find` expression (`\( ... \)`)** to validate before publishing this contract to `.paaw/`.
+
+---
+
+## Task Management APIs
+
+*Evidence: commit `80b15a1` "feat(server): add Task management CRUD API endpoints" + `b655bc1` (CRUD UI). "CRUD" implies the full 5-endpoint set.* 🟢
+
+### GET /api/tasks
+- **Description:** List all tasks
+- **Feature:** Task Management
+- **File:** `server.mjs` or `src/routes/tasks.mjs` *(inferred)*
+- **Handler:** inline / `listTasks` *(inferred)*
+- **Auth:** None evident
+- **Confidence:** 🟢 (endpoint exists) / 🟡 (exact path)
+- **Query Params:**
+  | Field | Type | Required | Description |
+  |-------|------|----------|-------------|
+  | status | string | No | Filter by task status |
+- **Response 200:**
+  | Field | Type | Description |
+  |-------|------|-------------|
+  | (array) | Task[] | Array of task objects |
+  | [].id | string | Task ID |
+  | [].title | string | Task title |
+  | [].description | string | Task details |
+  | [].status | string | `pending` / `in_progress` / `done` *(enum inferred)* |
+  | [].priority | string | Task priority |
+  | [].createdAt | string (ISO 8601) | Creation timestamp |
+- **Response 500:** Server error
+- **Calls:** task store list operation (file or in-memory persistence — unverified)
+
+### POST /api/tasks
+- **Description:** Create a new task
+- **Feature:** Task Management
+- **File:** `server.mjs` or `src/routes/tasks.mjs` *(inferred)*
+- **Handler:** inline / `createTask` *(inferred)*
+- **Auth:** None evident
+- **Confidence:** 🟢 (endpoint exists) / 🟡 (exact path, body shape)
+- **Request Body:**
+  | Field | Type | Required | Description |
+  |-------|------|----------|-------------|
+  | title | string | Yes | Task title |
+  | description | string | No | Task details |
+  | status | string | No | Defaults to `pending` *(inferred)* |
+  | priority | string | No | Task priority |
+- **Response 200 (or 201):**
+  | Field | Type | Description |
+  |-------|------|-------------|
+  | id | string | New task ID |
+  | title | string | Task title |
+  | status | string | Task status |
+  | createdAt | string (ISO 8601) | Creation timestamp |
+- **Response 400:** Invalid input (missing/invalid fields)
+- **Response 500:** Server error
+
+### GET /api/tasks/{id}
+- **Description:** Get a single task by ID
+- **Feature:** Task Management
+- **File:** `server.mjs` or `src/routes/tasks.mjs` *(inferred)*
+- **Auth:** None evident
+- **Confidence:** 🟢 / 🟡 (path)
+- **Path Params:** `id` — task identifier
+- **Response 200:** Full task object (same shape as list items)
+- **Response 404:** Task not found
+- **Response 500:** Server error
+
+### PUT /api/tasks/{id}
+- **Description:** Update an existing task *(PATCH is an equally likely variant — unverified)*
+- **Feature:** Task Management
+- **File:** `server.mjs` or `src/routes/tasks.mjs` *(inferred)*
+- **Auth:** None evident
+- **Confidence:** 🟡 (CRUD implies update; PUT vs PATCH unverified)
+- **Path Params:** `id`
+- **Request Body:** Partial or full task fields (`title`, `description`, `status`, `priority`)
+- **Response 200:** Updated task object
+- **Response 400:** Invalid input
+- **Response 404:** Task not found
+- **Response 500:** Server error
+
+### DELETE /api/tasks/{id}
+- **Description:** Delete a task
+- **Feature:** Task Management
+- **File:** `server.mjs` or `src/routes/tasks.mjs` *(inferred)*
+- **Auth:** None evident
+- **Confidence:** 🟢 / 🟡 (path)
+- **Path Params:** `id`
+- **Response 200:** Success confirmation (e.g., `{ ok: true }` or deleted object)
+- **Response 404:** Task not found
+- **Response 500:** Server error
 
 ---
 
 ## Chat APIs
 
+*Evidence: commits `6f00301` (multi-tab chat + model selector), `edf2daa` (chat send no response + error not displayed). Error responses are surfaced to the UI — response body contains a structured error field.* 🟢 that a send endpoint exists; 🟡 on sessions endpoint.
+
 ### POST /api/chat
-- **Description:** Send a user message to the SRE agent and receive an assistant reply. Messages are scoped to a chat tab and processed with a selected model.
-- **Feature:** Chat (Web UI ↔ Agent)
-- **File:** `src/server.ts`
-- **Handler:** `handleChat` (inferred)
-- **Auth:** None enforced (single-user local tool — inferred)
-- **Rate Limiting:** None visible
+- **Description:** Send a chat message and get the assistant reply
+- **Feature:** Chat (Multi-tab Console)
+- **File:** `server.mjs` or `src/routes/chat.mjs` *(inferred)*
+- **Handler:** inline *(inferred)*
+- **Auth:** None evident
+- **Confidence:** 🟢 (endpoint exists) / 🔴 (exact path — could be `/api/chat/send`, `/api/chat/message`, or `/api/messages`)
 - **Request Body:**
   | Field | Type | Required | Description |
   |-------|------|----------|-------------|
-  | message | string | Yes | User's prompt / question |
-  | model | string | No | Model identifier (e.g. `gpt-4o`, `claude-3-5-sonnet`) |
-  | tabId | string | No | Chat tab the message belongs to; new tab created if omitted |
-  | role | string | No | Defaults to `user` |
+  | sessionId | string | Yes | Chat tab/session ID (multi-tab support) |
+  | message | string | Yes | User message |
+  | model | string | No | Selected model ID (model selector) |
 - **Response 200:**
   | Field | Type | Description |
   |-------|------|-------------|
-  | id | string | Server-assigned message ID |
-  | role | string | `assistant` |
-  | content | string | Assistant's reply text |
-  | timestamp | string (ISO 8601) | Reply timestamp |
+  | sessionId | string | Session the reply belongs to |
+  | reply | string | Assistant response text |
   | model | string | Model that produced the reply |
-  | tabId | string | Tab ID for the conversation |
-- **Response 400:** Malformed request body — missing `message`
-- **Response 500:** Upstream model or MCP failure
-- **Calls:** `McpClient.listTools()`, `McpClient.callTool()` (if agent decides to invoke a tool), `runCrew()` (if SRE orchestration is triggered)
+- **Response 400:** Invalid input
+- **Response 500:** LLM/provider failure — structured error body (`{ error: "..." }`) rendered by console (per `edf2daa`)
+- **Calls:** `llm.mjs` chat/send → `provider.mjs` provider call → MCP client tool invocations (Grafana / tchat tools) *(call chain inferred from Architecture Map)*
+
+### GET /api/chat/sessions
+- **Description:** List chat sessions (tabs)
+- **Feature:** Chat (Multi-tab Console)
+- **File:** `server.mjs` or `src/routes/chat.mjs` *(inferred)*
+- **Auth:** None evident
+- **Confidence:** 🔴 — multi-tab may be purely client-side state; endpoint may not exist
+- **Response 200:** Array of sessions `{ id, title, model, createdAt, updatedAt }`
+- **Response 500:** Server error
 
 ---
 
-## Tools APIs
+## LLM Model APIs
+
+*Evidence: commit `6f00301` "model selector" — the selector must be populated from somewhere (server list or hardcoded client config).* 🟡
+
+### GET /api/models
+- **Description:** List available LLM models for the chat model selector
+- **Feature:** Model Selection
+- **File:** `server.mjs` / `llm.mjs` route *(inferred)*
+- **Auth:** None evident
+- **Confidence:** 🟡 — endpoint may not exist if models are hardcoded in the UI
+- **Response 200:**
+  | Field | Type | Description |
+  |-------|------|-------------|
+  | (array) | Model[] | Available models |
+  | [].id | string | Model identifier |
+  | [].provider | string | Provider name (e.g., openai, anthropic) |
+- **Response 500:** Server error
+- **Calls:** `llm.mjs` / `provider.mjs` model registry *(inferred)*
+
+---
+
+## Tool Registry & Testing APIs
+
+*Evidence: commits `1ca8dfa` "add web UI + tool test endpoint", `f072911` (tool-loader path-traversal hardening), `55cc035` (Grafana provider, 6 tools), `795e8f0` (tchat provider, 3 tools).* The test endpoint is 🟢; its exact path is 🟡.
 
 ### GET /api/tools
-- **Description:** List all MCP tools registered on the server (Grafana + Tchat providers).
-- **Feature:** Tool Discovery
-- **File:** `src/server.ts`
-- **Handler:** `handleListTools` (inferred)
-- **Auth:** None enforced
-- **Rate Limiting:** None visible
-- **Request:** No body, no query params
+- **Description:** List available MCP tools from loaded providers (grafana, tchat)
+- **Feature:** Tool Registry
+- **File:** `server.mjs` / `tool-loader.mjs` route *(inferred)*
+- **Auth:** None evident
+- **Confidence:** 🟡 — the tool-test UI likely needs a tool list; endpoint may not exist
 - **Response 200:**
   | Field | Type | Description |
   |-------|------|-------------|
-  | tools | McpTool[] | Array of registered tools |
-  | tools[].name | string | Tool name (e.g. `grafana_query_metrics`) |
-  | tools[].description | string | Human-readable description |
-  | tools[].inputSchema | object | JSON-Schema describing accepted args |
-  | tools[].provider | string | `grafana` \| `tchat` |
-- **Response 500:** MCP server unreachable
-- **Calls:** `McpClient.listTools()`
+  | (array) | Tool[] | Registered tools |
+  | [].name | string | Tool name (e.g., `grafana_list_dashboards`, `tchat_send_message`) |
+  | [].provider | string | Source provider |
+  | [].description | string | Tool description |
+- **Calls:** `tool-loader.mjs` discovery (fs read with path-traversal protection per `f072911`) *(inferred)*
 
 ### POST /api/tools/test
-- **Description:** Manually invoke a single MCP tool with provided arguments — used by the UI's tool-test panel and as a debugging surface.
-- **Feature:** Tool Invocation
-- **File:** `src/server.ts`
-- **Handler:** `handleToolTest` (inferred)
-- **Auth:** None enforced
+- **Description:** Execute a tool with test arguments and return its result
+- **Feature:** Tool Testing
+- **File:** `server.mjs` or `src/routes/tools.mjs` *(inferred)*
+- **Handler:** inline *(inferred)*
+- **Auth:** None evident
 - **Rate Limiting:** None visible
+- **Confidence:** 🟢 (endpoint exists per commit `1ca8dfa`) / 🟡 (exact path, body shape)
 - **Request Body:**
   | Field | Type | Required | Description |
   |-------|------|----------|-------------|
-  | toolName | string | Yes | Registered tool name (e.g. `grafana_list_dashboards`) |
-  | args | object | No | Tool-specific arguments matching `inputSchema` |
+  | tool | string | Yes | Tool name (e.g., `grafana_list_dashboards`) |
+  | args | object | No | Tool-specific arguments |
 - **Response 200:**
   | Field | Type | Description |
   |-------|------|-------------|
-  | ok | boolean | `true` on success |
-  | toolName | string | Echo of the invoked tool |
-  | result | any | Tool-specific result payload |
-- **Response 400:** Unknown `toolName` or `args` fails `inputSchema` validation
-- **Response 500:** Tool provider raised an error (Grafana/Telegram API failure, network, auth)
-- **Calls:** `McpClient.callTool(toolName, args)` → routes to `GrafanaProvider` or `TchatProvider`
+  | ok | boolean | Execution success |
+  | result | object | Raw tool output |
+- **Response 400:** Unknown tool or invalid args
+- **Response 500:** Tool execution failure
+- **Calls:** `tool-loader.mjs` load → MCP client `callTool` → provider (Grafana API / tchat API) *(inferred)*
 
 ---
 
-## MCP Tool Catalog (exposed via `POST /api/tools/test`)
+## Cross-cutting Notes
 
-> These are not HTTP endpoints — they are the tool names accepted by `toolName` in `/api/tools/test`. Included here because the catalog is the real API surface for SRE automation.
-
-### Grafana Provider — 6 tools (inferred names)
-
-| Tool Name | Description | Key Args |
-|-----------|-------------|----------|
-| `grafana_list_dashboards` | List available dashboards | `tag?`, `limit?` |
-| `grafana_get_dashboard` | Fetch a dashboard by UID | `uid` |
-| `grafana_list_alerts` | List current alert states | `state?` |
-| `grafana_query_metrics` | Run a PromQL query | `query`, `start`, `end` |
-| `grafana_list_datasources` | List configured datasources | — |
-| `grafana_get_annotations` | Fetch dashboard annotations | `dashboardUID?`, `from`, `to` |
-
-### Tchat Provider — 3 tools (renamed `telegram_*` → `tchat_*`)
-
-| Tool Name | Description | Key Args |
-|-----------|-------------|----------|
-| `tchat_send_message` | Send a message to a chat | `chatId`, `text` |
-| `tchat_read_messages` | Read recent messages from a chat | `chatId`, `limit?` |
-| `tchat_list_chats` | List available chats | — |
+| Concern | Finding |
+|---------|---------|
+| **Auth** | No authentication/authorization layer evident anywhere in git history or architecture map. All endpoints assumed open. ⚠️ Flag for the API Tester: do **not** send `Authorization` headers. |
+| **Rate limiting** | None visible |
+| **Error format** | Structured error body exists at least for chat (commit `edf2daa` mentions displaying errors) — assumed `{ "error": "<message>" }` *(inferred)* |
+| **Content type** | `application/json` on all request/response bodies |
 
 ---
 
-## Cross-Cutting Concerns
-
-| Concern | Status |
-|---------|--------|
-| Authentication | **None enforced** (single-user local tool — inferred) |
-| Authorization / RBAC | Not present |
-| Rate Limiting | Not present |
-| Request Schema Validation | **Missing** — flagged as tech debt; recommend Zod |
-| Error Code Taxonomy | **Missing** — errors are passed through, no centralized mapping |
-| Persistence | In-memory only; chat history and tab state lost on restart |
-| CORS | Presumed permissive for local Vite dev server |
-
----
-
-## Open Questions for Source Verification
-1. Exact handler function names in `src/server.ts` (`handleChat` / `handleListTools` / `handleToolTest` are guesses).
-2. Real list of 6 Grafana tool names and 3 Tchat tool names — verify in `src/tools/grafana/*` and `src/tools/tchat/*`.
-3. Whether `POST /api/chat` returns the full assistant message object or just plain text.
-4. Whether `/api/tools/test` wraps results in `{ ok, result }` or returns the raw tool output.
-5. Whether any auth middleware exists despite the scan reporting `hasAuth: false`.
-
----
+## API Examples (JSON)
 
 ```json-examples
 [
   {
-    "method": "POST",
-    "endpoint": "/api/chat",
-    "description": "Send a chat message and receive an assistant reply",
+    "method": "GET",
+    "endpoint": "/api/tasks",
+    "description": "List all tasks",
     "request": {
-      "headers": { "Content-Type": "application/json" },
-      "body": {
-        "message": "Why did the checkout service latency spike at 14:32 UTC?",
-        "model": "gpt-4o",
-        "tabId": "tab-incident-2024-09-12",
-        "role": "user"
-      }
+      "headers": { "Content-Type": "application/json" }
     },
     "response": {
       "status": 200,
-      "body": {
-        "id": "msg-7f3a9c2e",
-        "role": "assistant",
-        "content": "At 14:32 UTC, checkout-service p95 latency rose from 180ms to 2.4s. The Grafana dashboard shows a correlated spike in DB connection pool saturation on orders-db-1. Recommend checking the connection pool size and recent deployment of checkout-service v3.4.1.",
-        "timestamp": "2024-09-12T14:34:08.117Z",
-        "model": "gpt-4o",
-        "tabId": "tab-incident-2024-09-12"
-      }
+      "body": [
+        {
+          "id": "task-001",
+          "title": "Investigate HighMemoryUsage alert on api-gateway",
+          "description": "Alert firing since 08:10 UTC on the payments dashboard; identify top memory-consuming pods.",
+          "status": "in_progress",
+          "priority": "high",
+          "createdAt": "2025-01-15T08:24:00Z",
+          "updatedAt": "2025-01-15T09:02:00Z"
+        },
+        {
+          "id": "task-002",
+          "title": "Review Grafana dashboard for checkout latency",
+          "description": "Check p99 latency panels after the 2x spike reported by on-call.",
+          "status": "pending",
+          "priority": "medium",
+          "createdAt": "2025-01-15T09:10:00Z",
+          "updatedAt": "2025-01-15T09:10:00Z"
+        }
+      ]
     }
   },
   {
     "method": "POST",
-    "endpoint": "/api/chat",
-    "description": "Send a chat message without an existing tab (new tab created)",
+    "endpoint": "/api/tasks",
+    "description": "Create a new task",
     "request": {
       "headers": { "Content-Type": "application/json" },
       "body": {
-        "message": "Summarize the last 24 hours of alerts for the payments namespace.",
-        "model": "claude-3-5-sonnet"
+        "title": "Investigate HighMemoryUsage alert on api-gateway",
+        "description": "Alert firing since 08:10 UTC on the payments dashboard; identify top memory-consuming pods.",
+        "status": "pending",
+        "priority": "high"
       }
     },
     "response": {
-      "status": 200,
+      "status": 201,
       "body": {
-        "id": "msg-2b8e1d4f",
-        "role": "assistant",
-        "content": "Over the last 24h, the payments namespace fired 12 alerts: 8 HighPaymentLatency, 3 PodCrashLoopBackOff on payments-worker, and 1 DBReplicaLag. The latency alerts cluster between 02:00–04:00 UTC, coinciding with the nightly batch run.",
-        "timestamp": "2024-09-12T15:01:22.883Z",
-        "model": "claude-3-5-sonnet",
-        "tabId": "tab-3c91ab78"
+        "id": "task-003",
+        "title": "Investigate HighMemoryUsage alert on api-gateway",
+        "description": "Alert firing since 08:10 UTC on the payments dashboard; identify top memory-consuming pods.",
+        "status": "pending",
+        "priority": "high",
+        "createdAt": "2025-01-15T09:30:00Z"
       }
     }
   },
   {
     "method": "GET",
-    "endpoint": "/api/tools",
-    "description": "List all MCP tools registered on the server",
+    "endpoint": "/api/tasks/{id}",
+    "description": "Get task by ID",
     "request": {
-      "headers": {},
-      "params": {}
+      "headers": { "Content-Type": "application/json" },
+      "params": { "id": "task-001" }
     },
     "response": {
       "status": 200,
       "body": {
-        "tools": [
-          {
-            "name": "grafana_list_dashboards",
-            "description": "List Grafana dashboards, optionally filtered by tag",
-            "inputSchema": {
-              "type": "object",
-              "properties": {
-                "tag": { "type": "string", "description": "Filter by dashboard tag" },
-                "limit": { "type": "number", "default": 50, "maximum": 200 }
-              }
-            },
-            "provider": "grafana"
-          },
-          {
-            "name": "grafana_query_metrics",
-            "description": "Run a PromQL query against Grafana datasources",
-            "inputSchema": {
-              "type": "object",
-              "required": ["query"],
-              "properties": {
-                "query": { "type": "string" },
-                "start": { "type": "string", "description": "RFC3339 or unix timestamp" },
-                "end": { "type": "string" }
-              }
-            },
-            "provider": "grafana"
-          },
-          {
-            "name": "tchat_send_message",
-            "description": "Send a message to a Telegram chat",
-            "inputSchema": {
-              "type": "object",
-              "required": ["chatId", "text"],
-              "properties": {
-                "chatId": { "type": "number" },
-                "text": { "type": "string", "maxLength": 4096 }
-              }
-            },
-            "provider": "tchat"
-          }
-        ]
+        "id": "task-001",
+        "title": "Investigate HighMemoryUsage alert on api-gateway",
+        "description": "Alert firing since 08:10 UTC on the payments dashboard; identify top memory-consuming pods.",
+        "status": "in_progress",
+        "priority": "high",
+        "createdAt": "2025-01-15T08:24:00Z",
+        "updatedAt": "2025-01-15T09:02:00Z"
       }
+    }
+  },
+  {
+    "method": "PUT",
+    "endpoint": "/api/tasks/{id}",
+    "description": "Update a task",
+    "request": {
+      "headers": { "Content-Type": "application/json" },
+      "params": { "id": "task-001" },
+      "body": {
+        "status": "done",
+        "description": "Resolved: memory leak in payment-worker v2.4.1; rollback to v2.4.0 completed."
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "id": "task-001",
+        "title": "Investigate HighMemoryUsage alert on api-gateway",
+        "description": "Resolved: memory leak in payment-worker v2.4.1; rollback to v2.4.0 completed.",
+        "status": "done",
+        "priority": "high",
+        "createdAt": "2025-01-15T08:24:00Z",
+        "updatedAt": "2025-01-15T10:15:00Z"
+      }
+    }
+  },
+  {
+    "method": "DELETE",
+    "endpoint": "/api/tasks/{id}",
+    "description": "Delete a task",
+    "request": {
+      "headers": { "Content-Type": "application/json" },
+      "params": { "id": "task-002" }
+    },
+    "response": {
+      "status": 200,
+      "body": { "ok": true }
+    }
+  },
+  {
+    "method": "POST",
+    "endpoint": "/api/chat",
+    "description": "Send a chat message and receive the assistant reply",
+    "request": {
+      "headers": { "Content-Type": "application/json" },
+      "body": {
+        "sessionId": "sess-4f8a-latency",
+        "message": "Why did checkout service p99 latency spike at 14:00 UTC yesterday?",
+        "model": "gpt-4o"
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "sessionId": "sess-4f8a-latency",
+        "reply": "Checkout p99 latency rose from 210ms to 480ms between 14:00–14:25 UTC, correlating with a deploy of checkout-api v3.12. The payments dashboard shows elevated downstream latency to the payment-provider at the same window. Recommended next step: compare error rates across the two versions.",
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "endpoint": "/api/chat/sessions",
+    "description": "List chat sessions (multi-tab) — LOW CONFIDENCE, may not exist",
+    "request": {
+      "headers": { "Content-Type": "application/json" }
+    },
+    "response": {
+      "status": 200,
+      "body": [
+        {
+          "id": "sess-4f8a-latency",
+          "title": "Checkout latency spike",
+          "model": "gpt-4o",
+          "createdAt": "2025-01-15T08:02:00Z",
+          "updatedAt": "2025-01-15T09:44:00Z"
+        },
+        {
+          "id": "sess-91c2-alerts",
+          "title": "Firing alerts triage",
+          "model": "claude-sonnet-4-5",
+          "createdAt": "2025-01-15T07:30:00Z",
+          "updatedAt": "2025-01-15T08:15:00Z"
+        }
+      ]
+    }
+  },
+  {
+    "method": "GET",
+    "endpoint": "/api/models",
+    "description": "List available models for the model selector",
+    "request": {
+      "headers": { "Content-Type": "application/json" }
+    },
+    "response": {
+      "status": 200,
+      "body": [
+        { "id": "gpt-4o", "provider": "openai" },
+        { "id": "gpt-4o-mini", "provider": "openai" },
+        { "id": "claude-sonnet-4-5", "provider": "anthropic" }
+      ]
+    }
+  },
+  {
+    "method": "GET",
+    "endpoint": "/api/tools",
+    "description": "List registered MCP tools",
+    "request": {
+      "headers": { "Content-Type": "application/json" }
+    },
+    "response": {
+      "status": 200,
+      "body": [
+        { "name": "grafana_list_dashboards", "provider": "grafana", "description": "List Grafana dashboards matching a query" },
+        { "name": "grafana_query_metrics", "provider": "grafana", "description": "Run a PromQL query against Grafana" },
+        { "name": "tchat_send_message", "provider": "tchat", "description": "Send a message to a tchat channel" }
+      ]
     }
   },
   {
     "method": "POST",
     "endpoint": "/api/tools/test",
-    "description": "Invoke grafana_query_metrics with a PromQL query",
+    "description": "Execute a tool with test arguments",
     "request": {
       "headers": { "Content-Type": "application/json" },
       "body": {
-        "toolName": "grafana_query_metrics",
-        "args": {
-          "query": "rate(http_requests_total{service=\"checkout\",code=~\"5..\"}[5m])",
-          "start": "2024-09-12T14:00:00Z",
-          "end": "2024-09-12T14:45:00Z"
-        }
+        "tool": "grafana_list_dashboards",
+        "args": { "query": "payments" }
       }
     },
     "response": {
       "status": 200,
       "body": {
         "ok": true,
-        "toolName": "grafana_query_metrics",
         "result": {
-          "series": [
-            {
-              "labels": { "service": "checkout", "code": "500", "instance": "checkout-1:8080" },
-              "samples": [
-                { "timestamp": 1726147200, "value": "0.4" },
-                { "timestamp": 1726147260, "value": "12.7" },
-                { "timestamp": 1726147320, "value": "18.3" }
-              ]
-            }
+          "dashboards": [
+            { "id": 42, "title": "Payments - Service Overview", "uid": "payments-overview" },
+            { "id": 57, "title": "Payments - Provider Latency", "uid": "payments-latency" }
           ]
         }
-      }
-    }
-  },
-  {
-    "method": "POST",
-    "endpoint": "/api/tools/test",
-    "description": "Invoke grafana_list_dashboards filtered by tag",
-    "request": {
-      "headers": { "Content-Type": "application/json" },
-      "body": {
-        "toolName": "grafana_list_dashboards",
-        "args": { "tag": "payments", "limit": 10 }
-      }
-    },
-    "response": {
-      "status": 200,
-      "body": {
-        "ok": true,
-        "toolName": "grafana_list_dashboards",
-        "result": [
-          { "uid": "payments-overview", "title": "Payments Overview", "tags": ["payments", "prod"] },
-          { "uid": "payments-latency", "title": "Payments Latency SLO", "tags": ["payments", "slo"] }
-        ]
-      }
-    }
-  },
-  {
-    "method": "POST",
-    "endpoint": "/api/tools/test",
-    "description": "Invoke tchat_send_message to notify an incident channel",
-    "request": {
-      "headers": { "Content-Type": "application/json" },
-      "body": {
-        "toolName": "tchat_send_message",
-        "args": {
-          "chatId": -1002384719203,
-          "text": "🚨 SEV-2: checkout-service p95 latency exceeded 2s at 14:32 UTC. Investigating DB connection pool saturation on orders-db-1."
-        }
-      }
-    },
-    "response": {
-      "status": 200,
-      "body": {
-        "ok": true,
-        "toolName": "tchat_send_message",
-        "result": {
-          "messageId": 4827,
-          "chatId": -1002384719203,
-          "sentAt": "2024-09-12T14:33:01.412Z"
-        }
-      }
-    }
-  },
-  {
-    "method": "POST",
-    "endpoint": "/api/tools/test",
-    "description": "Invoke tchat_read_messages to fetch recent incident-channel updates",
-    "request": {
-      "headers": { "Content-Type": "application/json" },
-      "body": {
-        "toolName": "tchat_read_messages",
-        "args": { "chatId": -1002384719203, "limit": 5 }
-      }
-    },
-    "response": {
-      "status": 200,
-      "body": {
-        "ok": true,
-        "toolName": "tchat_read_messages",
-        "result": [
-          { "messageId": 4827, "from": "SRE Bot", "text": "🚨 SEV-2: checkout-service p95 latency exceeded 2s...", "timestamp": "2024-09-12T14:33:01Z" },
-          { "messageId": 4828, "from": "alice", "text": "On-call acknowledged, checking Grafana.", "timestamp": "2024-09-12T14:33:24Z" },
-          { "messageId": 4829, "from": "bob", "text": "Rolling back checkout-service v3.4.1.", "timestamp": "2024-09-12T14:35:11Z" }
-        ]
-      }
-    }
-  },
-  {
-    "method": "POST",
-    "endpoint": "/api/tools/test",
-    "description": "Bad request — unknown tool name",
-    "request": {
-      "headers": { "Content-Type": "application/json" },
-      "body": {
-        "toolName": "grafana_delete_everything",
-        "args": {}
-      }
-    },
-    "response": {
-      "status": 400,
-      "body": {
-        "ok": false,
-        "error": "UNKNOWN_TOOL",
-        "message": "No tool registered with name 'grafana_delete_everything'"
       }
     }
   }
 ]
 ```
+
+---
+
+## Validation Checklist (before publishing to `.paaw/`)
+
+1. **Re-run the scan** with corrected `find` syntax: `find . -type f \( -name '*.mjs' -o -name '*.js' ... \)` — the `(` must be escaped/quoted.
+2. **Verify exact paths** for chat send (`/api/chat` vs `/api/chat/send`) and tool test (`/api/tools/test` vs `/api/tool/test`).
+3. **Confirm Task schema field names** (`title`/`name`, `status` enum values, `priority` presence).
+4. **Verify session persistence** — if multi-tab is client-only, delete the `/api/chat/sessions` entry from `api-examples.json`.
+5. **Check response codes** — create may return 200 or 201.
+6. **Confirm no auth layer** — if one was added later, update all examples with auth headers.

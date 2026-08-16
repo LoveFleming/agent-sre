@@ -1,6 +1,6 @@
 # Project Source Analysis (Tree-sitter)
-Parsed 25 of 27 source files
-Languages: javascript(22), tsx(4), typescript(1)
+Parsed 45 of 47 source files
+Languages: javascript(29), tsx(14), typescript(4)
 
 ## server/agent-loop.mjs [javascript]
   Imports:
@@ -37,6 +37,11 @@ Languages: javascript(22), tsx(4), typescript(1)
     function loadProviderConfig()
     function resolveLLM(modelOverride)
 
+## server/config.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← ./config.mjs
+
 ## server/conversation.mjs [javascript]
   Imports:
     * ← fs
@@ -50,11 +55,20 @@ Languages: javascript(22), tsx(4), typescript(1)
     function: loadArchive
   Functions:
     function ensureDir(dir)
+    function sanitizeId(id)
     function loadConversation(crewId)
     function saveConversation(crewId, messages)
     function archiveConversation(crewId)
     function listArchives(crewId)
     function loadArchive(crewId, sessionId)
+
+## server/conversation.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← ./conversation.mjs
+    * ← path
+    * ← url
+    * ← fs
 
 ## server/crew-loader.mjs [javascript]
   Imports:
@@ -77,7 +91,6 @@ Languages: javascript(22), tsx(4), typescript(1)
     * ← ./tool-loader.mjs
     * ← ./crew-loader.mjs
     * ← ./routes.mjs
-    * ← ./mcp-client.mjs
     * ← fs
     * ← path
     * ← url
@@ -104,49 +117,22 @@ Languages: javascript(22), tsx(4), typescript(1)
     async function handleStream(resp, onEvent)
     function mergeToolCalls(existing, deltas)
 
-## server/mcp-client.mjs [javascript]
+## server/llm.test.mjs [javascript]
   Imports:
-    * ← child_process
-    * ← fs
-    * ← path
-    * ← url
-    * ← ./tool-registry.mjs
-  Exports:
-    function: connectAllMCPServers
-    function: disconnectAllMCPClients
+    * ← vitest
+    * ← ./llm.mjs
   Functions:
-    function loadMCPConfig()
-    async function connectAllMCPServers()
-    async arrow handler(args)
-    function disconnectAllMCPClients(clients)
-  Classes:
-    class MCPClient { constructor, connect, _loadTools, callTool, _request, _notify, _onData, disconnect }
-
-## server/mcp-server.mjs [javascript]
-  Imports:
-    * ← http
-    * ← ./tool-loader.mjs
-    * ← ./crew-loader.mjs
-    * ← ./tool-registry.mjs
-    * ← ./agent-loop.mjs
-    * ← ./crew-loader.mjs
-    * ← ./conversation.mjs
-  Functions:
-    function rpcResult(id, result)
-    function rpcError(id, code, message)
-    function buildMCPTools()
-    function buildMCPResources()
-    function buildMCPPrompts()
-    async function handleRequest(msg)
-    async function runStdio()
-    async function runSSE(port)
+    function jsonResponse(body, ok = true, status = 200)
+    function streamResponse(chunks)
 
 ## server/routes.mjs [javascript]
   Imports:
     * ← ./crew-loader.mjs
     * ← ./agent-loop.mjs
     * ← ./tool-registry.mjs
+    * ← ./tool-loader.mjs
     * ← ./conversation.mjs
+    * ← ./task-store.mjs
     * ← fs
     * ← path
     * ← url
@@ -157,6 +143,33 @@ Languages: javascript(22), tsx(4), typescript(1)
     function json(res, code, data)
     function registerRoutes(server)
     arrow onToolCall({ name, result })
+
+## server/routes.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← http
+    * ← path
+    * ← url
+    * ← ./routes.mjs
+    * ← ./tool-loader.mjs
+  Functions:
+    function httpGet(pathname)
+
+## server/task-store.mjs [javascript]
+  Imports:
+    * ← crypto
+  Exports:
+    variable: taskStore
+    default value: taskStore
+  Classes:
+    class TaskStore { constructor, list, get, create, update, delete, clear }
+
+## server/task-store.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← ./task-store.mjs
+  Functions:
+    function makeStore()
 
 ## server/tool-engine/provider.mjs [javascript]
   Imports:
@@ -169,6 +182,8 @@ Languages: javascript(22), tsx(4), typescript(1)
     function: createProviderAdapter
   Functions:
     function _llmLog(entry)
+    function stableStringify(value, space)
+    function sortKeysDeep(value)
     arrow logStream(line)
     function createProviderAdapter(config)
   Classes:
@@ -181,10 +196,21 @@ Languages: javascript(22), tsx(4), typescript(1)
     * ← url
     * ← ./tool-registry.mjs
   Exports:
+    function: safeResolve
     function: loadAllTools
   Functions:
+    function safeResolve(base, ...child)
     async function loadAllTools()
     async arrow wrappedHandler(args, ctx)
+
+## server/tool-loader.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← ./tool-loader.mjs
+    * ← path
+    * ← url
+    * ← fs
+    * ← os
 
 ## server/tool-registry.mjs [javascript]
   Exports:
@@ -192,6 +218,14 @@ Languages: javascript(22), tsx(4), typescript(1)
     default value: toolRegistry
   Classes:
     class ToolRegistry { constructor, register, registerAll, getDefinitions, get, list, execute, clear }
+
+## server/tool-registry.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← ./tool-registry.mjs
+  Functions:
+    function makeRegistry()
+    function sampleEntry(name = "gr")
 
 ## tools/docs/handler.mjs [javascript]
   Exports:
@@ -329,18 +363,60 @@ Languages: javascript(22), tsx(4), typescript(1)
 ## ui/src/App.tsx [tsx]
   Imports:
     * ← react
+    * ← ./components/Sidebar
+    * ← ./pages/HomePage
+    * ← ./pages/ConsolePage
+    * ← ./pages/ToolsPage
+    * ← ./pages/TaskManagementPage
+    * ← ./pages/Placeholder
+    * ← ./types
   Exports:
     default function: App
   Functions:
     function App()
-    arrow closeTab(idx: number, e: React.MouseEvent)
-    function Dot({ delay = "0s" }: { delay?: string })
-    function ToolCard({ tool }: { tool: ToolEntry })
-    async arrow test()
+    async arrow check()
   React Components:
     function: App
-    function: Dot
-    function: ToolCard
+
+## ui/src/components/Sidebar.test.tsx [tsx]
+  Imports:
+    * ← vitest
+    * ← @testing-library/react
+    * ← @testing-library/user-event
+    * ← ./Sidebar
+    * ← ../types
+  Functions:
+    arrow defaultProps()
+
+## ui/src/components/Sidebar.tsx [tsx]
+  Imports:
+    * ← ../types
+    * ← ./StatusBadge
+  Exports:
+    default function: Sidebar
+  Functions:
+    function Sidebar({
+  items,
+  activeId,
+  onSelect,
+  healthStatus,
+}: SidebarProps)
+  React Components:
+    function: Sidebar
+
+## ui/src/components/StatusBadge.test.tsx [tsx]
+  Imports:
+    * ← vitest
+    * ← @testing-library/react
+    * ← ./StatusBadge
+
+## ui/src/components/StatusBadge.tsx [tsx]
+  Exports:
+    default function: StatusBadge
+  Functions:
+    function StatusBadge({ status }: StatusBadgeProps)
+  React Components:
+    function: StatusBadge
 
 ## ui/src/main.tsx [tsx]
   Imports:
@@ -349,9 +425,157 @@ Languages: javascript(22), tsx(4), typescript(1)
     * ← ./App
     * ← ./index.css
 
+## ui/src/pages/ConsolePage.tsx [tsx]
+  Imports:
+    * ← react
+    * ← react-markdown
+    * ← remark-gfm
+    * ← ../types
+  Exports:
+    default function: ConsolePage
+  Functions:
+    function ConsolePage({
+  initialPrompt,
+  onPromptConsumed,
+}: ConsolePageProps)
+  React Components:
+    function: ConsolePage
+
+## ui/src/pages/HomePage.test.tsx [tsx]
+  Imports:
+    * ← vitest
+    * ← @testing-library/react
+    * ← @testing-library/user-event
+    * ← ./HomePage
+    * ← ../types
+  Functions:
+    function mockFetchSuccess()
+    function mockFetchFailure()
+
+## ui/src/pages/HomePage.tsx [tsx]
+  Imports:
+    * ← react
+    * ← ../types
+    * ← ../types
+  Exports:
+    default function: HomePage
+  Functions:
+    function HomePage({ onNavigate, onQuickAction }: HomePageProps)
+    function StatCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: string | number;
+  icon: string;
+})
+  React Components:
+    function: HomePage
+    function: StatCard
+
+## ui/src/pages/Placeholder.tsx [tsx]
+  Exports:
+    default function: Placeholder
+  Functions:
+    function Placeholder({ title, phase, icon = "🚧" }: PlaceholderProps)
+  React Components:
+    function: Placeholder
+
+## ui/src/pages/TaskManagementPage.tsx [tsx]
+  Imports:
+    * ← react
+    * ← ../types
+    * ← ../types
+  Exports:
+    default function: TaskManagementPage
+  Functions:
+    function TaskManagementPage()
+    function EmptyState({ onNewTask }: { onNewTask: () => void })
+    function Field({
+  label,
+  required,
+  hint,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  hint?: string;
+  children: React.ReactNode;
+})
+    function LinesField({
+  label,
+  description,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  description?: string;
+  value: string;
+  onChange: (text: string) => void;
+  placeholder?: string;
+})
+    function ToolPicker({
+  tools,
+  selected,
+  onToggle,
+}: {
+  tools: ToolEntry[];
+  selected: string[];
+  onToggle: (toolName: string) => void;
+})
+  React Components:
+    function: TaskManagementPage
+    function: EmptyState
+    function: Field
+    function: LinesField
+    function: ToolPicker
+
+## ui/src/pages/ToolsPage.tsx [tsx]
+  Imports:
+    * ← react
+    * ← ../types
+    * ← ../types
+  Exports:
+    default function: ToolsPage
+  Functions:
+    function ToolsPage()
+  React Components:
+    function: ToolsPage
+
+## ui/src/test/setup.ts [typescript]
+  Imports:
+    * ← @testing-library/jest-dom/vitest
+    * ← vitest
+    * ← @testing-library/react
+
+## ui/src/types.test.ts [typescript]
+  Imports:
+    * ← vitest
+    * ← ./types
+
+## ui/src/types.ts [typescript]
+  Exports:
+    function: emptyTaskDraft
+    function: linesToText
+    function: textToLines
+    function: getProvider
+    function: formatUptime
+  Functions:
+    function emptyTaskDraft()
+    function linesToText(lines: string[])
+    function textToLines(text: string)
+    function getProvider(source?: string)
+    function formatUptime(seconds?: number)
+
 ## ui/vite.config.ts [typescript]
   Imports:
     * ← vite
     * ← @vitejs/plugin-react
     * ← path
     * ← url
+
+## vitest.config.mjs [javascript]
+  Imports:
+    * ← vitest/config

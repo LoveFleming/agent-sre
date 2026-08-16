@@ -125,6 +125,15 @@
     },
     {
       "type": "function",
+      "name": "sanitizeId",
+      "file": "server/conversation.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(id)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
       "name": "loadConversation",
       "file": "server/conversation.mjs",
       "kind": "function",
@@ -314,139 +323,20 @@
     },
     {
       "type": "function",
-      "name": "loadMCPConfig",
-      "file": "server/mcp-client.mjs",
+      "name": "jsonResponse",
+      "file": "server/llm.test.mjs",
       "kind": "function",
       "async": false,
-      "params": "()",
+      "params": "(body, ok = true, status = 200)",
       "callCount": 0
     },
     {
       "type": "function",
-      "name": "connectAllMCPServers",
-      "file": "server/mcp-client.mjs",
-      "kind": "function",
-      "async": true,
-      "params": "()",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "handler",
-      "file": "server/mcp-client.mjs",
-      "kind": "arrow",
-      "async": true,
-      "params": "(args)",
-      "callCount": 1
-    },
-    {
-      "type": "function",
-      "name": "disconnectAllMCPClients",
-      "file": "server/mcp-client.mjs",
+      "name": "streamResponse",
+      "file": "server/llm.test.mjs",
       "kind": "function",
       "async": false,
-      "params": "(clients)",
-      "callCount": 0
-    },
-    {
-      "type": "class",
-      "name": "MCPClient",
-      "file": "server/mcp-client.mjs",
-      "methods": [
-        "constructor",
-        "connect",
-        "_loadTools",
-        "callTool",
-        "_request",
-        "_notify",
-        "_onData",
-        "disconnect"
-      ]
-    },
-    {
-      "type": "export",
-      "name": "connectAllMCPServers",
-      "file": "server/mcp-client.mjs",
-      "kind": "function",
-      "isDefault": false
-    },
-    {
-      "type": "export",
-      "name": "disconnectAllMCPClients",
-      "file": "server/mcp-client.mjs",
-      "kind": "function",
-      "isDefault": false
-    },
-    {
-      "type": "function",
-      "name": "rpcResult",
-      "file": "server/mcp-server.mjs",
-      "kind": "function",
-      "async": false,
-      "params": "(id, result)",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "rpcError",
-      "file": "server/mcp-server.mjs",
-      "kind": "function",
-      "async": false,
-      "params": "(id, code, message)",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "buildMCPTools",
-      "file": "server/mcp-server.mjs",
-      "kind": "function",
-      "async": false,
-      "params": "()",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "buildMCPResources",
-      "file": "server/mcp-server.mjs",
-      "kind": "function",
-      "async": false,
-      "params": "()",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "buildMCPPrompts",
-      "file": "server/mcp-server.mjs",
-      "kind": "function",
-      "async": false,
-      "params": "()",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "handleRequest",
-      "file": "server/mcp-server.mjs",
-      "kind": "function",
-      "async": true,
-      "params": "(msg)",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "runStdio",
-      "file": "server/mcp-server.mjs",
-      "kind": "function",
-      "async": true,
-      "params": "()",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "runSSE",
-      "file": "server/mcp-server.mjs",
-      "kind": "function",
-      "async": true,
-      "params": "(port)",
+      "params": "(chunks)",
       "callCount": 0
     },
     {
@@ -494,11 +384,75 @@
     },
     {
       "type": "function",
+      "name": "httpGet",
+      "file": "server/routes.test.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(pathname)",
+      "callCount": 0
+    },
+    {
+      "type": "class",
+      "name": "TaskStore",
+      "file": "server/task-store.mjs",
+      "methods": [
+        "constructor",
+        "list",
+        "get",
+        "create",
+        "update",
+        "delete",
+        "clear"
+      ]
+    },
+    {
+      "type": "export",
+      "name": "taskStore",
+      "file": "server/task-store.mjs",
+      "kind": "variable",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "taskStore",
+      "file": "server/task-store.mjs",
+      "kind": "value",
+      "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "makeStore",
+      "file": "server/task-store.test.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
       "name": "_llmLog",
       "file": "server/tool-engine/provider.mjs",
       "kind": "function",
       "async": false,
       "params": "(entry)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "stableStringify",
+      "file": "server/tool-engine/provider.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(value, space)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "sortKeysDeep",
+      "file": "server/tool-engine/provider.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(value)",
       "callCount": 0
     },
     {
@@ -544,6 +498,15 @@
     },
     {
       "type": "function",
+      "name": "safeResolve",
+      "file": "server/tool-loader.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(base, ...child)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
       "name": "loadAllTools",
       "file": "server/tool-loader.mjs",
       "kind": "function",
@@ -559,6 +522,13 @@
       "async": true,
       "params": "(args, ctx)",
       "callCount": 1
+    },
+    {
+      "type": "export",
+      "name": "safeResolve",
+      "file": "server/tool-loader.mjs",
+      "kind": "function",
+      "isDefault": false
     },
     {
       "type": "export",
@@ -595,6 +565,24 @@
       "file": "server/tool-registry.mjs",
       "kind": "value",
       "isDefault": true
+    },
+    {
+      "type": "function",
+      "name": "makeRegistry",
+      "file": "server/tool-registry.test.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "sampleEntry",
+      "file": "server/tool-registry.test.mjs",
+      "kind": "function",
+      "async": false,
+      "params": "(name = \"gr\")",
+      "callCount": 0
     },
     {
       "type": "function",
@@ -1184,39 +1172,12 @@
     },
     {
       "type": "function",
-      "name": "closeTab",
-      "file": "ui/src/App.tsx",
-      "kind": "arrow",
-      "async": false,
-      "params": "(idx: number, e: React.MouseEvent)",
-      "callCount": 7
-    },
-    {
-      "type": "function",
-      "name": "Dot",
-      "file": "ui/src/App.tsx",
-      "kind": "function",
-      "async": false,
-      "params": "({ delay = \"0s\" }: { delay?: string })",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "ToolCard",
-      "file": "ui/src/App.tsx",
-      "kind": "function",
-      "async": false,
-      "params": "({ tool }: { tool: ToolEntry })",
-      "callCount": 0
-    },
-    {
-      "type": "function",
-      "name": "test",
+      "name": "check",
       "file": "ui/src/App.tsx",
       "kind": "arrow",
       "async": true,
       "params": "()",
-      "callCount": 11
+      "callCount": 3
     },
     {
       "type": "export",
@@ -1232,16 +1193,340 @@
       "kind": "function"
     },
     {
+      "type": "function",
+      "name": "defaultProps",
+      "file": "ui/src/components/Sidebar.test.tsx",
+      "kind": "arrow",
+      "async": false,
+      "params": "()",
+      "callCount": 1
+    },
+    {
+      "type": "function",
+      "name": "Sidebar",
+      "file": "ui/src/components/Sidebar.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({\n  items,\n  activeId,\n  onSelect,\n  healthStatus,\n}: SidebarProps)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "Sidebar",
+      "file": "ui/src/components/Sidebar.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
       "type": "component",
-      "name": "Dot",
-      "file": "ui/src/App.tsx",
+      "name": "Sidebar",
+      "file": "ui/src/components/Sidebar.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "function",
+      "name": "StatusBadge",
+      "file": "ui/src/components/StatusBadge.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({ status }: StatusBadgeProps)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "StatusBadge",
+      "file": "ui/src/components/StatusBadge.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "component",
+      "name": "StatusBadge",
+      "file": "ui/src/components/StatusBadge.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "function",
+      "name": "ConsolePage",
+      "file": "ui/src/pages/ConsolePage.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({\n  initialPrompt,\n  onPromptConsumed,\n}: ConsolePageProps)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "ConsolePage",
+      "file": "ui/src/pages/ConsolePage.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "component",
+      "name": "ConsolePage",
+      "file": "ui/src/pages/ConsolePage.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "function",
+      "name": "mockFetchSuccess",
+      "file": "ui/src/pages/HomePage.test.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "mockFetchFailure",
+      "file": "ui/src/pages/HomePage.test.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "HomePage",
+      "file": "ui/src/pages/HomePage.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({ onNavigate, onQuickAction }: HomePageProps)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "StatCard",
+      "file": "ui/src/pages/HomePage.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({\n  label,\n  value,\n  icon,\n}: {\n  label: string;\n  value: string | number;\n  icon: string;\n})",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "HomePage",
+      "file": "ui/src/pages/HomePage.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "component",
+      "name": "HomePage",
+      "file": "ui/src/pages/HomePage.tsx",
       "kind": "function"
     },
     {
       "type": "component",
-      "name": "ToolCard",
-      "file": "ui/src/App.tsx",
+      "name": "StatCard",
+      "file": "ui/src/pages/HomePage.tsx",
       "kind": "function"
+    },
+    {
+      "type": "function",
+      "name": "Placeholder",
+      "file": "ui/src/pages/Placeholder.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({ title, phase, icon = \"🚧\" }: PlaceholderProps)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "Placeholder",
+      "file": "ui/src/pages/Placeholder.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "component",
+      "name": "Placeholder",
+      "file": "ui/src/pages/Placeholder.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "function",
+      "name": "TaskManagementPage",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "EmptyState",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({ onNewTask }: { onNewTask: () => void })",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "Field",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({\n  label,\n  required,\n  hint,\n  children,\n}: {\n  label: string;\n  required?: boolean;\n  hint?: string;\n  children: React.ReactNode;\n})",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "LinesField",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({\n  label,\n  description,\n  value,\n  onChange,\n  placeholder,\n}: {\n  label: string;\n  description?: string;\n  value: string;\n  onChange: (text: string) => void;\n  placeholder?: string;\n})",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "ToolPicker",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "({\n  tools,\n  selected,\n  onToggle,\n}: {\n  tools: ToolEntry[];\n  selected: string[];\n  onToggle: (toolName: string) => void;\n})",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "TaskManagementPage",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "component",
+      "name": "TaskManagementPage",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "component",
+      "name": "EmptyState",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "component",
+      "name": "Field",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "component",
+      "name": "LinesField",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "component",
+      "name": "ToolPicker",
+      "file": "ui/src/pages/TaskManagementPage.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "function",
+      "name": "ToolsPage",
+      "file": "ui/src/pages/ToolsPage.tsx",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "ToolsPage",
+      "file": "ui/src/pages/ToolsPage.tsx",
+      "kind": "function",
+      "isDefault": true
+    },
+    {
+      "type": "component",
+      "name": "ToolsPage",
+      "file": "ui/src/pages/ToolsPage.tsx",
+      "kind": "function"
+    },
+    {
+      "type": "function",
+      "name": "emptyTaskDraft",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "async": false,
+      "params": "()",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "linesToText",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "async": false,
+      "params": "(lines: string[])",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "textToLines",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "async": false,
+      "params": "(text: string)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "getProvider",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "async": false,
+      "params": "(source?: string)",
+      "callCount": 0
+    },
+    {
+      "type": "function",
+      "name": "formatUptime",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "async": false,
+      "params": "(seconds?: number)",
+      "callCount": 0
+    },
+    {
+      "type": "export",
+      "name": "emptyTaskDraft",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "linesToText",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "textToLines",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "getProvider",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "isDefault": false
+    },
+    {
+      "type": "export",
+      "name": "formatUptime",
+      "file": "ui/src/types.ts",
+      "kind": "function",
+      "isDefault": false
     }
   ],
   "byName": {
@@ -1389,6 +1674,17 @@
         "kind": "function",
         "async": false,
         "params": "(dir)",
+        "callCount": 0
+      }
+    ],
+    "sanitizeId": [
+      {
+        "type": "function",
+        "name": "sanitizeId",
+        "file": "server/conversation.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(id)",
         "callCount": 0
       }
     ],
@@ -1609,294 +1905,25 @@
         "callCount": 0
       }
     ],
-    "loadMCPConfig": [
+    "jsonResponse": [
       {
         "type": "function",
-        "name": "loadMCPConfig",
-        "file": "server/mcp-client.mjs",
+        "name": "jsonResponse",
+        "file": "server/llm.test.mjs",
         "kind": "function",
         "async": false,
-        "params": "()",
+        "params": "(body, ok = true, status = 200)",
         "callCount": 0
       }
     ],
-    "connectAllMCPServers": [
+    "streamResponse": [
       {
         "type": "function",
-        "name": "connectAllMCPServers",
-        "file": "server/mcp-client.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "()",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "connectAllMCPServers",
-        "file": "server/mcp-client.mjs",
-        "kind": "function",
-        "isDefault": false
-      }
-    ],
-    "handler": [
-      {
-        "type": "function",
-        "name": "handler",
-        "file": "server/mcp-client.mjs",
-        "kind": "arrow",
-        "async": true,
-        "params": "(args)",
-        "callCount": 1
-      },
-      {
-        "type": "function",
-        "name": "handler",
-        "file": "tools/docs/handler.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(args, ctx)",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "handler",
-        "file": "tools/docs/handler.mjs",
-        "kind": "function",
-        "isDefault": true
-      },
-      {
-        "type": "function",
-        "name": "handler",
-        "file": "tools/grafana/handler.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(args, ctx)",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "handler",
-        "file": "tools/grafana/handler.mjs",
-        "kind": "function",
-        "isDefault": true
-      },
-      {
-        "type": "function",
-        "name": "handler",
-        "file": "tools/k8s/handler.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(args, ctx)",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "handler",
-        "file": "tools/k8s/handler.mjs",
-        "kind": "function",
-        "isDefault": true
-      },
-      {
-        "type": "function",
-        "name": "handler",
-        "file": "tools/loki/handler.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(args, ctx)",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "handler",
-        "file": "tools/loki/handler.mjs",
-        "kind": "function",
-        "isDefault": true
-      },
-      {
-        "type": "function",
-        "name": "handler",
-        "file": "tools/prometheus/handler.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(args, ctx)",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "handler",
-        "file": "tools/prometheus/handler.mjs",
-        "kind": "function",
-        "isDefault": true
-      },
-      {
-        "type": "function",
-        "name": "handler",
-        "file": "tools/security/handler.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(args, ctx)",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "handler",
-        "file": "tools/security/handler.mjs",
-        "kind": "function",
-        "isDefault": true
-      },
-      {
-        "type": "function",
-        "name": "handler",
-        "file": "tools/shell/handler.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(args, ctx)",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "handler",
-        "file": "tools/shell/handler.mjs",
-        "kind": "function",
-        "isDefault": true
-      },
-      {
-        "type": "function",
-        "name": "handler",
-        "file": "tools/tchat/handler.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(args, ctx)",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "handler",
-        "file": "tools/tchat/handler.mjs",
-        "kind": "function",
-        "isDefault": true
-      }
-    ],
-    "disconnectAllMCPClients": [
-      {
-        "type": "function",
-        "name": "disconnectAllMCPClients",
-        "file": "server/mcp-client.mjs",
+        "name": "streamResponse",
+        "file": "server/llm.test.mjs",
         "kind": "function",
         "async": false,
-        "params": "(clients)",
-        "callCount": 0
-      },
-      {
-        "type": "export",
-        "name": "disconnectAllMCPClients",
-        "file": "server/mcp-client.mjs",
-        "kind": "function",
-        "isDefault": false
-      }
-    ],
-    "MCPClient": [
-      {
-        "type": "class",
-        "name": "MCPClient",
-        "file": "server/mcp-client.mjs",
-        "methods": [
-          "constructor",
-          "connect",
-          "_loadTools",
-          "callTool",
-          "_request",
-          "_notify",
-          "_onData",
-          "disconnect"
-        ]
-      }
-    ],
-    "rpcResult": [
-      {
-        "type": "function",
-        "name": "rpcResult",
-        "file": "server/mcp-server.mjs",
-        "kind": "function",
-        "async": false,
-        "params": "(id, result)",
-        "callCount": 0
-      }
-    ],
-    "rpcError": [
-      {
-        "type": "function",
-        "name": "rpcError",
-        "file": "server/mcp-server.mjs",
-        "kind": "function",
-        "async": false,
-        "params": "(id, code, message)",
-        "callCount": 0
-      }
-    ],
-    "buildMCPTools": [
-      {
-        "type": "function",
-        "name": "buildMCPTools",
-        "file": "server/mcp-server.mjs",
-        "kind": "function",
-        "async": false,
-        "params": "()",
-        "callCount": 0
-      }
-    ],
-    "buildMCPResources": [
-      {
-        "type": "function",
-        "name": "buildMCPResources",
-        "file": "server/mcp-server.mjs",
-        "kind": "function",
-        "async": false,
-        "params": "()",
-        "callCount": 0
-      }
-    ],
-    "buildMCPPrompts": [
-      {
-        "type": "function",
-        "name": "buildMCPPrompts",
-        "file": "server/mcp-server.mjs",
-        "kind": "function",
-        "async": false,
-        "params": "()",
-        "callCount": 0
-      }
-    ],
-    "handleRequest": [
-      {
-        "type": "function",
-        "name": "handleRequest",
-        "file": "server/mcp-server.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(msg)",
-        "callCount": 0
-      }
-    ],
-    "runStdio": [
-      {
-        "type": "function",
-        "name": "runStdio",
-        "file": "server/mcp-server.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "()",
-        "callCount": 0
-      }
-    ],
-    "runSSE": [
-      {
-        "type": "function",
-        "name": "runSSE",
-        "file": "server/mcp-server.mjs",
-        "kind": "function",
-        "async": true,
-        "params": "(port)",
+        "params": "(chunks)",
         "callCount": 0
       }
     ],
@@ -1951,6 +1978,60 @@
         "callCount": 2
       }
     ],
+    "httpGet": [
+      {
+        "type": "function",
+        "name": "httpGet",
+        "file": "server/routes.test.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(pathname)",
+        "callCount": 0
+      }
+    ],
+    "TaskStore": [
+      {
+        "type": "class",
+        "name": "TaskStore",
+        "file": "server/task-store.mjs",
+        "methods": [
+          "constructor",
+          "list",
+          "get",
+          "create",
+          "update",
+          "delete",
+          "clear"
+        ]
+      }
+    ],
+    "taskStore": [
+      {
+        "type": "export",
+        "name": "taskStore",
+        "file": "server/task-store.mjs",
+        "kind": "variable",
+        "isDefault": false
+      },
+      {
+        "type": "export",
+        "name": "taskStore",
+        "file": "server/task-store.mjs",
+        "kind": "value",
+        "isDefault": true
+      }
+    ],
+    "makeStore": [
+      {
+        "type": "function",
+        "name": "makeStore",
+        "file": "server/task-store.test.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
     "_llmLog": [
       {
         "type": "function",
@@ -1959,6 +2040,28 @@
         "kind": "function",
         "async": false,
         "params": "(entry)",
+        "callCount": 0
+      }
+    ],
+    "stableStringify": [
+      {
+        "type": "function",
+        "name": "stableStringify",
+        "file": "server/tool-engine/provider.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(value, space)",
+        "callCount": 0
+      }
+    ],
+    "sortKeysDeep": [
+      {
+        "type": "function",
+        "name": "sortKeysDeep",
+        "file": "server/tool-engine/provider.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(value)",
         "callCount": 0
       }
     ],
@@ -2006,6 +2109,24 @@
         "name": "OpenAICompatibleAdapter",
         "file": "server/tool-engine/provider.mjs",
         "kind": "class",
+        "isDefault": false
+      }
+    ],
+    "safeResolve": [
+      {
+        "type": "function",
+        "name": "safeResolve",
+        "file": "server/tool-loader.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(base, ...child)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "safeResolve",
+        "file": "server/tool-loader.mjs",
+        "kind": "function",
         "isDefault": false
       }
     ],
@@ -2071,6 +2192,28 @@
         "isDefault": true
       }
     ],
+    "makeRegistry": [
+      {
+        "type": "function",
+        "name": "makeRegistry",
+        "file": "server/tool-registry.test.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "sampleEntry": [
+      {
+        "type": "function",
+        "name": "sampleEntry",
+        "file": "server/tool-registry.test.mjs",
+        "kind": "function",
+        "async": false,
+        "params": "(name = \"gr\")",
+        "callCount": 0
+      }
+    ],
     "parseFrontmatter": [
       {
         "type": "function",
@@ -2113,6 +2256,136 @@
         "async": false,
         "params": "(keyword, runbooks)",
         "callCount": 0
+      }
+    ],
+    "handler": [
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/docs/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/docs/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/grafana/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/k8s/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/k8s/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/loki/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/loki/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/prometheus/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/security/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/security/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/shell/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/shell/handler.mjs",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "function",
+        "name": "handler",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "async": true,
+        "params": "(args, ctx)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "handler",
+        "file": "tools/tchat/handler.mjs",
+        "kind": "function",
+        "isDefault": true
       }
     ],
     "getConfig": [
@@ -2624,69 +2897,400 @@
         "kind": "function"
       }
     ],
-    "closeTab": [
+    "check": [
       {
         "type": "function",
-        "name": "closeTab",
-        "file": "ui/src/App.tsx",
-        "kind": "arrow",
-        "async": false,
-        "params": "(idx: number, e: React.MouseEvent)",
-        "callCount": 7
-      }
-    ],
-    "Dot": [
-      {
-        "type": "function",
-        "name": "Dot",
-        "file": "ui/src/App.tsx",
-        "kind": "function",
-        "async": false,
-        "params": "({ delay = \"0s\" }: { delay?: string })",
-        "callCount": 0
-      },
-      {
-        "type": "component",
-        "name": "Dot",
-        "file": "ui/src/App.tsx",
-        "kind": "function"
-      }
-    ],
-    "ToolCard": [
-      {
-        "type": "function",
-        "name": "ToolCard",
-        "file": "ui/src/App.tsx",
-        "kind": "function",
-        "async": false,
-        "params": "({ tool }: { tool: ToolEntry })",
-        "callCount": 0
-      },
-      {
-        "type": "component",
-        "name": "ToolCard",
-        "file": "ui/src/App.tsx",
-        "kind": "function"
-      }
-    ],
-    "test": [
-      {
-        "type": "function",
-        "name": "test",
+        "name": "check",
         "file": "ui/src/App.tsx",
         "kind": "arrow",
         "async": true,
         "params": "()",
-        "callCount": 11
+        "callCount": 3
+      }
+    ],
+    "defaultProps": [
+      {
+        "type": "function",
+        "name": "defaultProps",
+        "file": "ui/src/components/Sidebar.test.tsx",
+        "kind": "arrow",
+        "async": false,
+        "params": "()",
+        "callCount": 1
+      }
+    ],
+    "Sidebar": [
+      {
+        "type": "function",
+        "name": "Sidebar",
+        "file": "ui/src/components/Sidebar.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({\n  items,\n  activeId,\n  onSelect,\n  healthStatus,\n}: SidebarProps)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "Sidebar",
+        "file": "ui/src/components/Sidebar.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "Sidebar",
+        "file": "ui/src/components/Sidebar.tsx",
+        "kind": "function"
+      }
+    ],
+    "StatusBadge": [
+      {
+        "type": "function",
+        "name": "StatusBadge",
+        "file": "ui/src/components/StatusBadge.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({ status }: StatusBadgeProps)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "StatusBadge",
+        "file": "ui/src/components/StatusBadge.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "StatusBadge",
+        "file": "ui/src/components/StatusBadge.tsx",
+        "kind": "function"
+      }
+    ],
+    "ConsolePage": [
+      {
+        "type": "function",
+        "name": "ConsolePage",
+        "file": "ui/src/pages/ConsolePage.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({\n  initialPrompt,\n  onPromptConsumed,\n}: ConsolePageProps)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "ConsolePage",
+        "file": "ui/src/pages/ConsolePage.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "ConsolePage",
+        "file": "ui/src/pages/ConsolePage.tsx",
+        "kind": "function"
+      }
+    ],
+    "mockFetchSuccess": [
+      {
+        "type": "function",
+        "name": "mockFetchSuccess",
+        "file": "ui/src/pages/HomePage.test.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "mockFetchFailure": [
+      {
+        "type": "function",
+        "name": "mockFetchFailure",
+        "file": "ui/src/pages/HomePage.test.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      }
+    ],
+    "HomePage": [
+      {
+        "type": "function",
+        "name": "HomePage",
+        "file": "ui/src/pages/HomePage.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({ onNavigate, onQuickAction }: HomePageProps)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "HomePage",
+        "file": "ui/src/pages/HomePage.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "HomePage",
+        "file": "ui/src/pages/HomePage.tsx",
+        "kind": "function"
+      }
+    ],
+    "StatCard": [
+      {
+        "type": "function",
+        "name": "StatCard",
+        "file": "ui/src/pages/HomePage.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({\n  label,\n  value,\n  icon,\n}: {\n  label: string;\n  value: string | number;\n  icon: string;\n})",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "StatCard",
+        "file": "ui/src/pages/HomePage.tsx",
+        "kind": "function"
+      }
+    ],
+    "Placeholder": [
+      {
+        "type": "function",
+        "name": "Placeholder",
+        "file": "ui/src/pages/Placeholder.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({ title, phase, icon = \"🚧\" }: PlaceholderProps)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "Placeholder",
+        "file": "ui/src/pages/Placeholder.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "Placeholder",
+        "file": "ui/src/pages/Placeholder.tsx",
+        "kind": "function"
+      }
+    ],
+    "TaskManagementPage": [
+      {
+        "type": "function",
+        "name": "TaskManagementPage",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "TaskManagementPage",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "TaskManagementPage",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function"
+      }
+    ],
+    "EmptyState": [
+      {
+        "type": "function",
+        "name": "EmptyState",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({ onNewTask }: { onNewTask: () => void })",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "EmptyState",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function"
+      }
+    ],
+    "Field": [
+      {
+        "type": "function",
+        "name": "Field",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({\n  label,\n  required,\n  hint,\n  children,\n}: {\n  label: string;\n  required?: boolean;\n  hint?: string;\n  children: React.ReactNode;\n})",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "Field",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function"
+      }
+    ],
+    "LinesField": [
+      {
+        "type": "function",
+        "name": "LinesField",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({\n  label,\n  description,\n  value,\n  onChange,\n  placeholder,\n}: {\n  label: string;\n  description?: string;\n  value: string;\n  onChange: (text: string) => void;\n  placeholder?: string;\n})",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "LinesField",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function"
+      }
+    ],
+    "ToolPicker": [
+      {
+        "type": "function",
+        "name": "ToolPicker",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "({\n  tools,\n  selected,\n  onToggle,\n}: {\n  tools: ToolEntry[];\n  selected: string[];\n  onToggle: (toolName: string) => void;\n})",
+        "callCount": 0
+      },
+      {
+        "type": "component",
+        "name": "ToolPicker",
+        "file": "ui/src/pages/TaskManagementPage.tsx",
+        "kind": "function"
+      }
+    ],
+    "ToolsPage": [
+      {
+        "type": "function",
+        "name": "ToolsPage",
+        "file": "ui/src/pages/ToolsPage.tsx",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "ToolsPage",
+        "file": "ui/src/pages/ToolsPage.tsx",
+        "kind": "function",
+        "isDefault": true
+      },
+      {
+        "type": "component",
+        "name": "ToolsPage",
+        "file": "ui/src/pages/ToolsPage.tsx",
+        "kind": "function"
+      }
+    ],
+    "emptyTaskDraft": [
+      {
+        "type": "function",
+        "name": "emptyTaskDraft",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "async": false,
+        "params": "()",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "emptyTaskDraft",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "linesToText": [
+      {
+        "type": "function",
+        "name": "linesToText",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "async": false,
+        "params": "(lines: string[])",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "linesToText",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "textToLines": [
+      {
+        "type": "function",
+        "name": "textToLines",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "async": false,
+        "params": "(text: string)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "textToLines",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "getProvider": [
+      {
+        "type": "function",
+        "name": "getProvider",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "async": false,
+        "params": "(source?: string)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "getProvider",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "isDefault": false
+      }
+    ],
+    "formatUptime": [
+      {
+        "type": "function",
+        "name": "formatUptime",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "async": false,
+        "params": "(seconds?: number)",
+        "callCount": 0
+      },
+      {
+        "type": "export",
+        "name": "formatUptime",
+        "file": "ui/src/types.ts",
+        "kind": "function",
+        "isDefault": false
       }
     ]
   },
   "stats": {
-    "total": 147,
-    "functions": 102,
+    "total": 185,
+    "functions": 117,
     "classes": 3,
-    "exports": 34,
+    "exports": 47,
     "routes": 0,
-    "components": 8
+    "components": 18
   }
 }

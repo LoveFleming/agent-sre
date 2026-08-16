@@ -10,7 +10,7 @@
   },
   "taskDecomposition": {
     "maxSubtasks": 10,
-    "defaultEffort": "L",
+    "defaultEffort": "S",
     "requireEstimate": true
   },
   "reporting": {

@@ -1,18 +1,51 @@
 {
-  "createdAt": "2026-08-02T10:16:24.593Z",
+  "createdAt": "2026-08-16T03:30:10.375Z",
   "agent": "developer",
-  "task": "修復 2 個 JSON.stringify stable key ordering 安全性警告（server/llm.mjs + server/tool-engine/provider.mjs）",
-  "summary": "審查兩個檔案共 6 處 JSON.stringify 使用場景：\n- provider.mjs _llmLog（第26行）：用於寫 JSONL 日誌，改用 stableStringify（sortKeysDeep 遞迴排序 key）使日誌輸出具確定性。\n- llm.mjs（第63行）：fetch() HTTP request body，標註 false-positive。\n- provider.mjs 其餘 4 處（debug payload dump、HTTP body、2x truncated debug log）：全標註 false-positive。\n語法檢查通過，stableStringify 邏輯經 smoke test 驗證正確。",
+  "task": "工作區清理與未提交變更 commit：server 程式碼修改 + 對應測試檔一個 commit；.paaw/ 中繼資料另一個 chore(.paaw) commit；刪除垃圾檔 nul 並加入 .gitignore。不 push。",
+  "taskId": "",
+  "summary": "清理未提交工作區並分成兩個 commit：(1) server 安全性修改（conversation.mjs 的 sanitizeId 防路徑逃逸、routes.mjs 靜態檔服務改用 safeResolve、tool-loader.mjs 強化 safeResolve）+ 6 個新增測試檔（config/conversation/llm/routes/task-store/tool-registry 共 113 個測試）；(2) .paaw/ 中繼資料變更另開 chore(.paaw) commit。根目錄垃圾檔 nul 已刪除並加入 .gitignore。agent-store.mjs 相關已於 f3e68fc 提交，未重複處理。全套測試 214/214 綠燈。只 commit 不 push。",
   "files": [
     {
-      "path": "server/llm.mjs",
-      "reason": "第63行 fetch body JSON.stringify 標註 false-positive 註解"
+      "path": "server/conversation.mjs",
+      "reason": "新增 sanitizeId()，load/save/archive/listArchives/loadArchive 全部驗證 crewId/sessionId，阻擋 path traversal"
     },
     {
-      "path": "server/tool-engine/provider.mjs",
-      "reason": "_llmLog 改用 stableStringify + 新增 sortKeysDeep helper；4處 false-positive 標註"
+      "path": "server/routes.mjs",
+      "reason": "靜態檔案服務改用 tool-loader 的 safeResolve 取代手寫 startsWith 檢查，traversal 被 block 時 fallback 404"
+    },
+    {
+      "path": "server/tool-loader.mjs",
+      "reason": "safeResolve 強化（diff 尾端小幅調整）"
+    },
+    {
+      "path": ".gitignore",
+      "reason": "加入 nul，避免 Windows shell 重定向產物再被加進來"
+    },
+    {
+      "path": "server/config.test.mjs",
+      "reason": "config.mjs 對應測試（13 tests）"
+    },
+    {
+      "path": "server/conversation.test.mjs",
+      "reason": "conversation.mjs 對應測試（42 tests，含 sanitizeId traversal 案例）"
+    },
+    {
+      "path": "server/llm.test.mjs",
+      "reason": "llm.mjs 對應測試（9 tests，含 retry 成功案例）"
+    },
+    {
+      "path": "server/routes.test.mjs",
+      "reason": "routes.mjs 對應測試（14 tests，含靜態檔 traversal 案例）"
+    },
+    {
+      "path": "server/task-store.test.mjs",
+      "reason": "task-store.mjs 對應測試（18 tests）"
+    },
+    {
+      "path": "server/tool-registry.test.mjs",
+      "reason": "tool-registry.mjs 對應測試（17 tests）"
     }
   ],
-  "howToTest": "1. node --check server/llm.mjs（語法 OK）\n2. node --check server/tool-engine/provider.mjs（語法 OK）\n3. stableStringify smoke test：{b:1,a:2} 和 {a:2,b:1} 產出相同字串，陣列順序保留，原始型過 passthrough — 全部通過\n4. 觀察 data/llm-logs/ 下的 JSONL 日誌，key 應按字母排序",
-  "risk": "低 — stableStringify 僅影響日誌輸出格式（key 排序），不改變資料內容；sortKeysDeep 對 Date 物件有保護，深層物件遞迴處理"
+  "howToTest": "1. `cd /Users/steward/App/agent-sre && npm test`，預期 8 個檔案 214 tests 全綠（agent-store.test.mjs 的兩條 stderr 是測試故意觸發的警告訊息，非錯誤）。\n2. `git log --oneline -3` 確認新 commit 在最上面、9de054a 未動。\n3. `git status` 確認 server/ 與根目錄無殘留未追蹤檔（nul 已刪除並 ignore）。",
+  "risk": "conversation.mjs 的 sanitizeId 會拒絕含點、斜線或其他符號的 crewId/sessionId；若既有 callers 傳入這類 id 會直接 throw，需確認 API 層已將其轉為 400/500 錯誤回應而非 crash。routes.mjs 靜態檔改用 safeResolve 後，原本會命中 existsSync 的路徑行為不變，但 UI_DIR 外的請求現在確定 fallback 404。"
 }
