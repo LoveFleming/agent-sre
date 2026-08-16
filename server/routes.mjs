@@ -10,6 +10,7 @@ import { loadConversation, saveConversation, archiveConversation, listArchives, 
 import { taskStore } from "./task-store.mjs";
 import { listAgents, getAgent, saveAgent, deleteAgent } from "./agent-store.mjs";
 import { listRuns, getRun } from "./run-store.mjs";
+import { listDatasources, getDatasource, saveDatasource, deleteDatasource, TOKEN_MASK } from "./datasource-store.mjs";
 import { beginRun, executeScheduledRun } from "./scheduler.mjs";
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname, extname } from "path";
@@ -300,6 +301,89 @@ export function registerRoutes(server) {
           }
           if (!deleted) return json(res, 404, { error: `Agent not found: ${id}` });
           notifyScheduler("deleted", { id });
+          return json(res, 200, { success: true, id });
+        }
+      }
+
+      // ── GET /api/datasources — list all, tokens ALWAYS masked (TASK-011) ──
+      // Secret rule: no response path may ever contain a plaintext token.
+      if (path === "/api/datasources" && method === "GET") {
+        const datasources = listDatasources().map(ds => ({
+          ...ds,
+          token: TOKEN_MASK,
+        }));
+        return json(res, 200, { datasources });
+      }
+
+      // ── POST /api/datasources — create a datasource (TASK-011) ──
+      // id is a caller-chosen slug naming the tool provider it binds to.
+      // The token is written in plaintext (handlers need the real value);
+      // the response is masked. Duplicate id → 400 (PUT for updates).
+      if (path === "/api/datasources" && method === "POST") {
+        const body = await readBody(req);
+        if (!body || typeof body !== "object" || Array.isArray(body)) {
+          return json(res, 400, { error: "Request body must be a JSON object" });
+        }
+        try {
+          if (getDatasource(body.id) !== null) {
+            return json(res, 400, { error: `Datasource already exists: ${body.id} (use PUT to update)` });
+          }
+          const ds = saveDatasource(body);
+          return json(res, 201, { datasource: { ...ds, token: TOKEN_MASK } });
+        } catch (err) {
+          return json(res, 400, { error: err.message });
+        }
+      }
+
+      // ── Datasource by-id routes: GET / PUT / DELETE (TASK-011) ──
+      const datasourceMatch = path.match(/^\/api\/datasources\/([^/]+)$/);
+      if (datasourceMatch) {
+        const id = decodeURIComponent(datasourceMatch[1]);
+
+        // GET /api/datasources/:id — single read, token masked
+        if (method === "GET") {
+          let ds;
+          try {
+            ds = getDatasource(id);
+          } catch (err) {
+            // invalid/traversal id — store contract says these throw
+            return json(res, 400, { error: err.message });
+          }
+          if (!ds) return json(res, 404, { error: `Datasource not found: ${id}` });
+          return json(res, 200, { datasource: { ...ds, token: TOKEN_MASK } });
+        }
+
+        // PUT /api/datasources/:id — update.
+        // Token rule: "***", empty, or missing in the body keeps the stored
+        // value (the UI can only ever send the mask back); any other string
+        // rotates it. A response NEVER echoes plaintext.
+        if (method === "PUT") {
+          const body = await readBody(req);
+          if (!body || typeof body !== "object" || Array.isArray(body)) {
+            return json(res, 400, { error: "Request body must be a JSON object" });
+          }
+          let ds;
+          try {
+            ds = saveDatasource({ ...body, id });
+          } catch (err) {
+            if (err.message && err.message.startsWith("Datasource not found")) {
+              return json(res, 404, { error: err.message });
+            }
+            return json(res, 400, { error: err.message });
+          }
+          return json(res, 200, { datasource: { ...ds, token: TOKEN_MASK } });
+        }
+
+        // DELETE /api/datasources/:id
+        if (method === "DELETE") {
+          let deleted;
+          try {
+            deleted = deleteDatasource(id);
+          } catch (err) {
+            // invalid/traversal id
+            return json(res, 400, { error: err.message });
+          }
+          if (!deleted) return json(res, 404, { error: `Datasource not found: ${id}` });
           return json(res, 200, { success: true, id });
         }
       }
