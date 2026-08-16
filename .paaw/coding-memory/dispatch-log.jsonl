@@ -796,3 +796,217 @@
   ]
 }
 ---
+{
+  "ts": "2026-08-16T12:30:36.999Z",
+  "route": "A2A message/stream",
+  "agentId": "developer",
+  "model": "zai/glm-5.1",
+  "systemPromptLength": 27888,
+  "systemPromptPreview": "=== 當前日期時間 ===\n今天是 2026-08-16（星期日），時間 20:30，時區 Asia/Taipei (UTC+8)\n\n\n## 溝通原則\n\n1. **接受使用者問問題，你要會答** — 人類問問題就回答，不要每句話都急著寫程式\n2. **變更太大要說** — 如果你評估一個改動影響檔案太多或邏輯太複雜，告訴人類「這個改動很大，建議分階段開發」，並列出分階段計畫\n3. **確認再動手** — 不要假設需求，用 ask_user 確認\n4. **不知道就說不知道** — 不要硬掰\n5. **簡潔回答問題，展開寫碼** — 問答用 1-3 句，寫碼才給完整分析和步驟\n\n6. **善用 Feature-File Mapping** — 改碼前先用 project_info(category=\"features\") / project_info(category=\"feature_detail\", id=...) 看這個功能涉及哪些檔案（feature→files mapping）；收到錯誤回報時，用 read_file 看對應的 feature 定義，確認是哪個 feature",
+  "actionLogInjected": "[10:39] developer/create: TASK-009 tchat mock server 完成並驗證 → dev/mocks/tchat-mock.mjs, package.json, .gitignore [created]\n[08:28] developer/create: TASK-007 完成：tchat 拆 transport 層（client.mjs，SWAP POINT）+ 工具層（handler.mjs），契約 v0 落地，scheduler 通知從 stub 接上真實路徑，全套測試 329/329 綠 → tools/tchat/client.mjs, too",
+  "agentMemoryInjected": "(none)",
+  "conversationHistoryCount": 9,
+  "cleanHistoryCount": 9,
+  "currentMessage": "TASK-010 目前status 還open 請繼續把它完成",
+  "totalMessages": 11,
+  "messagesSummary": [
+    {
+      "role": "system",
+      "contentLength": 27888,
+      "preview": "=== 當前日期時間 ===\n今天是 2026-08-16（星期日），時間 20:30，時區 Asia/Taipei (UTC+8)\n\n\n## 溝通原則\n\n1. **接受使用者問問題，你要會答** — 人類問問題就回答，不要每句話都急著寫程"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 67,
+      "preview": "嗨！我是普里亞·夏爾馬 Priya Sharma，Developer 💻\n\n需要寫程式、修 bug、refactor 嗎？交給我吧！"
+    },
+    {
+      "role": "user",
+      "contentLength": 19,
+      "preview": "你可以幫忙開發 TASK-007 嗎?"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 21109,
+      "preview": "TASK-007 完成 ✅\n\n## 實作重點（依 ADR-004 ports & adapters）\n\n**兩層拆分：**\n- **`tools/tchat/client.mjs`**（新增）— transport 層：`POST {api"
+    },
+    {
+      "role": "user",
+      "contentLength": 45,
+      "preview": "你說 TASK-007 已 commit，未 push 但看起來push了 是哪出問題了?"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 924,
+      "preview": "查清楚了 — **commit 沒有被 push**。你看到的應該是誤解：\n\n## Git 實際狀態\n\n```\n81fbe64  ← 本地 main（TASK-007 commit）\norigin/main ← 落後 1 個 commit\n"
+    },
+    {
+      "role": "user",
+      "contentLength": 13,
+      "preview": "幫我開發 TASK-010"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 26119,
+      "preview": "## 目前的完整狀態報告\n\n### ✅ TASK-009（tchat mock server）— 已完成、已 commit、已 resolve\n\n**交付物（3 檔案已 staged）：**\n1. **`dev/mocks/tchat-mo"
+    },
+    {
+      "role": "user",
+      "contentLength": 5,
+      "preview": "繼續 go"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 26688,
+      "preview": "## TASK-010 完整現況報告\n\n### ✅ 程式碼與單元測試：全部完成（335/335 綠）\n\n**1. `server/agent-store.mjs` — notifyPolicy 欄位**\n- `NOTIFY_POLICIES"
+    },
+    {
+      "role": "user",
+      "contentLength": 31,
+      "preview": "TASK-010 目前status 還open 請繼續把它完成"
+    }
+  ]
+}
+---
+{
+  "ts": "2026-08-16T12:43:10.807Z",
+  "route": "A2A message/stream",
+  "agentId": "em",
+  "model": "zai/glm-5.1",
+  "systemPromptLength": 29322,
+  "systemPromptPreview": "=== 當前日期時間 ===\n今天是 2026-08-16（星期日），時間 20:43，時區 Asia/Taipei (UTC+8)\n\n\n## 溝通原則\n\n1. **接受使用者問問題，你要會答** — 人類問問題就回答，不要只顧著派工\n2. **變更太大要說** — 如果一個改動影響多個 agent 或多個模組，告訴人類「這個改動很大，建議分階段開發」，並列出分階段計畫和每階段負責的 agent\n3. **先做再報告** — 需求明確就立刻執行，做完統一報告。只有需求真的不明確時才用 ask_user，不要每步都問\n4. **不知道就說不知道** — 不要硬掰\n5. **簡潔回答問題，展開規劃** — 問答用 1-3 句，規劃派工才展開\n\n6. **善用 Feature-File Mapping** — 改碼前先用 project_info(category=\"features\") / project_info(category=\"feature_detail\", id=...) 看這個功能涉及哪些檔案（feature→files mapping）；收到錯誤回報時，用 read_fil",
+  "actionLogInjected": "[12:40] developer/create: TASK-010 watchdog 範本 agent 完成結案：e2e 驗收腳本 8/8 ALL PASS + api-samples 補 notifyPolicy + seed 文件 → dev/e2e/watchdog-e2e.mjs, package.json, .paaw/api-samples.json, agents/README.md [created]\n[10:39] developer/create: TASK-009 tchat mock server 完成並驗證 → dev/mocks/tchat-mock.mjs, p",
+  "agentMemoryInjected": "(none)",
+  "conversationHistoryCount": 23,
+  "cleanHistoryCount": 23,
+  "currentMessage": "TASK-011 to TASK-014 幫我請開發把它們完成",
+  "totalMessages": 25,
+  "messagesSummary": [
+    {
+      "role": "system",
+      "contentLength": 29322,
+      "preview": "=== 當前日期時間 ===\n今天是 2026-08-16（星期日），時間 20:43，時區 Asia/Taipei (UTC+8)\n\n\n## 溝通原則\n\n1. **接受使用者問問題，你要會答** — 人類問問題就回答，不要只顧著派工\n2."
+    },
+    {
+      "role": "assistant",
+      "contentLength": 79,
+      "preview": "🎖️ 我是陳哲宇 Ethan，EM 大總管。我可以幫你規劃工作、調度 agent、審查進度。\n\n告訴我你想做什麼，或點「🚀 EM 自動調度」讓我自動規劃。"
+    },
+    {
+      "role": "user",
+      "contentLength": 33,
+      "preview": "可以請developer 找sa 討論開始做task 001 嗎?"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 958,
+      "preview": "## ✅ 完成報告 — TASK-001\n\n**目標**：developer 找 SA 討論後開始做 TASK-001\n**Commit**：`f3e68fc`（feat(agent-store)，+354/+270/+12 三檔案）\n\n|"
+    },
+    {
+      "role": "user",
+      "contentLength": 49,
+      "preview": "不是只有做 TASK-001 怎麼有 TASK-005/006/007 的未 commit 變更?"
+    },
+    {
+      "role": "user",
+      "contentLength": 56,
+      "preview": "回答問題就好\n不是只有做 TASK-001 怎麼有 TASK-005/006/007 的未 commit 變更?"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 670,
+      "preview": "我說錯了，向你更正 — 那些變更**不是** TASK-005/006/007 的工作。剛剛實際查了 diff 和 task 系統：\n\n**實際的未 commit 變更：**\n\n1. **三個 server 檔案的安全修復**（看起來是 s"
+    },
+    {
+      "role": "user",
+      "contentLength": 13,
+      "preview": "🚀 啟動 EM 調度規劃"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 21,
+      "preview": "✅ 目前沒有需要調度的工作，專案狀態良好。"
+    },
+    {
+      "role": "user",
+      "contentLength": 13,
+      "preview": "🚀 啟動 EM 調度規劃"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 5337,
+      "preview": "## 📋 EM 調度規劃\n\n共 **8** 項工作，確認後開始執行：\n\n---\n\n### 🟡 1. 💻 developer\n\n**任務：** 工作區清理與未提交變更 commit（effort: S）：目前有未提交的 server/c"
+    },
+    {
+      "role": "user",
+      "contentLength": 14,
+      "preview": "✅ 確認執行 EM 調度計畫"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 223,
+      "preview": "### ✅ 💻 developer 完成\n\n清理完成。\n\n**執行結果：**\n\n| 步驟 | 結果 |\n|---|---|\n| `npm test` | ✅ 8 檔 214/214 全綠 |\n| Commit 1 | `c7e19b4` "
+    },
+    {
+      "role": "assistant",
+      "contentLength": 223,
+      "preview": "### ✅ 💻 developer 完成\n\nTASK-002 完成。實作內容在進入本次工作時已存在於工作樹（前一 session 寫完未 commit），本次完成了驗證與收尾 commit。\n\n📋 **Work Summary**\n├─"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 223,
+      "preview": "### ✅ 💻 developer 完成\n\n## 📋 Work Summary\n\n**├─ 改了什麼**\n| 檔案 | 內容 |\n|---|---|\n| `server/routes.mjs` | `safeTokenEqual()`（"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 30,
+      "preview": "❌ **developer** — fetch failed"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 30,
+      "preview": "❌ **developer** — fetch failed"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 30,
+      "preview": "❌ **developer** — fetch failed"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 30,
+      "preview": "❌ **developer** — fetch failed"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 223,
+      "preview": "### ✅ 💻 developer 完成\n\nTASK-008 已完成（由平行 session 實作、commit `4a13b24`），本 session 做完整驗證通過。\n\n## 驗證結果\n\n**端點與 handler 對齊**（逐行比"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 486,
+      "preview": "🎖️ EM 調度完成！完成 4 項工作。\n\n  ✅ developer: 清理完成。\n\n**執行結果：**\n\n| 步驟 | 結果 |\n|---|---|\n| `npm test` | ✅ 8 檔 214/214 全綠 |\n| Commit"
+    },
+    {
+      "role": "user",
+      "contentLength": 16,
+      "preview": "為什麼有4 個tasks 失敗?"
+    },
+    {
+      "role": "assistant",
+      "contentLength": 1014,
+      "preview": "查完了。**那 4 個「失敗」是假的 — 任務其實全部完成了**，是回報機制壞掉，不是工作沒做。\n\n## 發生什麼事\n\n那 4 次 `fetch failed` 是 **dispatch_agent 的網路傳輸錯誤**（API 呼叫沒能把結"
+    },
+    {
+      "role": "user",
+      "contentLength": 31,
+      "preview": "TASK-011 to TASK-014 幫我請開發把它們完成"
+    },
+    {
+      "role": "user",
+      "contentLength": 31,
+      "preview": "TASK-011 to TASK-014 幫我請開發把它們完成"
+    }
+  ]
+}
+---

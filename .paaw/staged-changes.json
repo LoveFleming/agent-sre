@@ -1,0 +1,27 @@
+{
+  "createdAt": "2026-08-16T12:40:15.464Z",
+  "agent": "developer",
+  "task": "TASK-010：Watchdog 範本 agent（seed + 驗收）— 完成 e2e 驗收腳本、api-samples、seed 文件並結案",
+  "taskId": "",
+  "summary": "TASK-010 watchdog 範本 agent 收尾完成。\n\n本輪交付（前次 session 已交付 scheduler/agent-store notifyPolicy 邏輯、watchdog seed、20 條單元測試，均已在 25dce80/e31af3d commit）：\n1. dev/e2e/watchdog-e2e.mjs（新）— 可重現驗收腳本（舊版放 .paaw/tmp/ 已被自動清空）。全 mock：grafana-mock(3311) + tchat-mock(3312) + 內建 OpenAI-compatible LLM stub(3313)。LLM stub 行為完全照 watchdog prompt（healthy→不通知；firing→呼 tchat_send_message），經 config.providers runtime 注入指向 stub，不打真 API。驗證的是真接線：scheduler → agent-loop → toolRegistry（loadAllTools bootstrap）→ 真工具層 → 真 transport client.mjs → mocks → jsonl。三個腳本 bug 迭代修掉：工具未註冊（補 loadAllTools）、LLM stub 收到 tool result 後重複下 call 跑滿 maxRounds=8（偵測 assistant 已叫過 tchat_send_message 即給 final answer）、/ping wait 殘留。\n2. npm run e2e:watchdog script\n3. .paaw/api-samples.json — GET/POST /api/agents sample 補 notifyPolicy 欄位（always/on-fail/on-signal + 語意說明）\n4. agents/README.md — watchdog-patrol seed 使用說明（行為、enabled:false 出貨、啟用方式、驗收指令）\n\n驗收結果 8/8 ALL PASS：healthy run success + jsonl 無新訊息 + scheduler 不推；firing run success + jsonl +1 則告警（HighCPUUsage critical）+ run.notified=true（on-signal 去重）。全套 vitest 335/335 綠，e2e 重跑 idempotent。",
+  "files": [
+    {
+      "path": "dev/e2e/watchdog-e2e.mjs",
+      "reason": "TASK-010 驗收腳本（新檔，可重現）：全 mock 端到端驗證 healthy 安靜 / firing 通知"
+    },
+    {
+      "path": "package.json",
+      "reason": "加 e2e:watchdog script"
+    },
+    {
+      "path": ".paaw/api-samples.json",
+      "reason": "GET/POST /api/agents sample 補 notifyPolicy 欄位（TASK-010 新 API 欄位）"
+    },
+    {
+      "path": "agents/README.md",
+      "reason": "watchdog-patrol seed 使用說明：notifyPolicy 行為、啟用方式、驗收指令"
+    }
+  ],
+  "howToTest": "1. npx vitest run → 335/335 綠（12 檔，含 scheduler notifyPolicy 4 條 + agent-store 3 條新測試）\n2. npm run e2e:watchdog → ✅ ALL PASS (8 passed)：healthy 情境 jsonl 無新訊息 + firing 情境 +1 則含 HighCPUUsage 的告警、run.notified=true（去重生效）\n3. 驗收後自動清理：workdir temp、data/conversations/watchdog-patrol 皆刪",
+  "risk": "① LLM stub 是腳本內建 OpenAI-compatible 假 server（注入 config.providers），驗證的是接線與 scheduler 行為，非真 LLM 判斷力 — 換真 LLM 後 firing 判斷需人工複驗一次。② watchdog seed enabled:false 出貨，啟用需手動改 true 或 PATCH。③ notifyPolicy 是 agent schema 新欄位，UI 尚未顯示此欄位（後續 task 範圍）"
+}

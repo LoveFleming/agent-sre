@@ -7,3 +7,7 @@ dist/
 nul
 runs/
 dev/mocks/tchat-sent.jsonl
+
+# TASK-011: datasource store + tool configs hold plaintext tokens — never commit
+datasources/
+tools/*/config.json

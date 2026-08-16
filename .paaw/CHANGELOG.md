@@ -99,6 +99,23 @@
 ### changed
 - +283 −877 lines across 13 files
 
+### changed
+- +283 −877 lines across 13 files
+
+### changed
+- 實作 TASK-011：datasource-store.mjs + /api/datasources CRUD（token 於回應一律 mask 成 "***"；PUT 傳 "***"/空/缺省 = 保留原值）。存檔時 hot-sync 到 tools/<id>/config.json，provider 免重啟。前置已就緒：TASK-001 agent-store 模式沿用、TASK-015 X-API-Token auth 保護。修復 comment 內 `tools/*/config.json` 導致的 vitest parse 失敗（`*/` 提前終止 block comment），並補齊 6 個 /api/datasources API samples。(2 new files) (4 modified)
+
+### changed
+- +964 −360 lines across 9 files
+
+### fixed
+- 修復 TASK-011 遺留的測試 parse 失敗並完成結案。
+
+已診斷出 root cause：你新寫的 server/datasource-store.m (3 modified)
+
+### changed
+- +1151 −367 lines across 11 files
+
 ## 2026-08-15
 ### changed
 - 實作 TASK-001：server/agent-store.mjs — file-based Agent Registry 持久化。

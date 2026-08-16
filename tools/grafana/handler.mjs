@@ -11,7 +11,7 @@
  *   }
  */
 
-import { existsSync, readFileSync } from "fs";
+import { existsSync, readFileSync, statSync } from "fs";
 import { resolve, dirname, join } from "path";
 import { fileURLToPath } from "url";
 
@@ -19,13 +19,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 let _config = null;
+/** Cached mtime (ms) of the config file the cache was loaded from. */
+let _configMtime = 0;
 
 function getConfig() {
-  if (_config) return _config;
   const ROOT = process.env.PAAW_ROOT || process.env.SRE_ROOT || resolve(__dirname, "../..");
   const configPath = join(ROOT, "tools/grafana/config.json");
   if (existsSync(configPath)) {
-    _config = JSON.parse(readFileSync(configPath, "utf-8"));
+    // TASK-011: datasource-store hot-syncs this file via the API; watch its
+    // mtime so a rotated token/url is picked up without a server restart.
+    const mtime = statSync(configPath).mtimeMs;
+    if (!_config || mtime !== _configMtime) {
+      _config = JSON.parse(readFileSync(configPath, "utf-8"));
+      _configMtime = mtime;
+    }
   } else {
     // Fallback to env vars
     _config = {
@@ -33,6 +40,7 @@ function getConfig() {
       grafana_token: process.env.GRAFANA_TOKEN || "",
       default_org_id: parseInt(process.env.GRAFANA_ORG_ID || "1", 10),
     };
+    _configMtime = 0;
   }
   return _config;
 }

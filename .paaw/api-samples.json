@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-16T04:57:12.099Z",
-  "note": "API Tester samples. Source of truth for request/response shapes — Tester (Divya) and QA (大安) derive E2E cases from these. TASK-002 added /api/agents CRUD. TASK-015: 所有 /api/* endpoint（/api/health 除外）都要求 X-API-Token header，值 = env AGENT_SRE_API_TOKEN；env 未設時 server 以 dev mode 放行。靜態檔案與 /api/health 不需要 token。 TASK-004 新增 /api/runs 查詢 endpoints（run 歷史記錄）。 TASK-004 補齊：fingerprint / notifyError 欄位、notified null 三態語意、GET /api/runs ?limit= 參數、每 agent 保留 200 筆的 retention 策略（SRE_RUNS_RETENTION 可覆寫）。",
+  "updatedAt": "2026-08-16T13:39:47Z",
+  "note": "API Tester samples. Source of truth for request/response shapes — Tester (Divya) and QA (大安) derive E2E cases from these. TASK-002 added /api/agents CRUD. TASK-015: 所有 /api/* endpoint（/api/health 除外）都要求 X-API-Token header，值 = env AGENT_SRE_API_TOKEN；env 未設時 server 以 dev mode 放行。靜態檔案與 /api/health 不需要 token。 TASK-004 新增 /api/runs 查詢 endpoints（run 歷史記錄）。 TASK-004 補齊：fingerprint / notifyError 欄位、notified null 三態語意、GET /api/runs ?limit= 參數、每 agent 保留 200 筆的 retention 策略（SRE_RUNS_RETENTION 可覆寫）。 TASK-011 新增 /api/datasources CRUD（datasource 註冊檔；token 於回應一律 mask 成 \"***\"，PUT 時 body 傳 \"***\"/空/缺省 = 保留原值）。",
   "endpoints": [
     {
       "method": "GET",
@@ -38,7 +38,8 @@
               "cooldownMinutes": 30,
               "enabled": true,
               "createdAt": "2026-08-16T03:41:00.000Z",
-              "updatedAt": "2026-08-16T03:41:00.000Z"
+              "updatedAt": "2026-08-16T03:41:00.000Z",
+              "notifyPolicy": "always"
             }
           ]
         }
@@ -47,7 +48,7 @@
     {
       "method": "POST",
       "endpoint": "/api/agents",
-      "description": "需 X-API-Token header（TASK-015）。建立 agent。id 由 server 端產生（client 傳入的 id/createdAt/updatedAt 會被忽略）。name 與 prompt 為必填；notifyTarget 為 store 必填 schema。",
+      "description": "需 X-API-Token header（TASK-015）。建立 agent。id 由 server 端產生（client 傳入的 id/createdAt/updatedAt 會被忽略）。name 與 prompt 為必填；notifyTarget 為 store 必填 schema。 notifyPolicy: always(預設)/on-fail(失敗才通知)/on-signal(agent 已自行通知則 scheduler 跳過，healthy 不推) — TASK-010。",
       "request": {
         "headers": {
           "Content-Type": "application/json",
@@ -66,7 +67,8 @@
             "targetId": "c-alerts"
           },
           "cooldownMinutes": 15,
-          "enabled": true
+          "enabled": true,
+          "notifyPolicy": "on-signal"
         }
       },
       "response": {
@@ -409,6 +411,152 @@
         "status": 409,
         "body": {
           "error": "agent is already running"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "endpoint": "/api/datasources",
+      "description": "需 X-API-Token header（TASK-015）。列出所有 datasources（TASK-011），按 createdAt 升冪。回應中的 token 一律為 mask 值 \"***\"，絕不回傳明文。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "datasources": [
+            {
+              "id": "grafana",
+              "url": "http://grafana.local:3000",
+              "token": "***",
+              "settings": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "endpoint": "/api/datasources",
+      "hint": "create",
+      "description": "需 X-API-Token header（TASK-015）。建立 datasource（TASK-011）。id 為 caller 自選 slug，同時對應 tool provider 目錄（tools/<id>/）— 儲存時會 hot-sync 設定到 tools/<id>/config.json，provider 不需重啟。id 重複 → 400（更新請用 PUT）。url 必填且必須是合法 URL；token/settings 選填（字串/物件）。回應 token 已 mask。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "grafana",
+          "url": "http://grafana.local:3000",
+          "token": "gapi_realtoken",
+          "settings": {}
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "datasource": {
+            "id": "grafana",
+            "url": "http://grafana.local:3000",
+            "token": "***",
+            "settings": {},
+            "createdAt": "2026-08-16T12:30:00.000Z",
+            "updatedAt": "2026-08-16T12:30:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "endpoint": "/api/datasources",
+      "hint": "duplicate",
+      "description": "id 已存在 → 400，提示改用 PUT（更新請用 PUT /api/datasources/{id}）。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "grafana",
+          "url": "http://grafana.local:3000"
+        }
+      },
+      "response": {
+        "status": 400,
+        "body": {
+          "error": "Datasource already exists: grafana (use PUT to update)"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "endpoint": "/api/datasources/{id}",
+      "description": "需 X-API-Token header（TASK-015）。取得單一 datasource（TASK-011），token 已 mask。不存在 → 404；無效 id（traversal 樣式）→ 400。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "datasource": {
+            "id": "grafana",
+            "url": "http://grafana.local:3000",
+            "token": "***",
+            "settings": {},
+            "createdAt": "2026-08-16T12:00:00.000Z",
+            "updatedAt": "2026-08-16T12:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/api/datasources/{id}",
+      "description": "需 X-API-Token header（TASK-015）。更新 datasource（TASK-011）。token 規則：body 傳 \"***\"、空字串或省略 = 保留原值（UI 只拿得到 mask，回傳 mask 不會洗掉真 token）；傳其他字串 = 輪替 token。回應 token 已 mask。不存在 → 404；驗證失敗 → 400。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "url": "http://grafana.local:3100",
+          "token": "***"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "datasource": {
+            "id": "grafana",
+            "url": "http://grafana.local:3100",
+            "token": "***",
+            "settings": {},
+            "createdAt": "2026-08-16T12:00:00.000Z",
+            "updatedAt": "2026-08-16T12:35:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "endpoint": "/api/datasources/{id}",
+      "description": "需 X-API-Token header（TASK-015）。刪除 datasource（TASK-011）。不存在 → 404；無效 id → 400。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "success": true,
+          "id": "grafana"
         }
       }
     }

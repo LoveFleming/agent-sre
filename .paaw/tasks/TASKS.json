@@ -71,6 +71,26 @@
           "by": "migration",
           "at": "2026-08-16T07:57:54.546Z",
           "note": "reconcile 2026-08-16 晚：git 證據 f3e68fc (agent-store atomic writes)"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -102,13 +122,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-002",
@@ -156,6 +170,26 @@
           "by": "migration",
           "at": "2026-08-16T07:57:54.546Z",
           "note": "reconcile 2026-08-16 晚：git 證據 aa558e7, aa3fb2b (agents CRUD)"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -192,13 +226,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-003",
@@ -251,6 +279,26 @@
           "by": "migration",
           "at": "2026-08-16T07:57:54.546Z",
           "note": "reconcile 2026-08-16 晚：git 證據 c287bbb (AgentsPage)"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -287,13 +335,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-004",
@@ -366,6 +408,26 @@
             "flakyFix": "bbdf738 deterministic sort tie-break",
             "passed": 283
           }
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -403,13 +465,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-005",
@@ -458,6 +514,26 @@
           "by": "migration",
           "at": "2026-08-16T07:57:54.546Z",
           "note": "reconcile 2026-08-16 晚：git 證據 089ff88, e648486 (scheduler)"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -497,13 +573,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-006",
@@ -566,6 +636,26 @@
           "by": "migration",
           "at": "2026-08-16T07:57:54.546Z",
           "note": "reconcile 2026-08-16 晚：git 證據 48b42f2 (manual run trigger)"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -601,13 +691,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-007",
@@ -656,6 +740,26 @@
           "by": "migration",
           "at": "2026-08-16T10:13:52.697Z",
           "note": "git 證據 81fbe64 (tchat transport + contract v0, 329/329 tests)"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -688,13 +792,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-008",
@@ -747,6 +845,26 @@
           "by": "migration",
           "at": "2026-08-16T07:57:54.546Z",
           "note": "reconcile 2026-08-16 晚：git 證據 4a13b24 (grafana mock)"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -782,13 +900,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-009",
@@ -847,6 +959,26 @@
             ],
             "staged": true
           }
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -882,13 +1014,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-010",
@@ -896,7 +1022,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "resolved",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -908,11 +1034,17 @@
       "assignee": null,
       "description": "建立第一個 watchdog agent（agents/ 目錄 seed 一個範例 JSON + 文件說明）。allowedTools: grafana 系列 + tchat_send_message。context 寫明判斷準則：以 Grafana alerts API 客觀狀態為準（state=firing 才通知，pending 僅觀察並記錄），LLM 負責綜合與措辭，不憑 metric 單點猜測。prompt 教流程：grafana_list_alerts →（必要時 grafana_query 補細節）→ 判斷 → 異常時 tchat_send_message 到 notifyTarget（targetType/targetId 由 system 注入，LLM 只需引用）。schedule 例：*/5 * * * *。驗收流程（全 mock）：切 healthy→run 綠燈且 tchat-sent.jsonl 無新訊息；切 firing→通知送達 jsonl。依賴 T4/T5/T6/T-M1/T-M2/T-M3 全部完成。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "2026-08-16 收尾完成（developer session）：\n- 產品碼（scheduler notifyPolicy 三態 + agentNotified 去重 + failure bypass、agent-store notifyPolicy 欄位、watchdog-patrol seed、20 條新單元測試）已於 25dce80 / e31af3d commit\n- 本輪補齊：dev/e2e/watchdog-e2e.mjs 可重現驗收腳本（npm run e2e:watchdog，8/8 ALL PASS：healthy 安靜、firing 通知 + on-signal 去重）、api-samples 補 notifyPolicy、agents/README.md seed 說明、package.json e2e script\n- 驗收採 LLM stub（config.providers runtime 注入），驗證接線與 scheduler 行為；真 LLM 判斷力屬 TASK 後續人工複驗\n- 已 staged 待人類 commit（不做 push）",
+          "at": "2026-08-16T12:40:27.598Z",
+          "by": "agent"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.050Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
+      "updatedAt": "2026-08-16T12:40:39.937Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -922,10 +1054,42 @@
           "at": "2026-08-15T13:05:41.050Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T12:40:33.897Z"
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T12:40:39.937Z",
+          "result": {
+            "e2e": "8/8 ALL PASS (healthy quiet + firing notify + on-signal dedupe)",
+            "tests": "335/335 vitest green",
+            "acceptanceCriteria": [
+              "healthy 情境 run success 且 jsonl 無新訊息 ✅",
+              "firing 情境通知送達 jsonl ✅"
+            ]
+          }
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -961,13 +1125,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-011",
@@ -975,7 +1133,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "resolved",
       "priority": "medium",
       "effort": null,
       "labels": [
@@ -983,15 +1141,25 @@
         "datasource",
         "secrets"
       ],
-      "assignee": null,
+      "assignee": "developer",
       "description": "server/datasource-store.mjs + routes：管理 datasource 設定（例 grafana: { url, token }），存 datasources/*.json。API：GET /api/datasources 回傳時 token 一律 mask 成 ***（永不回明文）、POST/PUT 寫入明文、PUT 若 token 欄為 *** 或缺空則保留原值不覆蓋。串接：datasource 變更時同步更新對應 tools/&lt;name&gt;/config.json（grafana handler 讀的是該檔）。secret 不寫進 run log、不進 agent prompt。⚠️ 前置：T12 API auth 必須先完成（本 endpoint 管理 secrets）。附測試。",
       "relatedFiles": [],
-      "notes": [],
-      "executionResult": null,
+      "notes": [
+        {
+          "text": "修復遺留測試 parse 失敗並完成結案（2026-08-16）。Root cause：datasource-store.mjs / datasource-store.test.mjs 的 header block comment 含 `tools/*/config.json`，`*/` 提前終止 comment，後續文字被當 JS code，vitest \"Failed to parse source for import analysis\"。修復：兩檔各一處改為 `tools/<name>/config.json`；grep 全掃 server/ 確認無其他 block comment 內 `*/`（routes.test.mjs:656 `/* try next dir */` 為合法 inline comment）。驗證：vitest run datasource-store(21)+routes(64)=85 tests 全綠；npm test 全套 13 files / 356 tests 全綠。補件：.paaw/api-samples.json 補上 6 個 /api/datasources samples（GET list、POST create/duplicate 400、GET/PUT/DELETE :id，含 token mask 語意說明）— 之前實作時漏了 API Contract 規則。.gitignore 加 datasources/ 與 tools/*/config.json（明文 token 不入 repo）。",
+          "at": "2026-08-16T13:41:58.423Z",
+          "by": "agent"
+        }
+      ],
+      "executionResult": {
+        "summary": "## TASK-011 收尾報告\n\n**(1) Commit 狀態確認** — TASK-011 原本**沒有 commit**（最新 5 筆都是 watchdog/mocks 相關），working tree 有未提交的 datasource 變更 → 已依指示 `git add` + commit。\n\n**(2) Action log** — 已記錄 TASK-011 結案（datasourc",
+        "filesChanged": [],
+        "success": true
+      },
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.051Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
-      "resolvedAt": null,
+      "updatedAt": "2026-08-16T13:48:19.014Z",
+      "resolvedAt": "2026-08-16T13:48:19.014Z",
       "createdBy": "agent",
       "pipeline": {
         "spec": {
@@ -1000,10 +1168,45 @@
           "at": "2026-08-15T13:05:41.051Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T13:42:06.812Z",
+          "result": {
+            "passed": true,
+            "tests": "85/85 focus; 356/356 full suite (13 files)"
+          }
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T13:42:12.342Z",
+          "result": {
+            "passed": true,
+            "tests": "356/356 (13 files)",
+            "focus": "datasource-store 21 + routes 64 = 85 green; parse failure resolved",
+            "apiSamples": "6 datasource endpoints documented",
+            "commitMessage": "feat(server): datasource store and CRUD API with token masking"
+          }
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -1040,13 +1243,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-012",
@@ -1082,6 +1279,26 @@
         },
         "commit": {
           "status": "pending"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -1118,13 +1335,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-013",
@@ -1132,7 +1343,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "resolved",
       "priority": "medium",
       "effort": null,
       "labels": [
@@ -1140,15 +1351,19 @@
         "cooldown",
         "ADR-003"
       ],
-      "assignee": null,
+      "assignee": "developer",
       "description": "run 結果產生 alert fingerprint（例：sorting 過的 alert names+state 雜湊）。通知前檢查：同 agent 同 fingerprint 若在 cooldownMinutes（agent 可覆寫，預設 30）內已通知過，跳過 tchat 發送並在 run 記 notified: false, skippedByCooldown: true。fingerprint 狀態存 runs/ 目錄旁（例 runs/&lt;agentId&gt;/cooldown-state.json，重啟存活）。實作位置：scheduler 執行路徑（包在 runAgentLoop 外圍，非改 agent-loop 本身）。驗收用 mock：firing 連跑兩次 → 第二次 jsonl 無新訊息；過 cooldown 再跑 → 重新通知。",
       "relatedFiles": [],
       "notes": [],
-      "executionResult": null,
+      "executionResult": {
+        "summary": "",
+        "filesChanged": [],
+        "success": true
+      },
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.054Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
-      "resolvedAt": null,
+      "updatedAt": "2026-08-16T14:04:57.231Z",
+      "resolvedAt": "2026-08-16T14:04:57.231Z",
       "createdBy": "agent",
       "pipeline": {
         "spec": {
@@ -1161,6 +1376,26 @@
         },
         "commit": {
           "status": "pending"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -1196,13 +1431,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-014",
@@ -1238,6 +1467,26 @@
         },
         "commit": {
           "status": "pending"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -1274,13 +1523,7 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     },
     {
       "id": "TASK-015",
@@ -1349,6 +1592,26 @@
           "by": "migration",
           "at": "2026-08-16T07:57:54.546Z",
           "note": "reconcile 2026-08-16 晚：git 證據 060f0b2, dca65ae, e9333a9 (X-API-Token auth)"
+        },
+        "review": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "test": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "qa": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
+        },
+        "docs": {
+          "status": "done",
+          "by": "system",
+          "reason": "skipped (mini loop)"
         }
       },
       "loopModeOverride": null,
@@ -1385,15 +1648,9 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null,
-      "pipelinePhases": [
-        "spec",
-        "implement",
-        "commit"
-      ],
-      "pipelineMode": "short"
+      "overnight": null
     }
   ],
-  "updatedAt": "2026-08-16T10:13:52.697Z",
+  "updatedAt": "2026-08-16T14:04:57.231Z",
   "loopMode": "mini"
 }

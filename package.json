@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "mock:grafana": "node dev/mocks/grafana-mock.mjs",
-    "mock:tchat": "node dev/mocks/tchat-mock.mjs"
+    "mock:tchat": "node dev/mocks/tchat-mock.mjs",
+    "e2e:watchdog": "node dev/e2e/watchdog-e2e.mjs"
   },
   "engines": {
     "node": ">=20"
