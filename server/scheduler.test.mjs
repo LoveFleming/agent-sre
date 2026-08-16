@@ -107,9 +107,6 @@ describe("scheduler — registration logic", () => {
     expect(scheduler.activeCount()).toBe(1);
     expect(status.jobs).toHaveLength(1);
     expect(status.jobs[0]).toMatchObject({ agentId: scheduled.id, schedule: "*/1 * * * *" });
-  });
-
-  it("a hand-edited agent file with an invalid schedule is skipped, not fatal", () => {
     writeFileSync(
       join(TMP_AGENTS, "badfile1.json"),
       JSON.stringify({
@@ -284,13 +281,13 @@ describe("scheduler — buildCrew mapping", () => {
     expect(crew.id).toBe("agent-x");
     expect(crew.title).toBe("DB Guardian");
     expect(crew.allowedTools).toEqual(["grafana_list_dashboards"]);
-    // identity + context into description, role + rules + notify target
-    // into systemPrompt (the only fields buildSystemPrompt reads)
+    // context → description; rules + prompt + notify target → systemPrompt
+    // (the fields buildSystemPrompt actually reads)
     expect(crew.description).toContain("production cluster");
-    expect(crew.systemPrompt).toContain("你是 DB 巡檢員");
     expect(crew.systemPrompt).toContain("不可重啟節點");
     expect(crew.systemPrompt).toContain("容量問題轉 infra");
     expect(crew.systemPrompt).toContain("個資");
+    expect(crew.systemPrompt).toContain("你是 DB 巡檢員");
     expect(crew.systemPrompt).toContain("channel");
     expect(crew.systemPrompt).toContain("ops");
   });
@@ -304,6 +301,7 @@ describe("scheduler — buildCrew mapping", () => {
       notifyTarget: { targetType: "user", targetId: "u" },
     });
     expect(crew.systemPrompt).toContain("role only");
+    expect(crew.expertise).toBe("");
     expect(crew.systemPrompt).not.toContain("Guardrails");
     expect(crew.systemPrompt).not.toContain("undefined");
   });
