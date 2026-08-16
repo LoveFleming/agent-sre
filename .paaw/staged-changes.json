@@ -1,19 +1,43 @@
 {
-  "createdAt": "2026-08-16T03:30:41.102Z",
+  "createdAt": "2026-08-16T03:42:28.750Z",
   "agent": "developer",
-  "task": "工作區清理與未提交變更 commit：server 程式碼修改 + 對應測試檔一個 commit；.paaw/ 中繼資料另一個 chore(.paaw) commit；刪除垃圾檔 nul 並加入 .gitignore。不 push。",
+  "task": "實作 TASK-002：/api/agents CRUD endpoints（GET 列表、POST 建立 server 產 id、PUT/DELETE by id），資料層用 server/agent-store.mjs，錯誤處理沿用 routes.mjs 慣例，routes.test.mjs 補 CRUD 的 200/400/404 測試",
   "taskId": "",
-  "summary": "工作區清理完成，共三個 commit：(1) c7e19b4 fix(server) — server 三檔安全性修改 + 6 個測試檔；(2) a4a3517 chore(.paaw) — 64 檔中繼資料同步；(3) a97ffa9 chore — .gitignore 補 nul。根目錄垃圾檔 nul 已刪除。全套測試 214/214 綠燈。工作樹乾淨。9de054a 及以上 commit 均未 push。",
+  "summary": "TASK-002 實作：\n\n1. server/routes.mjs\n   - 新增 4 個 endpoints：GET /api/agents（列表，createdAt 升冪）、POST /api/agents（建立，id 由 agent-store 的 saveAgent 產生 UUID）、GET/PUT/DELETE /api/agents/:id（PUT 為 partial patch，未傳欄位保留舊值）\n   - 錯誤處理沿用現有慣例：400（缺 name、缺 prompt、body 非物件、schema 違規、invalid/traversal id）、404（Agent not found）、error body { \"error\": ... }\n   - /api/tasks 五個 endpoints 全部保留但回應加 \"deprecated\": true（GET list、POST、GET :id、PUT :id、DELETE :id）\n   - 新增 scheduler hook：export setSchedulerNotifier(fn)，POST/PUT/DELETE 成功後以 { type: \"created\"|\"updated\"|\"deleted\", agent } 事件通知；notifier 未註冊或 throw 都不影響 HTTP 回應（ADR-003 介面預留，scheduler 落地後註冊即可）\n\n2. server/routes.test.mjs（41 案例，原 12 → 41）\n   - /api/agents CRUD：201 建立 + UUID id、列表含新建、GET/:id、PUT 更新、DELETE 後 GET 404\n   - 400：缺 name、缺 prompt、body 非物件、PUT schema 違規（cooldownMinutes 非數字）、invalid id（../traversal 樣式）\n   - 404：GET/PUT/DELETE 不存在的 id\n   - scheduler hook：created/updated/deleted 各觸發一次、notifier throw 時仍 201、未註冊時 CRUD 照常\n   - /api/tasks：五個 endpoints 皆驗證 deprecated: true 且功能不變\n   - 測試隔離：SRE_AGENTS_DIR 指向 temp dir（在 dynamic import routes.mjs 前設定，比照 agent-store.test.mjs 慣例），不污染版控的 agents/ 目錄\n\n3. .paaw/api-samples.json（新檔）：七個 endpoint 的 request/response/error 範例（agents CRUD × 5 + tasks deprecated × 2），供 Tester/QA 產 E2E 案例",
   "files": [
     {
-      "path": ".gitignore",
-      "reason": "加入 nul，阻擋 Windows shell 重定向產物再次出現在根目錄（實際刪除 nul 檔不會進 commit，因為它從未被追蹤）"
+      "path": "server/routes.mjs",
+      "reason": "新增 /api/agents CRUD 四個 endpoint + scheduler notifier hook；/api/tasks 全部回應加 deprecated: true"
     },
     {
-      "path": ".paaw/（64 個檔案）",
-      "reason": "中繼資料同步：code intelligence/features/change records 重整、舊 conversation logs 與過時設計文件清除、agent snapshots 與 dispatch logs 更新"
+      "path": "server/routes.test.mjs",
+      "reason": "擴充測試：agents CRUD 27 案例（200/400/404、invalid id、scheduler hook）+ tasks deprecated 5 案例，共 41 案例"
+    },
+    {
+      "path": ".paaw/api-samples.json",
+      "reason": "新檔：agents CRUD 與 tasks deprecated 的 API samples，供 Tester/QA 產 E2E 案例"
+    },
+    {
+      "path": ".paaw/tasks/TASKS.json",
+      "reason": "TASK-002 pipeline 前進到 implement done"
+    },
+    {
+      "path": ".paaw/staged-changes.json",
+      "reason": "staged summary 系統自動更新"
+    },
+    {
+      "path": ".paaw/auto-dispatch/plans/ns-2026-08-16-agent-sre.json",
+      "reason": "dispatch 系統自動更新"
+    },
+    {
+      "path": ".paaw/coding-memory/actions.jsonl",
+      "reason": "action log 自動累加"
+    },
+    {
+      "path": ".paaw/coding-memory/conversations/coding.em/active.json",
+      "reason": "對話紀錄自動更新"
     }
   ],
-  "howToTest": "1. `git log --oneline -4` 預期看到 c7e19b4 → a4a3517 → a97ffa9 三個新 commit，9de054a 在其下未動。\n2. `git status` 預期完全乾淨（無 staged、無 untracked）。\n3. `ls` 根目錄預期看不到 nul 檔。\n4. `npm test` 預期 214/214 全綠。",
-  "risk": "無。nul 檔本來就未被 git 追蹤，刪除不影響任何功能；.paaw/ 為中繼資料，同步內容由工具自動產生。"
+  "howToTest": "1. cd agent-sre && npx vitest run server/routes.test.mjs — 應 41/41 綠（agents CRUD + tasks deprecated + 原有 traversal）\n2. npx vitest run — 全套應 241/241 綠\n3. 手動 smoke：node server/index.mjs 起本地 server，curl -X POST localhost:PORT/api/agents -d '{\"name\":\"T\",\"prompt\":\"p\",\"notifyTarget\":{\"targetType\":\"user\",\"targetId\":\"u1\"}}' → 201 帶 UUID id；GET /api/agents → 列表含該筆；GET /api/tasks → 200 帶 deprecated:true",
+  "risk": "PUT /api/agents/:id 的 404/400 判斷依賚 store 的 \"Agent not found\" 訊息前綴（TASK-001 既定契約，route 層沿用）；若未來 agent-store 改錯誤訊息字串，404 mapping 會退回 400 — 已在 route 註解標明此耦合。"
 }
