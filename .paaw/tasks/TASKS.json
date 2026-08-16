@@ -796,7 +796,7 @@
       "type": "chore",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "resolved",
       "priority": "medium",
       "effort": null,
       "labels": [
@@ -808,11 +808,17 @@
       "assignee": null,
       "description": "dev/mocks/tchat-mock.mjs：port 3002，實作契約 v0 的 POST /api/messages（回 { ok: true, messageId }）。每筆收到的訊息 append 到 dev/mocks/tchat-sent.jsonl（{ ts, targetType, targetId, text }）— 驗證 agent 通知行為就是讀這個檔。POST /__scenario 支援：ok（正常）、reject（回 4xx 模擬公司 API 拒絕）、down（不回應模擬斷線）— 用於驗證 run 記錄 notifyError 路徑。package.json 加 npm run mock:tchat。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "2026-08-16 Priya 完成 TASK-009。交付物：dev/mocks/tchat-mock.mjs（契約 v0 mock，port 3002，MOCK_TCHAT_PORT 可覆寫）+ package.json 加 mock:tchat script + .gitignore 排除 tchat-sent.jsonl。功能：POST /api/messages（驗證+落檔 tchat-sent.jsonl）、情境切換 ok/reject/down（POST /__scenario）、POST /__reset 清 log、GET /__sent 讀取。驗證：smoke 17/17 PASS + 真 tools/tchat/client.mjs 端到端 8/8 PASS（ok 送達/reject 403/down timeout 10s）+ 全套 vitest 329/329 綠。重要教訓：Node 25.8.2 上 readJsonBody 用 for-await 讀 IncomingMessage 且迴圈內有同步計算（size +=）時會 chunks=0（data 事件有到但 for-await 拿不到）— 改用事件式 readBody（同 grafana-mock 慣例）解決。",
+          "at": "2026-08-16T10:39:54.177Z",
+          "by": "agent"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.049Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
+      "updatedAt": "2026-08-16T10:40:21.107Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -822,10 +828,25 @@
           "at": "2026-08-15T13:05:41.049Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T10:40:18.291Z",
+          "result": {
+            "tests": "smoke 17/17, e2e real-client 8/8, full suite 329/329"
+          }
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T10:40:21.107Z",
+          "result": {
+            "files": [
+              "dev/mocks/tchat-mock.mjs",
+              "package.json",
+              ".gitignore"
+            ],
+            "staged": true
+          }
         }
       },
       "loopModeOverride": null,
