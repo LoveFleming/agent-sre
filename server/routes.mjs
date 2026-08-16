@@ -5,6 +5,7 @@
 import { loadAllCrews, getCrew, listCrews } from "./crew-loader.mjs";
 import { runAgentLoop, runAgentLoopStream } from "./agent-loop.mjs";
 import { toolRegistry } from "./tool-registry.mjs";
+import { safeResolve } from "./tool-loader.mjs";
 import { loadConversation, saveConversation, archiveConversation, listArchives, loadArchive } from "./conversation.mjs";
 import { taskStore } from "./task-store.mjs";
 import { existsSync, readFileSync } from "fs";
@@ -212,12 +213,16 @@ export function registerRoutes(server) {
       // ── Static UI files (non-API paths) ──
       if (!path.startsWith("/api/")) {
         const filePath = path === "/" ? "/index.html" : path;
-        const fullPath = resolve(UI_DIR, filePath.slice(1));
-        if (fullPath.startsWith(UI_DIR) && existsSync(fullPath)) {
-          const ext = extname(fullPath);
-          res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
-          res.end(readFileSync(fullPath));
-          return;
+        try {
+          const fullPath = safeResolve(UI_DIR, filePath.replace(/^\/+/, ""));
+          if (existsSync(fullPath)) {
+            const ext = extname(fullPath);
+            res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
+            res.end(readFileSync(fullPath));
+            return;
+          }
+        } catch {
+          // traversal blocked → fall through to 404
         }
       }
 

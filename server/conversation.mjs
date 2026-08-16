@@ -19,8 +19,17 @@ function ensureDir(dir) {
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 }
 
+/** Reject crew/session ids that could escape the conversations dir */
+function sanitizeId(id) {
+  if (typeof id !== "string" || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+    throw new Error(`Invalid id: ${String(id)}`);
+  }
+  return id;
+}
+
 /** Load active conversation */
 export function loadConversation(crewId) {
+  sanitizeId(crewId);
   const dir = join(CONV_DIR, crewId);
   const activeFile = join(dir, "active.json");
   if (!existsSync(activeFile)) return [];
@@ -34,6 +43,7 @@ export function loadConversation(crewId) {
 
 /** Save conversation */
 export function saveConversation(crewId, messages) {
+  sanitizeId(crewId);
   const dir = join(CONV_DIR, crewId);
   ensureDir(dir);
   writeFileSync(join(dir, "active.json"), JSON.stringify({ messages, updatedAt: new Date().toISOString() }, null, 2));
@@ -41,6 +51,7 @@ export function saveConversation(crewId, messages) {
 
 /** Archive current conversation + start fresh */
 export function archiveConversation(crewId) {
+  sanitizeId(crewId);
   const dir = join(CONV_DIR, crewId);
   const activeFile = join(dir, "active.json");
   if (!existsSync(activeFile)) return null;
@@ -59,6 +70,7 @@ export function archiveConversation(crewId) {
 
 /** List archived sessions */
 export function listArchives(crewId) {
+  sanitizeId(crewId);
   const dir = join(CONV_DIR, crewId);
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
@@ -82,6 +94,8 @@ export function listArchives(crewId) {
 
 /** Load archived session */
 export function loadArchive(crewId, sessionId) {
+  sanitizeId(crewId);
+  sanitizeId(sessionId);
   const dir = join(CONV_DIR, crewId);
   const file = join(dir, `${sessionId}.json`);
   if (!existsSync(file)) return [];

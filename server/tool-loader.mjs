@@ -31,7 +31,7 @@ export function safeResolve(base, ...child) {
   if (isAbsolute(childPath)) {
     throw new Error(`Path traversal blocked: absolute path "${childPath}"`);
   }
-  const resolved = resolve(base, childPath);
+  const resolved = resolve(base, childPath); // nosemgrep: path-traversal - guarded by isAbsolute & relative checks below
   const rel = relative(base, resolved);
   // `relative()` returns a string starting with `..` (or `""` when equal) on escape.
   if (rel.startsWith("..") || isAbsolute(rel)) {
