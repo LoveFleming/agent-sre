@@ -41,7 +41,11 @@ const VALID_SCENARIOS = ["ok", "reject", "down"];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const SENT_LOG = resolve(__dirname, "tchat-sent.jsonl"); // dev/mocks/tchat-sent.jsonl
+// TCHAT_SENT_LOG: e2e/acceptance runs redirect the jsonl so parallel
+// scenarios don't fight over the shared dev/mocks/tchat-sent.jsonl.
+const SENT_LOG = process.env.TCHAT_SENT_LOG
+  ? resolve(process.env.TCHAT_SENT_LOG)
+  : resolve(__dirname, "tchat-sent.jsonl"); // dev/mocks/tchat-sent.jsonl
 
 let scenario = "ok";
 let messageCounter = 0;
