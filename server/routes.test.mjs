@@ -430,6 +430,34 @@ describe("routes.mjs — /api/runs 查詢 (TASK-004)", () => {
     expect(res.body.runs[0].agentId).toBe("agent-b");
   });
 
+  it("GET /api/runs?limit= 截斷結果（新→舊的前 N 筆）", async () => {
+    const seeded = [];
+    for (let i = 0; i < 3; i++) seeded.push(await seedRun("agent-a"));
+    // 同毫秒建立的 run startedAt 相同，排序不穩定；改寫檔案讓時間戳確定錯開
+    const { writeFileSync: wfs, readFileSync: rfs } = await import("fs");
+    const { join } = await import("path");
+    seeded.forEach((r, i) => {
+      const file = join(RUNS_TMP, "agent-a", `${r.id}.json`);
+      const data = JSON.parse(rfs(file, "utf-8"));
+      data.startedAt = new Date(Date.UTC(2026, 0, 1, 0, 0, i)).toISOString();
+      wfs(file, JSON.stringify(data));
+    });
+    const res = await httpJson("GET", "/api/runs?limit=2");
+    expect(res.status).toBe(200);
+    expect(res.body.runs).toHaveLength(2);
+    // 新→舊排序：回傳的第一筆是最後 seed 的
+    expect(res.body.runs[0].id).toBe(seeded[2].id);
+    expect(res.body.runs[1].id).toBe(seeded[1].id);
+  });
+
+  it("GET /api/runs?limit= 無效值（非整數/負數）→ 400", async () => {
+    const bad1 = await httpJson("GET", "/api/runs?limit=abc");
+    expect(bad1.status).toBe(400);
+    expect(bad1.body.error).toContain("Invalid limit");
+    const bad2 = await httpJson("GET", "/api/runs?limit=-1");
+    expect(bad2.status).toBe(400);
+  });
+
   it("GET /api/runs?agentId=<traversal> → 400 + { error }", async () => {
     const res = await httpJson("GET", "/api/runs?agentId=..%2F..%2Fetc");
     expect(res.status).toBe(400);

@@ -10,10 +10,17 @@
  *     status: "running" | "success" | "failed",
  *     startedAt, finishedAt, durationMs,
  *     summary,        // LLM final conclusion (success runs)
- *     notified,       // whether the notifyTarget was messaged
+ *     notified,       // null = 未觸發通知場景, true/false = 通知已送/未送
+ *     notifyError,    // why a notify attempt failed (notified=false 時)
+ *     fingerprint,    // anomaly fingerprint — cooldown 去重用
  *     toolCalls,      // [{ name, durationMs }] summary per tool invocation
  *     error           // failure reason (failed runs)
  *   }
+ *
+ * Retention: each agent keeps at most RETENTION_LIMIT (default 200,
+ * env SRE_RUNS_RETENTION) newest run files; startRun() prunes anything
+ * older (best-effort — a prune failure warns but never fails the run
+ * being started).
  *
  * Lifecycle: scheduler/agent-loop calls startRun() before execution, then
  * finishRun() once with the outcome. This module is pure persistence —
@@ -34,7 +41,7 @@
  *   temp dir). Absolute env values are trusted as operator config.
  */
 
-import { existsSync, readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync } from "fs";
+import { existsSync, readFileSync, writeFileSync, renameSync, unlinkSync, mkdirSync, readdirSync } from "fs";
 import { randomBytes } from "crypto";
 import { isAbsolute, dirname } from "path";
 import { ROOT } from "./config.mjs";
@@ -48,6 +55,10 @@ const RUN_FILE_RE = /^[a-zA-Z0-9_-]+\.json$/;
 const SUMMARY_MAX_LENGTH = 4000;
 /** Cap for the `error` message — keeps a stack-trace-shaped string from bloating the record. */
 const ERROR_MAX_LENGTH = 2000;
+/** Cap for `fingerprint` / `notifyError` — digests, not transcripts. */
+const DIGEST_MAX_LENGTH = 200;
+/** Default per-agent retention: keep the newest 200 runs, prune older ones. */
+const DEFAULT_RETENTION = 200;
 const RUN_STATUSES = new Set(["running", "success", "failed"]);
 
 function resolveRunsDir() {
@@ -56,7 +67,14 @@ function resolveRunsDir() {
   return safeResolve(ROOT, override || "runs");
 }
 
+/** Per-agent run retention limit. SRE_RUNS_RETENTION overrides (tests use a small value). */
+function resolveRetentionLimit() {
+  const raw = Number(process.env.SRE_RUNS_RETENTION);
+  return Number.isInteger(raw) && raw >= 1 ? raw : DEFAULT_RETENTION;
+}
+
 const RUNS_DIR = resolveRunsDir();
+const RETENTION_LIMIT = resolveRetentionLimit();
 
 function ensureDir(dir) {
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
@@ -173,7 +191,8 @@ function findRunFile(runId) {
  * @param {string} agentId
  * @returns {{id: string, agentId: string, status: "running", startedAt: string,
  *            finishedAt: null, durationMs: null, summary: string,
- *            notified: boolean, toolCalls: {name:string,durationMs:number}[], error: null}}
+ *            notified: null, toolCalls: {name:string,durationMs:number}[], error: null,
+ *            fingerprint: null, notifyError: null}}
  * @throws {Error} On invalid/traversal agentId.
  */
 export function startRun(agentId) {
@@ -186,13 +205,16 @@ export function startRun(agentId) {
     finishedAt: null,
     durationMs: null,
     summary: "",
-    notified: false,
+    notified: null, // null = 通知場景尚未判定（未觸發）
     toolCalls: [],
     error: null,
+    fingerprint: null,
+    notifyError: null,
   };
   const filePath = runFilePath(agentId, run.id);
   ensureDir(dirname(filePath));
   atomicWriteJson(filePath, run);
+  pruneOldRuns(agentId);
   return run;
 }
 
@@ -206,7 +228,10 @@ export function startRun(agentId) {
  * @param {string} [result.summary] - LLM final conclusion (success runs)
  * @param {string} [result.error] - failure reason (failed runs)
  * @param {Array} [result.toolCalls] - per-tool summary entries
- * @param {boolean} [result.notified] - whether notifyTarget was messaged
+ * @param {boolean|null} [result.notified] - whether notifyTarget was messaged;
+ *        null = the notify scenario never applied this run
+ * @param {string} [result.fingerprint] - anomaly fingerprint for cooldown checks
+ * @param {string} [result.notifyError] - error message when tchat notify failed
  * @returns {object} The updated run record.
  * @throws {Error} On invalid id, missing run, or bad status.
  */
@@ -234,10 +259,48 @@ export function finishRun(runId, result = {}) {
       ? result.error.slice(0, ERROR_MAX_LENGTH)
       : null,
     toolCalls: result.toolCalls !== undefined ? normalizeToolCalls(result.toolCalls) : run.toolCalls,
-    notified: typeof result.notified === "boolean" ? result.notified : run.notified,
+    // notified keeps the stored value unless explicitly overridden; null is a
+    // meaningful "scenario didn't apply" state, distinct from false.
+    notified: result.notified !== undefined ? result.notified : run.notified,
+    fingerprint: typeof result.fingerprint === "string"
+      ? result.fingerprint.slice(0, DIGEST_MAX_LENGTH)
+      : result.fingerprint === null
+        ? null
+        : run.fingerprint,
+    notifyError: typeof result.notifyError === "string"
+      ? result.notifyError.slice(0, ERROR_MAX_LENGTH)
+      : result.notifyError === null
+        ? null
+        : run.notifyError,
   };
   atomicWriteJson(filePath, updated);
   return updated;
+}
+
+/**
+ * Per-agent retention: keep the newest RETENTION_LIMIT run files, delete the
+ * rest. Called after every startRun so an agent directory can only grow past
+ * the limit transiently. Best-effort — deletion errors are warned, not thrown
+ * (retention must never break a run that just started).
+ * @param {string} agentId - already whitelist-validated by the caller
+ */
+function pruneOldRuns(agentId) {
+  try {
+    const dir = safeResolve(RUNS_DIR, agentId);
+    if (!existsSync(dir)) return;
+    const runFiles = readdirSync(dir).filter(f => RUN_FILE_RE.test(f)).sort(); // oldest first
+    const excess = runFiles.length - RETENTION_LIMIT;
+    if (excess <= 0) return;
+    for (const file of runFiles.slice(0, excess)) {
+      try {
+        unlinkSync(safeResolve(dir, file));
+      } catch (err) {
+        console.warn(`[run-store] Retention delete failed for "${file}": ${err.message}`);
+      }
+    }
+  } catch (err) {
+    console.warn(`[run-store] Retention sweep failed for agent "${agentId}": ${err.message}`);
+  }
 }
 
 /**
@@ -245,9 +308,10 @@ export function finishRun(runId, result = {}) {
  * Sorted by startedAt descending (newest first — this is a log).
  * Tolerant read: missing dir → [], corrupt JSON → warn + skip.
  *
- * @param {{agentId?: string}} [filter] - restrict to one agent's runs
+ * @param {{agentId?: string, limit?: number}} [filter] - restrict to one
+ *        agent's runs and/or cap the number of entries returned
  * @returns {{id, agentId, status, startedAt, finishedAt, durationMs,
- *            summary, notified, toolCallCount}[]}
+ *            summary, notified, toolCallCount, fingerprint}[]}
  * @throws {Error} On an invalid/traversal agentId filter.
  */
 export function listRuns(filter = {}) {
@@ -276,13 +340,18 @@ export function listRuns(filter = {}) {
           summary: run.summary,
           notified: run.notified,
           toolCallCount: Array.isArray(run.toolCalls) ? run.toolCalls.length : 0,
+          fingerprint: typeof run.fingerprint === "string" ? run.fingerprint : null,
         });
       } catch (err) {
         console.warn(`[run-store] Skipping unreadable run file "${file}": ${err.message}`);
       }
     }
   }
-  return runs.sort((a, b) => (b.startedAt || "").localeCompare(a.startedAt || ""));
+  runs.sort((a, b) => (b.startedAt || "").localeCompare(a.startedAt || ""));
+  if (typeof filter.limit === "number" && Number.isFinite(filter.limit) && filter.limit >= 0) {
+    return runs.slice(0, Math.floor(filter.limit));
+  }
+  return runs;
 }
 
 /**

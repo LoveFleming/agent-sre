@@ -18,6 +18,8 @@ import { join } from "path";
 
 const TMP_DIR = mkdtempSync(join(tmpdir(), "run-store-test-"));
 process.env.SRE_RUNS_DIR = TMP_DIR;
+// 小保留上限讓 retention 測試可快速觸發；其他測試最多建 5 筆不受影響
+process.env.SRE_RUNS_RETENTION = "5";
 
 const { startRun, finishRun, listRuns, getRun } = await import("./run-store.mjs");
 
@@ -50,9 +52,11 @@ describe("run-store — 1. startRun lifecycle + record shape", () => {
     expect(run.finishedAt).toBeNull();
     expect(run.durationMs).toBeNull();
     expect(run.summary).toBe("");
-    expect(run.notified).toBe(false);
+    expect(run.notified).toBeNull(); // null = 通知場景尚未判定
     expect(run.toolCalls).toEqual([]);
     expect(run.error).toBeNull();
+    expect(run.fingerprint).toBeNull();
+    expect(run.notifyError).toBeNull();
     expect(existsSync(rawFile("agent-a", run.id))).toBe(true);
   });
 
@@ -92,13 +96,13 @@ describe("run-store — 2. finishRun outcome patching", () => {
     expect(updated.error).toBeNull();
   });
 
-  it("failed run：error 記錄且 summary 保留 running 時的空值", () => {
+  it("failed run：error 記錄且 summary 保留 running 時的空值；notified 未指定 → null", () => {
     const run = startRun("agent-a");
     const updated = finishRun(run.id, { status: "failed", error: "tool timeout" });
     expect(updated.status).toBe("failed");
     expect(updated.error).toBe("tool timeout");
     expect(updated.summary).toBe("");
-    expect(updated.notified).toBe(false);
+    expect(updated.notified).toBeNull(); // 未指定時保留 null（場景未觸發）
   });
 
   it("finishRun 不存在的 run → throw（404 語意）", () => {
@@ -143,6 +147,32 @@ describe("run-store — 2. finishRun outcome patching", () => {
       { name: "no-dur", durationMs: null },
     ]);
   });
+
+  it("fingerprint/notifyError 記錄且截斷至 200/2000；null 可明確清除", () => {
+    const run = startRun("agent-a");
+    const updated = finishRun(run.id, {
+      status: "failed",
+      error: "grafana down",
+      fingerprint: "f".repeat(500),
+      notifyError: "n".repeat(3000),
+    });
+    expect(updated.fingerprint).toHaveLength(200);
+    expect(updated.notifyError).toHaveLength(2000);
+
+    const cleared = finishRun(run.id, { status: "success", fingerprint: null, notifyError: null });
+    expect(cleared.fingerprint).toBeNull();
+    expect(cleared.notifyError).toBeNull();
+  });
+
+  it("notified=null（未觸發通知場景）與 notified=false（觸發但未送）是不同狀態", () => {
+    const a = startRun("agent-a");
+    const ra = finishRun(a.id, { status: "success", notified: null });
+    expect(ra.notified).toBeNull();
+
+    const b = startRun("agent-a");
+    const rb = finishRun(b.id, { status: "success", notified: false });
+    expect(rb.notified).toBe(false);
+  });
 });
 
 describe("run-store — 3. listRuns + getRun", () => {
@@ -175,6 +205,38 @@ describe("run-store — 3. listRuns + getRun", () => {
     expect(runs).toHaveLength(1);
     expect(runs[0].agentId).toBe("agent-b");
     expect(runs[0].id).toBe(b.id);
+  });
+
+  it("listRuns limit 截斷新→舊排序後的前 N 筆", () => {
+    const ids = [];
+    for (let i = 0; i < 5; i++) {
+      const run = startRun("agent-a");
+      ids.push(run.id);
+      // 同毫秒建立的 run 靠隨機後綴排序，順序不確定；改寫 startedAt 讓排序確定
+      const file = rawFile("agent-a", run.id);
+      const data = JSON.parse(readFileSync(file, "utf-8"));
+      data.startedAt = new Date(Date.UTC(2026, 0, 1, 0, 0, i)).toISOString();
+      writeFileSync(file, JSON.stringify(data));
+    }
+    const top2 = listRuns({ limit: 2 });
+    expect(top2).toHaveLength(2);
+    // 新→舊的前兩筆 = 最後建立的兩筆（i=4, i=3）
+    expect(top2.map(r => r.id)).toEqual([ids[4], ids[3]]);
+  });
+
+  it("listRuns 摘要含 fingerprint（cooldown 判斷用）、不含 notifyError/toolCalls/error", () => {
+    const run = startRun("agent-a");
+    finishRun(run.id, {
+      status: "failed",
+      error: "boom",
+      fingerprint: "cpu-high:prod-1",
+      notifyError: "tchat 500",
+    });
+    const [entry] = listRuns();
+    expect(entry.fingerprint).toBe("cpu-high:prod-1");
+    expect(entry).not.toHaveProperty("notifyError");
+    expect(entry).not.toHaveProperty("toolCalls");
+    expect(entry).not.toHaveProperty("error");
   });
 
   it("listRuns 無效 agentId → throw；空目錄 → []", () => {
@@ -216,5 +278,42 @@ describe("run-store — 3. listRuns + getRun", () => {
   it("getRun 無效 id（traversal）→ throw", () => {
     expect(() => getRun("..")).toThrow(/Invalid run id/);
     expect(() => getRun("a%2f..%2fb")).toThrow(/Invalid run id/);
+  });
+});
+
+describe("run-store — 4. retention（每 agent 保留上限，超過刪最舊）", () => {
+  beforeEach(resetRunsDir);
+
+  it("超過 SRE_RUNS_RETENTION 上限後，字典序最舊的 run 檔被刪除", () => {
+    const ids = [];
+    for (let i = 0; i < 8; i++) {
+      ids.push(startRun("agent-a").id); // retention=5 → 建到第 6 筆時開始刪
+    }
+    const remaining = readdirSync(join(TMP_DIR, "agent-a"))
+      .filter(f => f.endsWith(".json"))
+      .map(f => f.replace(/\.json$/, ""));
+    expect(remaining).toHaveLength(5);
+    // Contract：保留字典序最大的 5 筆（run id 時間戳前綴使字典序 ≈ 時間序）。
+    // 同毫秒建立的筆數靠隨機後綴區分，故以字典序而非建立順序斷言。
+    const sorted = [...ids].sort();
+    expect([...remaining].sort()).toEqual(sorted.slice(3));
+    expect(getRun(sorted[0])).toBeNull();
+    expect(getRun(sorted[7])).not.toBeNull();
+  });
+
+  it("retention 以 agent 為單位：另一個 agent 的 runs 不受影響", () => {
+    for (let i = 0; i < 3; i++) startRun("agent-a");
+    for (let i = 0; i < 7; i++) startRun("agent-b");
+    const countA = readdirSync(join(TMP_DIR, "agent-a")).filter(f => f.endsWith(".json"));
+    const countB = readdirSync(join(TMP_DIR, "agent-b")).filter(f => f.endsWith(".json"));
+    expect(countA).toHaveLength(3);
+    expect(countB).toHaveLength(5);
+  });
+
+  it("刪除失敗不影響 startRun（best-effort）— 缺目錄時直接返回", () => {
+    // 觸發不存在目錄的 prune（agent-c 尚未有 runs）
+    const run = startRun("agent-a");
+    finishRun(run.id, { status: "success" });
+    expect(listRuns()).toHaveLength(1);
   });
 });

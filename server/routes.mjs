@@ -303,11 +303,19 @@ export function registerRoutes(server) {
         }
       }
 
-      // ── GET /api/runs — list run summaries, optional ?agentId= filter (TASK-004) ──
+      // ── GET /api/runs — list run summaries, ?agentId= filter + ?limit= (TASK-004) ──
       if (path === "/api/runs" && method === "GET") {
         const query = new URL(url, "http://localhost").searchParams;
         const filter = {};
         if (query.get("agentId")) filter.agentId = query.get("agentId");
+        const limitRaw = query.get("limit");
+        if (limitRaw !== null && limitRaw !== "") {
+          const limit = Number(limitRaw);
+          if (!Number.isInteger(limit) || limit < 0) {
+            return json(res, 400, { error: `Invalid limit: ${limitRaw}` });
+          }
+          filter.limit = limit;
+        }
         let runs;
         try {
           runs = listRuns(filter);
