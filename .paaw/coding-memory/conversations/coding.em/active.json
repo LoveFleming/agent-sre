@@ -1,8 +1,8 @@
 {
   "_meta": {
     "crewId": "coding.em",
-    "lastUpdated": "2026-08-16T03:43:59.317Z",
-    "messageCount": 14
+    "lastUpdated": "2026-08-16T04:12:39.326Z",
+    "messageCount": 16
   },
   "messages": [
     {
@@ -135,8 +135,18 @@
     },
     {
       "role": "assistant",
-      "content": "### ⏳ 💻 developer 執行中...\n\n實作 TASK-015：API auth X-API-Token（effort: S）。在 server/routes.mjs（或抽出 middleware）為所有 /api/* 動態 endpoints 加 X-API-Token request header 檢查：值從 env AGENT_SRE_API_TOKEN 讀取，用 crypto.timingSafeEqual 做常數時間比對（先比長度並處理長度不符），失敗回 401 { \"error\": \"unauthorized\" }。env 未設定 AGENT_SRE_API_TOKEN 時放行並 log 警告（dev 便利性）。靜態檔案與健康檢查 endpoint 不受影響。同步更新 server/routes.test.mjs：既有 /api 測試補上合法 token header，並新增 401（無 token / 錯 token）與無 env 放行的測試。完成後 commit。此 task 排在 TASK-002 之後執行，記得 /api/agents 測試也要帶 token。\n\n`[3/8]`",
-      "ts": "2026-08-16T03:43:56.771Z",
+      "content": "### ✅ 💻 developer 完成\n\n## 📋 Work Summary\n\n**├─ 改了什麼**\n| 檔案 | 內容 |\n|---|---|\n| `server/routes.mjs` | `safeTokenEqual()`（Buffer + 長度預檢 + `crypto.timingSafeEqual`）+ `checkApiToken()` gate；CORS allow-header 加 `X-API-Token` |\n|",
+      "ts": "2026-08-16T03:57:26.658Z"
+    },
+    {
+      "role": "assistant",
+      "content": "❌ **developer** — fetch failed",
+      "ts": "2026-08-16T04:12:37.095Z"
+    },
+    {
+      "role": "assistant",
+      "content": "### ⏳ 💻 developer 執行中...\n\n實作 TASK-005：scheduler.mjs node-cron 排程引擎（effort: M）。新增 server/scheduler.mjs：安裝 node-cron dependency（執行期需要，放 dependencies）。匯出 startScheduler()，在 server/index.mjs 啟動時呼叫：讀取所有 enabled=true 且 schedule 非空的 agent，為每個註冊 cron job。到點執行流程：agent-store getAgent → 組裝 crew 物件（prompt/context/agentRules/allowedTools）→ 走現有 agent 執行路徑（參考 server/conversation.mjs 的 agent 執行與 tools/tchat、tools/grafana handler 接線）→ 用已完成的 server/run-store.mjs 記錄 run（status running → success/failed）→ 依 notifyTarget 發通知；tchat transport（TASK-007）尚未完成前，通知步驟先 log 並在 run 記 notified: false。同一 agent 執行中不重入。補最少單元測試（cron parse 註冊邏輯可用 mock timer）。完成後 commit。前置：TASK-004 的 run-store.mjs 需已存在於 repo。\n\n`[5/8]`",
+      "ts": "2026-08-16T04:12:37.133Z",
       "_emProgress": true
     }
   ]

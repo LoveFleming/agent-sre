@@ -77,26 +77,26 @@
       "sourceRef": null,
       "title": "實作 TASK-015：API auth X-API-Token（effort: S）。在 server/routes.mjs（或抽出 middleware）為所有 /api/* 動態 endpoints 加 X-API-Token request header 檢查：值從 env AGENT_SRE_API_TOKEN 讀取，用 crypto.timingSafeEqual 做常數時間比對（先比長度並處理長度不符），失敗回 401 { \"error\": \"unauthorized\" }。env 未設定 AGENT_SRE_API_TOKEN 時放行並 log 警告（dev 便利性）。靜態檔案與健康檢查 endpoint 不受影響。同步更新 server/routes.test.mjs：既有 /api 測試補上合法 token header，並新增 401（無 token / 錯 token）與無 env 放行的測試。完成後 commit。此 task 排在 TASK-002 之後執行，記得 /api/agents 測試也要帶 token。",
       "assignee": "developer",
-      "status": "running",
+      "status": "done",
       "priority": "high",
       "subtasks": [
         {
           "subtaskId": "ST-003.01",
           "title": "實作 TASK-015：API auth X-API-Token（effort: S）。在 server/routes.mjs（或抽出 middleware）為所有 /api/* 動態 endpoints 加 X-API-Token request header 檢查：值從 env AGENT_SRE_API_TOKEN 讀取，用 crypto.timingSafeEqual 做常數時間比對（先比長度並處理長度不符），失敗回 401 { \"error\": \"unauthorized\" }。env 未設定 AGENT_SRE_API_TOKEN 時放行並 log 警告（dev 便利性）。靜態檔案與健康檢查 endpoint 不受影響。同步更新 server/routes.test.mjs：既有 /api 測試補上合法 token header，並新增 401（無 token / 錯 token）與無 env 放行的測試。完成後 commit。此 task 排在 TASK-002 之後執行，記得 /api/agents 測試也要帶 token。",
           "assignee": "developer",
-          "status": "running",
+          "status": "done",
           "timeoutMs": 7200000,
           "startedAt": "2026-08-16T03:43:56.737Z",
-          "completedAt": null,
-          "durationMs": 0,
+          "completedAt": "2026-08-16T03:57:26.657Z",
+          "durationMs": 809920,
           "tokenUsage": {
-            "prompt": 0,
-            "completion": 0,
-            "total": 0
+            "prompt": 574807,
+            "completion": 8722,
+            "total": 583529
           },
-          "costUsd": 0,
+          "costUsd": 0.3641,
           "model": "zai/glm-5.1",
-          "result": null,
+          "result": "success",
           "error": null
         }
       ]
@@ -108,27 +108,27 @@
       "sourceRef": null,
       "title": "實作 TASK-004：run-store.mjs + /api/runs 查詢 endpoints（effort: M）。新增 server/run-store.mjs：每次 agent 執行存 runs/<agentId>/<timestamp>.json，記錄 { id, agentId, status: \"running\"|\"success\"|\"failed\", startedAt, finishedAt, durationMs, summary（LLM 最終結論摘要）, notified: true/false, toolCalls 摘要, error }。實作時參考 server/agent-store.mjs 的 file-based store 模式。在 server/routes.mjs 加 GET /api/runs（列表，支援 ?agentId= 過濾，回列表摘要）與 GET /api/runs/:id（完整記錄，404 若不存在）。新增 server/run-store.test.mjs，測試風格參考 server/task-store.test.mjs（temp dir 隔離）。完成後 commit。注意：若 /api/* 已加 X-API-Token（TASK-015），測試需帶 token header 或確保測試環境未設 env。",
       "assignee": "developer",
-      "status": "pending",
+      "status": "partial",
       "priority": "high",
       "subtasks": [
         {
           "subtaskId": "ST-004.01",
           "title": "實作 TASK-004：run-store.mjs + /api/runs 查詢 endpoints（effort: M）。新增 server/run-store.mjs：每次 agent 執行存 runs/<agentId>/<timestamp>.json，記錄 { id, agentId, status: \"running\"|\"success\"|\"failed\", startedAt, finishedAt, durationMs, summary（LLM 最終結論摘要）, notified: true/false, toolCalls 摘要, error }。實作時參考 server/agent-store.mjs 的 file-based store 模式。在 server/routes.mjs 加 GET /api/runs（列表，支援 ?agentId= 過濾，回列表摘要）與 GET /api/runs/:id（完整記錄，404 若不存在）。新增 server/run-store.test.mjs，測試風格參考 server/task-store.test.mjs（temp dir 隔離）。完成後 commit。注意：若 /api/* 已加 X-API-Token（TASK-015），測試需帶 token header 或確保測試環境未設 env。",
           "assignee": "developer",
-          "status": "pending",
+          "status": "fail",
           "timeoutMs": 7200000,
-          "startedAt": null,
-          "completedAt": null,
-          "durationMs": 0,
+          "startedAt": "2026-08-16T03:57:26.657Z",
+          "completedAt": "2026-08-16T04:12:37.093Z",
+          "durationMs": 910435,
           "tokenUsage": {
             "prompt": 0,
             "completion": 0,
             "total": 0
           },
           "costUsd": 0,
-          "model": null,
+          "model": "zai/glm-5.1",
           "result": null,
-          "error": null
+          "error": "fetch failed"
         }
       ]
     },
@@ -139,16 +139,16 @@
       "sourceRef": null,
       "title": "實作 TASK-005：scheduler.mjs node-cron 排程引擎（effort: M）。新增 server/scheduler.mjs：安裝 node-cron dependency（執行期需要，放 dependencies）。匯出 startScheduler()，在 server/index.mjs 啟動時呼叫：讀取所有 enabled=true 且 schedule 非空的 agent，為每個註冊 cron job。到點執行流程：agent-store getAgent → 組裝 crew 物件（prompt/context/agentRules/allowedTools）→ 走現有 agent 執行路徑（參考 server/conversation.mjs 的 agent 執行與 tools/tchat、tools/grafana handler 接線）→ 用已完成的 server/run-store.mjs 記錄 run（status running → success/failed）→ 依 notifyTarget 發通知；tchat transport（TASK-007）尚未完成前，通知步驟先 log 並在 run 記 notified: false。同一 agent 執行中不重入。補最少單元測試（cron parse 註冊邏輯可用 mock timer）。完成後 commit。前置：TASK-004 的 run-store.mjs 需已存在於 repo。",
       "assignee": "developer",
-      "status": "pending",
+      "status": "running",
       "priority": "high",
       "subtasks": [
         {
           "subtaskId": "ST-005.01",
           "title": "實作 TASK-005：scheduler.mjs node-cron 排程引擎（effort: M）。新增 server/scheduler.mjs：安裝 node-cron dependency（執行期需要，放 dependencies）。匯出 startScheduler()，在 server/index.mjs 啟動時呼叫：讀取所有 enabled=true 且 schedule 非空的 agent，為每個註冊 cron job。到點執行流程：agent-store getAgent → 組裝 crew 物件（prompt/context/agentRules/allowedTools）→ 走現有 agent 執行路徑（參考 server/conversation.mjs 的 agent 執行與 tools/tchat、tools/grafana handler 接線）→ 用已完成的 server/run-store.mjs 記錄 run（status running → success/failed）→ 依 notifyTarget 發通知；tchat transport（TASK-007）尚未完成前，通知步驟先 log 並在 run 記 notified: false。同一 agent 執行中不重入。補最少單元測試（cron parse 註冊邏輯可用 mock timer）。完成後 commit。前置：TASK-004 的 run-store.mjs 需已存在於 repo。",
           "assignee": "developer",
-          "status": "pending",
+          "status": "running",
           "timeoutMs": 7200000,
-          "startedAt": null,
+          "startedAt": "2026-08-16T04:12:37.096Z",
           "completedAt": null,
           "durationMs": 0,
           "tokenUsage": {
@@ -157,7 +157,7 @@
             "total": 0
           },
           "costUsd": 0,
-          "model": null,
+          "model": "zai/glm-5.1",
           "result": null,
           "error": null
         }
@@ -260,12 +260,12 @@
   "summary": {
     "totalTasks": 8,
     "totalSubtasks": 8,
-    "completed": 2,
-    "failed": 0,
+    "completed": 3,
+    "failed": 1,
     "timedOut": 0,
     "skipped": 0,
-    "totalTokens": 761302,
-    "totalCostUsd": 0.4736,
-    "totalDurationMs": 868714
+    "totalTokens": 1344831,
+    "totalCostUsd": 0.8377,
+    "totalDurationMs": 2589069
   }
 }

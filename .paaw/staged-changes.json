@@ -1,31 +1,35 @@
 {
-  "createdAt": "2026-08-16T03:54:56.161Z",
+  "createdAt": "2026-08-16T04:06:12.534Z",
   "agent": "developer",
-  "task": "實作 TASK-015：API auth X-API-Token（effort: S）。在 server/routes.mjs 為所有 /api/* 動態 endpoints 加 X-API-Token request header 檢查：值從 env AGENT_SRE_API_TOKEN 讀取，用 crypto.timingSafeEqual 做常數時間比對（先比長度並處理長度不符），失敗回 401 { \"error\": \"unauthorized\" }。env 未設定時放行並 log 警告。靜態檔案與健康檢查 endpoint 不受影響。同步更新 server/routes.test.mjs。完成後 commit。",
+  "task": "TASK-004：新增 server/run-store.mjs（runs/<agentId>/<timestamp>.json 記錄 agent 執行歷史）+ GET /api/runs（?agentId= 過濾）與 GET /api/runs/:id（404 若不存在）查詢 endpoints + 測試。參考 agent-store.mjs file-based store 模式與 task-store.test.mjs temp dir 隔離風格。",
   "taskId": "",
-  "summary": "TASK-015 API auth X-API-Token：所有 /api/* 動態 endpoints（/api/health 與靜態檔案除外）要求 X-API-Token header，值從 env AGENT_SRE_API_TOKEN 讀取，crypto.timingSafeEqual 常數時間比對（先比長度處理不符）。失敗回 401 { \"error\": \"unauthorized\" }。env 未設定時放行（dev 便利性），server 啟動時 log 醒目警告 + 每進程一次 runtime 警告。CORS Access-Control-Allow-Headers 加入 X-API-Token 供瀏覽器 UI 使用。routes.test.mjs：既有 /api 測試改為在 token 開啟下執行（httpJson 自動帶正確 header），新增 401（無 token / 長度不符 / 同長度錯值）、無 env 放行（dev mode）、health 與靜態檔案豁免案例。測試 41→50 案例，全套 250/250 綠。已 commit 060f0b2。",
+  "summary": "TASK-004 run-store 實作完成。\n\n**server/run-store.mjs（新檔）**\n- 每次執行存 `runs/<agentId>/<runId>.json`，runId = UTC 時間戳-毫秒-隨機 hex（字典序=時間序，同毫秒不撞）\n- 4 個 exports：startRun(agentId) / finishRun(runId, {status, summary, error, toolCalls, notified}) / listRuns({agentId?}) / getRun(runId)\n- 記錄欄位：id, agentId, status(running|success|failed), startedAt, finishedAt, durationMs, summary(≤4000字), notified, toolCalls[{name,durationMs}], error(≤2000字，僅 failed run 保留；success run 強制 null)\n- 沿用 agent-store 模式：FILENAME_SAFE_RE 白名單 + safeResolve 雙層 traversal 防護、.tmp+rename 原子寫、listRuns 跳過壞檔（warn）vs getRun 對壞檔 throw（非對稱讀取）、SRE_RUNS_DIR env 可重定位（測試指向 temp dir）\n- listRuns 回摘要（toolCallCount 取代完整 toolCalls、不含 error），按 startedAt 新→舊排序\n\n**server/routes.mjs**\n- GET /api/runs：列表摘要，支援 ?agentId= 過濾；無效 agentId（traversal）→ 400\n- GET /api/runs/:id：完整記錄；不存在 → 404 { error: \"Run not found: <id>\" }；無效 id → 400\n- 兩者都在 X-API-Token gate 之後（TASK-015 覆蓋）\n\n**測試**\n- server/run-store.test.mjs（新檔，18 案例）：lifecycle、排序、過濾、traversal、壞檔容忍、截斷、toolCalls 正規化\n- server/routes.test.mjs（+6 案例 = 56）：列表/過濾/完整記錄/404/400/401，SRE_RUNS_DIR 指向 temp dir 隔離\n- 全套 274/274 綠（原 256 + 新 18）",
   "files": [
     {
+      "path": "server/run-store.mjs",
+      "reason": "新檔：file-based run 歷史 store，runs/<agentId>/<runId>.json，startRun/finishRun/listRuns/getRun 四函式"
+    },
+    {
+      "path": "server/run-store.test.mjs",
+      "reason": "新檔：18 個測試案例，temp dir 隔離（SRE_RUNS_DIR env），覆蓋 lifecycle/過濾/traversal/壞檔容忍"
+    },
+    {
       "path": "server/routes.mjs",
-      "reason": "新增 safeTokenEqual（crypto.timingSafeEqual + 長度先比）與 checkApiToken gate，掛在 request handler 最前面；CORS allow-list 加入 X-API-Token"
+      "reason": "新增 GET /api/runs（?agentId= 過濾）與 GET /api/runs/:id 兩個 endpoints"
     },
     {
       "path": "server/routes.test.mjs",
-      "reason": "整個 suite 在 AGENT_SRE_API_TOKEN 開啟下執行（既有測試自動帶正確 token），新增 401（無/錯長度/同長度錯值）、dev-mode 放行、health/static 豁免案例（41→50）"
+      "reason": "新增 6 個 /api/runs endpoint 測試（含 token gate、traversal 400、404）"
     },
     {
-      "path": "server/index.mjs",
-      "reason": "啟動時 AGENT_SRE_API_TOKEN 未設 → log 醒目 dev mode 警告"
+      "path": ".gitignore",
+      "reason": "加入 runs/（runtime 產出目錄不進版控）"
     },
     {
       "path": ".paaw/api-samples.json",
-      "reason": "每個 sample 補上 X-API-Token request header 與 401 contract 說明"
-    },
-    {
-      "path": ".paaw/CHANGELOG.md / TASKS.json / sessions 等",
-      "reason": "changelog 條目與 task 狀態同步"
+      "reason": "記錄 /api/runs 兩個 endpoints 的 request/response sample 供 QA/Tester 使用"
     }
   ],
-  "howToTest": "1. 跑測試：`npx vitest run` → 預期 250/250 全綠，其中 routes.test.mjs 有 9 個新 X-API-Token 案例（401 x4、dev-mode x2、豁免 x3）\n2. 設定 token 重啟 server：`AGENT_SRE_API_TOKEN=secret123 node server/index.mjs`，然後 `curl -i http://localhost:PORT/api/agents` → 預期 401 {\"error\":\"unauthorized\"}；`curl -i -H \"X-API-Token: secret123\" http://localhost:PORT/api/agents` → 預期 200；`curl -i http://localhost:PORT/api/health` → 預期 200（不需要 token）\n3. 不設 token 啟動：`node server/index.mjs` → 預期啟動 log 出現 ⚠️ permissive dev mode 警告，且 API 不帶 token 也能用（本地開發模式）",
-  "risk": "所有 /api/* 現在預設要求 token：任何外部呼叫方（curl 腳本、瀏覽器 UI 的 fetch、其他服務整合）若 AGENT_SRE_API_TOKEN 有設定但沒帶 header 會收到 401。UI 端 fetch wrapper 尚未加上 token 支援（task spec 的 UI 部分），已透過 CORS allow-list 預留，屆時 localStorage + fetch wrapper 集中處理即可。"
+  "howToTest": "1. 跑測試：`npx vitest run`（全套 274/274 綠，含 run-store 18 + routes 56 案例）\n2. 手動 smoke（可選）：`AGENT_SRE_API_TOKEN=dev npm start` 起 server 後用 node 在 REPL 呼叫 startRun(\"agent-a\") + finishRun(...)，再 `curl -H \"X-API-Token: dev\" localhost:3000/api/runs` 應看到一筆摘要；`curl -H \"X-API-Token: dev\" localhost:3000/api/runs/<id>` 看完整記錄；不存在的 id 回 404。",
+  "risk": "finishRun 目前尚未接上 agent-loop/scheduler（那是後續 task），目前 runs 只能透過 store API 手動產生；runs/ 目錄會隨時間累積檔案，未來需輪替策略（本 task 範圍外）。"
 }

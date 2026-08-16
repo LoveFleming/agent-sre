@@ -294,7 +294,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "in-progress",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -305,11 +305,17 @@
       "assignee": null,
       "description": "server/run-store.mjs：每次執行存 runs/&lt;agentId&gt;/&lt;timestamp&gt;.json。記錄：{ id, agentId, status: \"running\"|\"success\"|\"failed\", startedAt, finishedAt, durationMs, summary（LLM 最終結論摘要）, notified: true/false/null（null=未觸發通知場景）, notifyError（tchat 失敗時的錯誤）, fingerprint（異常指紋，供 cooldown 用）, error, toolCalls 摘要（名稱+耗時，不含參數內容避免存 secret） }。API：GET /api/runs?agentId=&amp;limit=（列表回摘要不含完整輸出）、GET /api/runs/:id（完整）。run 檔案保留策略：每 agent 保留最近 200 瀏覽run，超過刪最舊。附測試。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "實作完成 round 2（補齊 9ce9281 缺漏項）：1) fingerprint/notifyError 欄位（各截 200/2000 字元，null 可清除）；2) notified 三態語意（null=未觸發通知場景 ≠ false=觸發但未送）；3) GET /api/runs ?limit= 參數（正整數，無效 → 400 Invalid limit）；4) retention：每 agent 保留最新 200 筆（SRE_RUNS_RETENTION 可覆寫），startRun 後 best-effort 刪除超額；5) listRuns 摘要含 fingerprint。測試 run-store 25 + routes 58，全套 283/283 綠。",
+          "at": "2026-08-16T04:16:18.540Z",
+          "by": "agent"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.043Z",
-      "updatedAt": "2026-08-15T13:05:41.043Z",
+      "updatedAt": "2026-08-16T04:16:18.540Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -319,7 +325,13 @@
           "at": "2026-08-15T13:05:41.043Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T04:16:13.522Z",
+          "result": {
+            "passed": 283,
+            "failed": 0
+          }
         },
         "review": {
           "status": "pending"

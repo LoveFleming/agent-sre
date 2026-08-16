@@ -21,6 +21,15 @@
 ### changed
 - +44 −29 lines across 2 files
 
+### changed
+- code changes (1 new file) (4 modified)
+
+### changed
+- +81 −80 lines across 5 files
+
+### added
+- TASK-004 run-store 補齊：fingerprint/notifyError 欄位、notified 三態（null=未觸發通知場景）、GET /api/runs ?limit= 參數（無效 → 400）、每 agent 保留 200 筆 retention（SRE_RUNS_RETENTION 可覆寫）。測試全套 283/283 綠。
+
 ## 2026-08-15
 ### changed
 - 實作 TASK-001：server/agent-store.mjs — file-based Agent Registry 持久化。
