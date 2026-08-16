@@ -1,0 +1,25 @@
+[
+  {
+    "agent": "developer",
+    "title": "TASK-007: tchat transport 抽層 + 契約 v0（ports & adapters）",
+    "type": "refactor",
+    "description": "依 ADR-004 將 tools/tchat 拆成 ports & adapters 兩層：client.mjs transport 層（契約 v0 唯一實作，進公司唯一可換檔案）+ handler.mjs 工具層（tchat_send_message LLM 介面凍結，驗證與錯誤格式化）。read 工具標 deprecated。scheduler 通知路徑從 stub 接上真實工具層。契約文件 specs/tchat-contract.md 含進公司 swap 清單。",
+    "files": [
+      "tools/tchat/client.mjs",
+      "tools/tchat/handler.mjs",
+      "tools/tchat/client.test.mjs",
+      "tools/tchat/handler.test.mjs",
+      "tools/tchat/tools/tchat_send_message.json",
+      "tools/tchat/config.example.json",
+      "server/scheduler.mjs",
+      "server/scheduler.test.mjs",
+      "vitest.config.mjs",
+      "specs/tchat-contract.md",
+      "ui/src/pages/HomePage.test.tsx",
+      "ui/src/pages/AgentsPage.test.tsx"
+    ],
+    "impact": "tchat 工具介面從 tchat_send({chat_id,...}) 改為 tchat_send_message({targetType,targetId,text})；排程通知真正送出（原為 stub）。進公司僅換 client.mjs + config。",
+    "testsRan": "npx vitest run（329/329）+ ui vitest（54/54）+ tool-loader smoke",
+    "timestamp": "2026-08-16T08:28:31.918Z"
+  }
+]

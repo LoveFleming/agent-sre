@@ -1,4 +1,7 @@
 {
+  "api_url": "http://localhost:3002",
+  "token": "",
+  "timeout_ms": 10000,
   "bot_token": "YOUR_BOT_TOKEN",
   "default_chat_id": "",
   "allowed_chat_ids": []

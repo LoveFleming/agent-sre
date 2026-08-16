@@ -1,6 +1,6 @@
 {
   "name": "tchat_read_history",
-  "description": "讀取聊天的歷史訊息。回傳最近的訊息列表，包含 sender、文字、時間。可指定數量和偏移。",
+  "description": "[DEPRECATED] 讀取聊天的歷史訊息。功能保留但公司 tchat API 契約未定（ADR-004），本期不納入契約 v0，仍走 legacy Telegram transport。回傳最近的訊息列表，包含 sender、文字、時間。可指定數量和偏移。",
   "parameters": {
     "type": "object",
     "properties": {

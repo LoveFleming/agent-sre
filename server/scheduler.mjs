@@ -7,9 +7,10 @@
  * records the outcome in run-store (running → success/failed), then
  * notifies the agent's notifyTarget.
  *
- * Notify note: the tchat transport (TASK-007) does not exist yet, so the
- * notify step only logs and the run records notified:false + notifyError.
- * deliverNotification() is the single swap point for the future transport.
+ * Notify note: delivery goes through the contract-v0 tchat transport
+ * (TASK-007 / ADR-004) — sendTchatMessage from the real tool layer, so the
+ * notify path is exercised by the same code the LLM uses. Swap the remote
+ * (mock server ↔ company API) by changing client.mjs + config only.
  *
  * Wiring: index.mjs bridges routes.mjs ↔ scheduler.mjs — it calls
  * setSchedulerNotifier(({type, agent}) => rescheduleAgent(type, agent)).
@@ -34,6 +35,7 @@ import { listAgents, getAgent } from "./agent-store.mjs";
 import { runAgentLoop } from "./agent-loop.mjs";
 import { loadConversation, saveConversation } from "./conversation.mjs";
 import { startRun, finishRun } from "./run-store.mjs";
+import { sendTchatMessage } from "../tools/tchat/handler.mjs";
 
 /** Default wall-clock budget for one scheduled run. */
 const DEFAULT_RUN_TIMEOUT_MS = 5 * 60_000;
@@ -115,19 +117,40 @@ function buildTriggerMessage(agent, trigger = "scheduled") {
 }
 
 /**
- * Deliver the run outcome to the agent's notifyTarget.
- * TASK-007 (tchat transport) is not implemented yet — log only and report
- * not-delivered so the run persists notified:false + a notifyError.
+ * Deliver the run outcome to the agent's notifyTarget via the contract-v0
+ * tchat transport (TASK-007 / ADR-004). Goes through the real tool layer
+ * (sendTchatMessage) so the notify path is exercised by the same code the
+ * LLM uses — mock server (TASK-009) and production client are swappable
+ * behind client.mjs without touching this file.
  * @returns {Promise<{sent: boolean, error: string|null}>}
  */
 async function deliverNotification(agent, summary) {
   const text = String(summary ?? "");
+  const target = agent.notifyTarget || {};
   console.log(
-    `[scheduler] notify(pending transport) agent=${agent.id} ` +
-    `→ ${agent.notifyTarget.targetType}:${agent.notifyTarget.targetId} ` +
+    `[scheduler] notify agent=${agent.id} ` +
+    `→ ${target.targetType}:${target.targetId} ` +
     `summary=${text.slice(0, NOTIFY_LOG_SUMMARY_MAX)}`
   );
-  return { sent: false, error: "notify transport not implemented (TASK-007 pending)" }; // swap point for TASK-007
+
+  try {
+    const result = await sendTchatMessage({
+      targetType: target.targetType,
+      targetId: target.targetId,
+      text,
+    });
+    if (result.ok) {
+      console.log(`[scheduler] notify delivered (message ${result.messageId})`);
+      return { sent: true, error: null };
+    }
+    console.warn(`[scheduler] notify failed: ${result.error}`);
+    return { sent: false, error: result.error };
+  } catch (err) {
+    // sendTchatMessage is designed never to throw, but guard anyway — a
+    // notify failure must never fail the run itself.
+    console.warn(`[scheduler] notify threw: ${err.message}`);
+    return { sent: false, error: err.message };
+  }
 }
 
 /**
@@ -239,13 +262,22 @@ export async function executeScheduledRun(agentId, { timeoutMs = resolveRunTimeo
   } catch (err) {
     console.error(`[scheduler] run ${run.id} for agent ${agentId} failed: ${err.message}`);
     // A failed scheduled run is exactly the case a human wants to hear
-    // about — same placeholder path as success until TASK-007 lands.
+    // about — best-effort notify through the contract-v0 transport.
+    let failNotify = { sent: false, error: null };
     try {
-      await deliverNotification(agent, `❌ 排程執行失敗: ${err.message}`);
-    } catch {
-      // notify stub never throws today; keep this defensive for TASK-007
+      failNotify = await deliverNotification(agent, `❌ 排程執行失敗: ${err.message}`);
+    } catch (notifyErr) {
+      // deliverNotification is designed never to throw, but guard anyway —
+      // a notify failure must never mask the run's own error.
+      failNotify = { sent: false, error: notifyErr.message };
     }
-    return finish({ status: "failed", error: err.message, toolCalls, notified: false, notifyError: "notify transport not implemented (TASK-007 pending)" });
+    return finish({
+      status: "failed",
+      error: err.message,
+      toolCalls,
+      notified: failNotify.sent,
+      ...(failNotify.sent ? {} : { notifyError: failNotify.error ?? `run failed: ${err.message}` }),
+    });
   } finally {
     inFlight.delete(agentId);
   }

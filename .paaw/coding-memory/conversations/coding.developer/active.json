@@ -1,0 +1,18 @@
+{
+  "_meta": {
+    "crewId": "coding.developer",
+    "lastUpdated": "2026-08-16T08:00:37.172Z",
+    "messageCount": 2
+  },
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "嗨！我是普里亞·夏爾馬 Priya Sharma，Developer 💻\n\n需要寫程式、修 bug、refactor 嗎？交給我吧！"
+    },
+    {
+      "role": "user",
+      "content": "你可以幫忙開發 TASK-007 嗎?",
+      "ts": "2026-08-16T08:00:35.122Z"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "tchat_read_next",
-  "description": "讀取下一則未讀訊息。使用 getUpdates 取得最新的傳入訊息。適合 agent 輪詢或依序讀取新訊息。回傳 sender、文字、時間、chat 資訊。",
+  "description": "[DEPRECATED] 讀取下一則未讀訊息。功能保留但公司 tchat API 契約未定（ADR-004），本期不納入契約 v0，仍走 legacy Telegram transport。使用 getUpdates 取得最新的傳入訊息，適合 agent 輪詢。回傳 sender、文字、時間、chat 資訊。",
   "parameters": {
     "type": "object",
     "properties": {

@@ -9,7 +9,7 @@ import type { HealthInfo, Crew, ToolEntry } from "../types";
 const mockHealth: HealthInfo = {
   status: "ok",
   uptime: 7200,
-  tools: ["grafana_list_dashboards", "tchat_send"],
+  tools: ["grafana_list_dashboards", "tchat_send_message"],
 };
 
 const mockCrews: { crews: Crew[] } = {
@@ -45,10 +45,10 @@ const mockTools: { tools: ToolEntry[] } = {
       source: "provider:grafana",
     },
     {
-      name: "tchat_send",
+      name: "tchat_send_message",
       definition: {
         function: {
-          name: "tchat_send",
+          name: "tchat_send_message",
           description: "Send a message",
           parameters: { type: "object", properties: {} },
         },
@@ -134,7 +134,7 @@ describe("HomePage", () => {
     });
     expect(screen.getByText("tchat")).toBeInTheDocument();
     expect(screen.getByText("grafana_list_dashboards")).toBeInTheDocument();
-    expect(screen.getByText("tchat_send")).toBeInTheDocument();
+    expect(screen.getByText("tchat_send_message")).toBeInTheDocument();
   });
 
   it("displays stat counts correctly after loading", async () => {

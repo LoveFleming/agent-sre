@@ -6,8 +6,8 @@
  *   disabled / no schedule / invalid expression → skipped, never fatal
  * - rescheduleAgent (routes hook): deleted removes, updated swaps the
  *   expression, created registers
- * - cron firing with fake timers: tick → run recorded success with
- *   notified:false (TASK-007 pending)
+ * - cron firing with fake timers: tick → run recorded success with the
+ *   notify outcome from the (mocked) tchat transport (TASK-007)
  * - executeScheduledRun: success path, failure path, timeout → failed,
  *   in-flight re-entry returns {skipped:true}
  * - buildCrew: agent → crew shape (prompt/rules/context/notifyTarget all
@@ -39,6 +39,14 @@ vi.mock("./agent-loop.mjs", () => ({
 vi.mock("./conversation.mjs", () => ({
   loadConversation: vi.fn(() => []),
   saveConversation: vi.fn(() => {}),
+}));
+
+// TASK-007: notify goes through the real tool layer's sendTchatMessage —
+// mock it so scheduler tests never hit the tchat transport.
+const tchatMock = vi.fn(async () => ({ ok: true, messageId: "m_test" }));
+vi.mock("../tools/tchat/handler.mjs", () => ({
+  sendTchatMessage: tchatMock,
+  default: vi.fn(),
 }));
 
 const scheduler = await import("./scheduler.mjs");
@@ -168,20 +176,25 @@ describe("scheduler — rescheduleAgent (routes notifier hook)", () => {
 });
 
 describe("scheduler — executeScheduledRun", () => {
-  it("records a success run with notified:false (TASK-007 pending)", async () => {
+  it("records a success run with the notify outcome from the tchat transport", async () => {
     const a = seedAgent();
     runAgentLoop.mockImplementationOnce(async () => ({
       content: "all clear",
       history: [{ role: "user", content: "q" }, { role: "assistant", content: "all clear" }],
     }));
+    tchatMock.mockResolvedValueOnce({ ok: true, messageId: "m_1" });
 
     const out = await scheduler.executeScheduledRun(a.id);
 
     expect(out.skipped).toBeUndefined();
     expect(out.run.status).toBe("success");
     expect(out.run.summary).toBe("all clear");
-    expect(out.run.notified).toBe(false);
-    expect(out.run.notifyError).toMatch(/TASK-007/);
+    expect(out.run.notified).toBe(true);
+    expect(tchatMock).toHaveBeenCalledWith({
+      targetType: "user",
+      targetId: "u1",
+      text: "all clear",
+    });
     expect(runAgentLoop).toHaveBeenCalledWith(
       expect.objectContaining({ crew: expect.objectContaining({ id: a.id }) })
     );
@@ -191,17 +204,33 @@ describe("scheduler — executeScheduledRun", () => {
     expect(scheduler.isRunning(a.id)).toBe(false);
   });
 
+  it("records notified:false + notifyError when the transport rejects", async () => {
+    const a = seedAgent();
+    runAgentLoop.mockImplementationOnce(async () => ({ content: "all clear", history: [] }));
+    tchatMock.mockResolvedValueOnce({ ok: false, error: "tchat API error: HTTP 502" });
+
+    const out = await scheduler.executeScheduledRun(a.id);
+
+    expect(out.run.status).toBe("success");
+    expect(out.run.notified).toBe(false);
+    expect(out.run.notifyError).toBe("tchat API error: HTTP 502");
+  });
+
   it("records a failed run and clears the in-flight flag", async () => {
     const a = seedAgent();
     runAgentLoop.mockImplementationOnce(async () => {
       throw new Error("LLM exploded");
     });
+    tchatMock.mockResolvedValueOnce({ ok: false, error: "tchat down" });
 
     const out = await scheduler.executeScheduledRun(a.id);
 
     expect(out.run.status).toBe("failed");
     expect(out.run.error).toMatch(/LLM exploded/);
+    // failed runs still attempt the failure notification via the transport
+    expect(tchatMock).toHaveBeenCalledWith(expect.objectContaining({ text: expect.stringContaining("LLM exploded") }));
     expect(out.run.notified).toBe(false);
+    expect(out.run.notifyError).toBe("tchat down");
     expect(scheduler.isRunning(a.id)).toBe(false);
   });
 
@@ -257,7 +286,7 @@ describe("scheduler — cron firing (fake timers)", () => {
     const runs = runStore.listRuns({ agentId: a.id });
     expect(runs).toHaveLength(1);
     expect(runs[0].status).toBe("success");
-    expect(runs[0].notified).toBe(false);
+    expect(runs[0].notified).toBe(true); // transport mocked ok (TASK-007)
   });
 });
 

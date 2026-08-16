@@ -49,11 +49,11 @@ const mockTools: { tools: ToolEntry[] } = {
       },
     },
     {
-      name: "tchat_send",
+      name: "tchat_send_message",
       source: "provider:tchat",
       definition: {
         function: {
-          name: "tchat_send",
+          name: "tchat_send_message",
           description: "Send a chat message",
           parameters: { type: "object" },
         },
@@ -346,7 +346,7 @@ describe("AgentsPage", () => {
     await openNewAgentForm();
 
     expect(screen.getByText("grafana_query_metrics")).toBeInTheDocument();
-    expect(screen.getByText("tchat_send")).toBeInTheDocument();
+    expect(screen.getByText("tchat_send_message")).toBeInTheDocument();
 
     const box = screen
       .getByText("grafana_query_metrics")

@@ -1,0 +1,23 @@
+{
+  "name": "tchat_send_message",
+  "description": "發送 TChat 訊息給指定使用者或頻道（契約 v0）。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "targetType": {
+        "type": "string",
+        "enum": ["user", "channel"],
+        "description": "目標類型：user（個人）或 channel（頻道/群組）"
+      },
+      "targetId": {
+        "type": "string",
+        "description": "目標 ID（使用者 ID 或頻道 ID）"
+      },
+      "text": {
+        "type": "string",
+        "description": "訊息內容（純文字）"
+      }
+    },
+    "required": ["targetType", "targetId", "text"]
+  }
+}
