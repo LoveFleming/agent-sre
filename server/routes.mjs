@@ -9,6 +9,7 @@ import { safeResolve } from "./tool-loader.mjs";
 import { loadConversation, saveConversation, archiveConversation, listArchives, loadArchive } from "./conversation.mjs";
 import { taskStore } from "./task-store.mjs";
 import { listAgents, getAgent, saveAgent, deleteAgent } from "./agent-store.mjs";
+import { listRuns, getRun } from "./run-store.mjs";
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -300,6 +301,36 @@ export function registerRoutes(server) {
           notifyScheduler("deleted", { id });
           return json(res, 200, { success: true, id });
         }
+      }
+
+      // ── GET /api/runs — list run summaries, optional ?agentId= filter (TASK-004) ──
+      if (path === "/api/runs" && method === "GET") {
+        const query = new URL(url, "http://localhost").searchParams;
+        const filter = {};
+        if (query.get("agentId")) filter.agentId = query.get("agentId");
+        let runs;
+        try {
+          runs = listRuns(filter);
+        } catch (err) {
+          // invalid/traversal agentId
+          return json(res, 400, { error: err.message });
+        }
+        return json(res, 200, { runs });
+      }
+
+      // ── GET /api/runs/:id — full run record (TASK-004) ──
+      const runMatch = path.match(/^\/api\/runs\/([^/]+)$/);
+      if (runMatch && method === "GET") {
+        const runId = decodeURIComponent(runMatch[1]);
+        let run;
+        try {
+          run = getRun(runId);
+        } catch (err) {
+          // invalid/traversal run id
+          return json(res, 400, { error: err.message });
+        }
+        if (!run) return json(res, 404, { error: `Run not found: ${runId}` });
+        return json(res, 200, { run });
       }
 
       // ── GET /api/conversations/:crewId ──

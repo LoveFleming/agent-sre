@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-16T11:54:00+08:00",
-  "note": "API Tester samples. Source of truth for request/response shapes — Tester (Divya) and QA (大安) derive E2E cases from these. TASK-002 added /api/agents CRUD. TASK-015: 所有 /api/* endpoint（/api/health 除外）都要求 X-API-Token header，值 = env AGENT_SRE_API_TOKEN；env 未設時 server 以 dev mode 放行。靜態檔案與 /api/health 不需要 token。",
+  "updatedAt": "2026-08-16T12:06:00+08:00",
+  "note": "API Tester samples. Source of truth for request/response shapes — Tester (Divya) and QA (大安) derive E2E cases from these. TASK-002 added /api/agents CRUD. TASK-015: 所有 /api/* endpoint（/api/health 除外）都要求 X-API-Token header，值 = env AGENT_SRE_API_TOKEN；env 未設時 server 以 dev mode 放行。靜態檔案與 /api/health 不需要 token。 TASK-004 新增 /api/runs 查詢 endpoints（run 歷史記錄）。",
   "endpoints": [
     {
       "method": "GET",
@@ -294,6 +294,85 @@
             "updatedAt": "…"
           },
           "deprecated": true
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "endpoint": "/api/runs",
+      "description": "需 X-API-Token header（TASK-015）。列出所有 run 摘要（TASK-004），按 startedAt 新→舊排序。支援 ?agentId= 過濾特定 agent。摘要不含 toolCalls 明細與 error，改回 toolCallCount。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        },
+        "query": {
+          "agentId": "（可選）過濾特定 agentId"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "runs": [
+            {
+              "id": "20260816T035901-123-a1b2c3d4",
+              "agentId": "3f1c2a4e-5b6d-4a7e-8f90-1a2b3c4d5e6f",
+              "status": "success",
+              "startedAt": "2026-08-16T03:59:01.123Z",
+              "finishedAt": "2026-08-16T03:59:04.500Z",
+              "durationMs": 3377,
+              "summary": "CPU 使用率在閾值內，無需告警。",
+              "notified": false,
+              "toolCallCount": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "endpoint": "/api/runs/:id",
+      "description": "需 X-API-Token header（TASK-015）。取得單一 run 完整記錄（TASK-004），含 toolCalls 明細與 error。run id 由 GET /api/runs 列表取得（格式：UTC 時間戳-隨機碼）。不存在 → 404。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "run": {
+            "id": "20260816T035901-123-a1b2c3d4",
+            "agentId": "3f1c2a4e-5b6d-4a7e-8f90-1a2b3c4d5e6f",
+            "status": "failed",
+            "startedAt": "2026-08-16T03:59:01.123Z",
+            "finishedAt": "2026-08-16T03:59:02.800Z",
+            "durationMs": 1677,
+            "summary": "",
+            "notified": true,
+            "toolCalls": [
+              {
+                "name": "grafana_query_metrics",
+                "durationMs": 1200
+              }
+            ],
+            "error": "grafana_query_metrics timed out after 1200ms"
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "endpoint": "/api/runs/:id (not found)",
+      "description": "run id 不存在 → 404。無效 id（traversal 樣式）→ 400。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
+      "response": {
+        "status": 404,
+        "body": {
+          "error": "Run not found: <id>"
         }
       }
     }

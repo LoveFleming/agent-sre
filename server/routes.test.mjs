@@ -42,6 +42,10 @@ const UI_DIR = resolve(ROOT, "ui-dist");
 const AGENTS_TMP = mkdtempSync(join(tmpdir(), "routes-agents-test-"));
 process.env.SRE_AGENTS_DIR = AGENTS_TMP;
 
+// TASK-004: run-store also resolves its directory at module-load time.
+const RUNS_TMP = mkdtempSync(join(tmpdir(), "routes-runs-test-"));
+process.env.SRE_RUNS_DIR = RUNS_TMP;
+
 // TASK-015: enable auth for the whole suite so every existing /api test is
 // implicitly re-run WITH the token requirement in force (they call httpJson
 // which now always sends the correct header). Dedicated 401/dev-mode cases
@@ -370,6 +374,94 @@ describe("routes.mjs — /api/agents CRUD (TASK-002)", () => {
       const res = await httpJson("POST", "/api/agents", validAgent());
       expect(res.status).toBe(201);
     });
+  });
+});
+
+describe("routes.mjs — /api/runs 查詢 (TASK-004)", () => {
+  beforeAll(async () => {
+    server = createServer();
+    registerRoutes(server);
+    await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  });
+
+  afterAll(() => {
+    if (server) server.close();
+    rmSync(RUNS_TMP, { recursive: true, force: true });
+  });
+
+  beforeEach(() => {
+    // 每個 case 從乾淨的 runs 目錄開始
+    for (const entry of readdirSync(RUNS_TMP)) {
+      rmSync(join(RUNS_TMP, entry), { recursive: true, force: true });
+    }
+  });
+
+  /** Create a finished run directly through the store (no scheduler yet). */
+  async function seedRun(agentId, result = {}) {
+    const { startRun, finishRun } = await import("./run-store.mjs");
+    const run = startRun(agentId);
+    return finishRun(run.id, {
+      status: "success",
+      summary: "ok",
+      ...result,
+    });
+  }
+
+  it("GET /api/runs 回摘要列表（含 toolCallCount，無 toolCalls/error）", async () => {
+    await seedRun("agent-a", { toolCalls: [{ name: "t1" }, { name: "t2" }] });
+    const res = await httpJson("GET", "/api/runs");
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.runs)).toBe(true);
+    expect(res.body.runs).toHaveLength(1);
+    const r = res.body.runs[0];
+    expect(r.agentId).toBe("agent-a");
+    expect(r.status).toBe("success");
+    expect(r.toolCallCount).toBe(2);
+    expect(r).not.toHaveProperty("toolCalls");
+    expect(r).not.toHaveProperty("error");
+  });
+
+  it("GET /api/runs?agentId= 過濾只回該 agent 的 runs", async () => {
+    await seedRun("agent-a");
+    await seedRun("agent-b");
+    const res = await httpJson("GET", "/api/runs?agentId=agent-b");
+    expect(res.status).toBe(200);
+    expect(res.body.runs).toHaveLength(1);
+    expect(res.body.runs[0].agentId).toBe("agent-b");
+  });
+
+  it("GET /api/runs?agentId=<traversal> → 400 + { error }", async () => {
+    const res = await httpJson("GET", "/api/runs?agentId=..%2F..%2Fetc");
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("Invalid agentId");
+  });
+
+  it("GET /api/runs/:id 回完整記錄（含 toolCalls/error）；404 當不存在", async () => {
+    const seeded = await seedRun("agent-a", {
+      status: "failed",
+      error: "boom",
+      toolCalls: [{ name: "t", durationMs: 3 }],
+    });
+    const res = await httpJson("GET", `/api/runs/${seeded.id}`);
+    expect(res.status).toBe(200);
+    expect(res.body.run.id).toBe(seeded.id);
+    expect(res.body.run.error).toBe("boom");
+    expect(res.body.run.toolCalls).toEqual([{ name: "t", durationMs: 3 }]);
+
+    const missing = await httpJson("GET", "/api/runs/20260816T000000-000-00000000");
+    expect(missing.status).toBe(404);
+    expect(missing.body.error).toContain("Run not found");
+  });
+
+  it("GET /api/runs/<traversal id> → 400 + { error }", async () => {
+    const res = await httpJson("GET", "/api/runs/..%2f..%2fetc%2fpasswd");
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("Invalid run id");
+  });
+
+  it("X-API-Token 缺失 → 401（runs 也受 gate 保護）", async () => {
+    const res = await httpJson("GET", "/api/runs", undefined, { token: null });
+    expect(res.status).toBe(401);
   });
 });
 
