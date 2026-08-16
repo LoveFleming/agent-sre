@@ -1,35 +1,19 @@
 {
-  "createdAt": "2026-08-16T04:06:12.534Z",
+  "createdAt": "2026-08-16T05:04:24.321Z",
   "agent": "developer",
-  "task": "TASK-004：新增 server/run-store.mjs（runs/<agentId>/<timestamp>.json 記錄 agent 執行歷史）+ GET /api/runs（?agentId= 過濾）與 GET /api/runs/:id（404 若不存在）查詢 endpoints + 測試。參考 agent-store.mjs file-based store 模式與 task-store.test.mjs temp dir 隔離風格。",
+  "task": "TASK-008：Grafana mock server dev fixture — dev/mocks/grafana-mock.mjs 標準 Node http server port 3001，實作 grafana handler 用到的 endpoints（search、dashboards/uid、ds/query、prometheus rules 含 firing+pending），package.json 加 mock:grafana script，完成後 commit",
   "taskId": "",
-  "summary": "TASK-004 run-store 實作完成。\n\n**server/run-store.mjs（新檔）**\n- 每次執行存 `runs/<agentId>/<runId>.json`，runId = UTC 時間戳-毫秒-隨機 hex（字典序=時間序，同毫秒不撞）\n- 4 個 exports：startRun(agentId) / finishRun(runId, {status, summary, error, toolCalls, notified}) / listRuns({agentId?}) / getRun(runId)\n- 記錄欄位：id, agentId, status(running|success|failed), startedAt, finishedAt, durationMs, summary(≤4000字), notified, toolCalls[{name,durationMs}], error(≤2000字，僅 failed run 保留；success run 強制 null)\n- 沿用 agent-store 模式：FILENAME_SAFE_RE 白名單 + safeResolve 雙層 traversal 防護、.tmp+rename 原子寫、listRuns 跳過壞檔（warn）vs getRun 對壞檔 throw（非對稱讀取）、SRE_RUNS_DIR env 可重定位（測試指向 temp dir）\n- listRuns 回摘要（toolCallCount 取代完整 toolCalls、不含 error），按 startedAt 新→舊排序\n\n**server/routes.mjs**\n- GET /api/runs：列表摘要，支援 ?agentId= 過濾；無效 agentId（traversal）→ 400\n- GET /api/runs/:id：完整記錄；不存在 → 404 { error: \"Run not found: <id>\" }；無效 id → 400\n- 兩者都在 X-API-Token gate 之後（TASK-015 覆蓋）\n\n**測試**\n- server/run-store.test.mjs（新檔，18 案例）：lifecycle、排序、過濾、traversal、壞檔容忍、截斷、toolCalls 正規化\n- server/routes.test.mjs（+6 案例 = 56）：列表/過濾/完整記錄/404/400/401，SRE_RUNS_DIR 指向 temp dir 隔離\n- 全套 274/274 綠（原 256 + 新 18）",
+  "summary": "新增 dev/mocks/grafana-mock.mjs：零依賴 Node http server（port 3001，MOCK_GRAFANA_PORT 可覆寫），實作 grafana handler 實際呼叫的全部 endpoints——GET /api/search（3 個 dashboard fixture）、GET /api/dashboards/uid/:uid（含 panels/targets/time）、POST /api/ds/query（Grafana frames 格式，20 點 deterministic 序列）、GET /api/prometheus/grafana/api/v1/rules（unified alerting，預設情境 firing 含 HighCPUUsage=firing + MemoryPressure=pending 各一筆，供 watchdog 判斷驗證）、GET /api/datasources、GET /api/alerts（legacy fallback）、GET /api/datasource/proxy/uid/:uid/api/v1/query_range（Prometheus matrix fallback）、GET /api/health。核心 POST /__scenario 切換四情境（healthy/firing/api-error/slow），/__scenario 控制端點不受情境影響。package.json 加 mock:grafana script。驗證：語法檢查 + 啟動 + 全 endpoints curl smoke + 情境切換 + slow 延遲 8s + 端到端用真正的 tools/grafana/handler.mjs 打 mock（healthy 全工具解析正常、firing 下 list_alerts 輸出 🔴 HighCPUUsage [firing] value 91.4、api-error 拋 500）+ 全套測試 301/301 綠。",
   "files": [
     {
-      "path": "server/run-store.mjs",
-      "reason": "新檔：file-based run 歷史 store，runs/<agentId>/<runId>.json，startRun/finishRun/listRuns/getRun 四函式"
+      "path": "dev/mocks/grafana-mock.mjs",
+      "reason": "新增 Grafana mock server：模擬 handler 用到的 7 個 endpoints + 情境切換 API"
     },
     {
-      "path": "server/run-store.test.mjs",
-      "reason": "新檔：18 個測試案例，temp dir 隔離（SRE_RUNS_DIR env），覆蓋 lifecycle/過濾/traversal/壞檔容忍"
-    },
-    {
-      "path": "server/routes.mjs",
-      "reason": "新增 GET /api/runs（?agentId= 過濾）與 GET /api/runs/:id 兩個 endpoints"
-    },
-    {
-      "path": "server/routes.test.mjs",
-      "reason": "新增 6 個 /api/runs endpoint 測試（含 token gate、traversal 400、404）"
-    },
-    {
-      "path": ".gitignore",
-      "reason": "加入 runs/（runtime 產出目錄不進版控）"
-    },
-    {
-      "path": ".paaw/api-samples.json",
-      "reason": "記錄 /api/runs 兩個 endpoints 的 request/response sample 供 QA/Tester 使用"
+      "path": "package.json",
+      "reason": "加 mock:grafana script 啟動 mock server"
     }
   ],
-  "howToTest": "1. 跑測試：`npx vitest run`（全套 274/274 綠，含 run-store 18 + routes 56 案例）\n2. 手動 smoke（可選）：`AGENT_SRE_API_TOKEN=dev npm start` 起 server 後用 node 在 REPL 呼叫 startRun(\"agent-a\") + finishRun(...)，再 `curl -H \"X-API-Token: dev\" localhost:3000/api/runs` 應看到一筆摘要；`curl -H \"X-API-Token: dev\" localhost:3000/api/runs/<id>` 看完整記錄；不存在的 id 回 404。",
-  "risk": "finishRun 目前尚未接上 agent-loop/scheduler（那是後續 task），目前 runs 只能透過 store API 手動產生；runs/ 目錄會隨時間累積檔案，未來需輪替策略（本 task 範圍外）。"
+  "howToTest": "1. npm run mock:grafana → 看到 listening on http://localhost:3001, scenario=firing\n2. curl localhost:3001/api/search → 3 個 dashboard；curl localhost:3001/api/prometheus/grafana/api/v1/rules → HighCPUUsage=firing, MemoryPressure=pending, DiskAlmostFull=ok\n3. 情境切換：curl -X POST localhost:3001/__scenario -d '{\"name\":\"healthy\"}' → rules 全變 ok；'api-error' → 500；'slow' → 延遲 8 秒\n4. 進階（本次已驗證過）：GRAFANA_URL=http://localhost:3001 跑 grafana handler，list_alerts 在 firing 情境正確輸出 🔴 HighCPUUsage [firing] (value: 91.4)\n5. npx vitest run → 301/301 綠",
+  "risk": "無。獨立 dev fixture（dev/mocks/ 新目錄），不影響 production 程式碼路徑；package.json 只加 script。port 3001 若被占用可用 MOCK_GRAFANA_PORT 覆寫（EADDRINUSE 會提示）。"
 }

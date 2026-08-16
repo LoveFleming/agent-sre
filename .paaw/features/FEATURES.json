@@ -217,29 +217,24 @@
       "status": "active",
       "codeFiles": [
         "server/task-store.mjs",
-        "server/routes.mjs",
-        "ui/src/pages/TaskManagementPage.tsx"
+        "server/routes.mjs"
       ],
       "apis": [
         {
           "method": "GET",
-          "path": "/api/tasks",
-          "file": "server/routes.mjs"
+          "path": "/api/tasks"
         },
         {
           "method": "POST",
-          "path": "/api/tasks",
-          "file": "server/routes.mjs"
+          "path": "/api/tasks"
         },
         {
           "method": "PUT",
-          "path": "/api/tasks/:id",
-          "file": "server/routes.mjs"
+          "path": "/api/tasks/:id"
         },
         {
           "method": "DELETE",
-          "path": "/api/tasks/:id",
-          "file": "server/routes.mjs"
+          "path": "/api/tasks/:id"
         }
       ],
       "tests": [

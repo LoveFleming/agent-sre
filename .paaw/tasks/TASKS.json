@@ -6,7 +6,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "in-progress",
+      "status": "resolved",
       "priority": "critical",
       "effort": null,
       "labels": [
@@ -37,6 +37,11 @@
           "text": "狀態修正（pipeline 尚有 test/qa/docs/commit pending，不可為 resolved）",
           "at": "2026-08-16T05:46:00.466Z",
           "by": "reconciliation"
+        },
+        {
+          "text": "平反：bootstrap 短版規則 + git 證據（f3e68fc (agent-store atomic writes)）",
+          "at": "2026-08-16T07:57:54.546Z",
+          "by": "migration"
         }
       ],
       "executionResult": {
@@ -46,7 +51,7 @@
       },
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.040Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
+      "updatedAt": "2026-08-16T07:57:54.546Z",
       "resolvedAt": "2026-08-15T14:06:45.952Z",
       "createdBy": "agent",
       "pipeline": {
@@ -56,10 +61,16 @@
           "at": "2026-08-15T13:05:41.040Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T07:57:54.546Z",
+          "note": "git commits 存在，補記"
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T07:57:54.546Z",
+          "note": "reconcile 2026-08-16 晚：git 證據 f3e68fc (agent-store atomic writes)"
         }
       },
       "loopModeOverride": null,
@@ -105,7 +116,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "in-progress",
+      "status": "resolved",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -116,11 +127,17 @@
       "assignee": null,
       "description": "在 server/routes.mjs 加 GET /api/agents（列表）、POST /api/agents（建立，server 產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。錯誤處理沿用現有慣例：400（缺必填欄位：name、prompt）、404（id 不存在）、500（server error），error body { \"error\": \"...\" }。舊 /api/tasks endpoints 保留但回應加 \"deprecated\": true 標記（過渡期並存，之後移除）。agent 更新時通知 scheduler 重排（scheduler 尚未存在時以事件/callback hook 預留介面，本 task 只埋 call site）。附 routes.test.mjs 擴充。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "平反：bootstrap 短版規則 + git 證據（aa558e7, aa3fb2b (agents CRUD)）",
+          "at": "2026-08-16T07:57:54.546Z",
+          "by": "migration"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.041Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
+      "updatedAt": "2026-08-16T07:57:54.546Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -135,7 +152,10 @@
           "at": "2026-08-16T03:41:59.977Z"
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T07:57:54.546Z",
+          "note": "reconcile 2026-08-16 晚：git 證據 aa558e7, aa3fb2b (agents CRUD)"
         }
       },
       "loopModeOverride": null,
@@ -186,7 +206,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "in-progress",
+      "status": "resolved",
       "priority": "medium",
       "effort": null,
       "labels": [
@@ -202,12 +222,17 @@
           "text": "Implement 完成（2026-08-16 13:16）。工作樹先前已有半成品（rename AgentsPage.tsx、types.ts Agent 型別、App.tsx 掛載），本 session 補完內容並對齊平行 session 留下的 385 行驗收測試 ui/src/pages/AgentsPage.test.tsx（11 cases）。\n\n關鍵決策與測試對齊細節：\n- 驗證順序 name → cron → targetId → cooldown；prompt 不做 client 端必填（測試 400 案例只填 name+target 就要打到 server，prompt 驗證留給 server 400 顯示）\n- cron 錯誤訊息需含「5 fields」（空格版）才符合 regex /5 fields/i\n- 成功訊息區分「Agent created.」（POST）與「Agent saved.」（PUT）\n- creating 模式按鈕文字「Create Agent」、編輯模式「Save」+ 條件渲染 Delete\n- label 設計：sr-only「Notify Target id」for targetId input（getByLabelText(/Notify Target/) 唯一命中）；select 用 aria-label=\"Notify target type\"（小寫 t 避開 /Notify Target/ 大小寫敏感 regex，probe 實測 getByLabelText 不會因此多重命中）\n- list item 顯示 ON/OFF badge + ⏰ schedule chip；manual only 文字\n- Delete 前用 window.confirm；empty list 時 empty-state 的 New Agent 按鈕也可開表單（測試用 btns[0]）\n- IME：name/targetId/schedule 輸入框 Enter 儲存用 composingRef useRef 三層保護\n- types.ts 刪除 deprecated Task/emptyTaskDraft（無引用者）；ViewId 已無 \"tasks\"\n- API contract 對齊 server/routes.mjs：GET /api/agents → {agents}、POST → {agent}、PUT /api/agents/:id、DELETE，error body {error} 顯示於 role=status banner\n\n測試：AgentsPage 11/11、UI 全套 54/54、server 全套 301/301、npm run build 通過。",
           "at": "2026-08-16T05:17:18.385Z",
           "by": "agent"
+        },
+        {
+          "text": "平反：bootstrap 短版規則 + git 證據（c287bbb (AgentsPage)）",
+          "at": "2026-08-16T07:57:54.546Z",
+          "by": "migration"
         }
       ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.042Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
+      "updatedAt": "2026-08-16T07:57:54.546Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -222,7 +247,10 @@
           "at": "2026-08-16T05:16:53.700Z"
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T07:57:54.546Z",
+          "note": "reconcile 2026-08-16 晚：git 證據 c287bbb (AgentsPage)"
         }
       },
       "loopModeOverride": null,
@@ -389,7 +417,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "in-progress",
+      "status": "resolved",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -400,11 +428,17 @@
       "assignee": null,
       "description": "server/scheduler.mjs：用 node-cron（新增 devDependency）。startScheduler() 在 server/index.mjs 啟動時：讀取所有 enabled 且 schedule 非空的 agent 註冊 cron job。到點執行：getAgent → 組裝 crew 物件（prompt/context/agentRules/allowedTools，比照 crew-loader 產出的形狀，確保能餵進現有 runAgentLoop）→ 執行 → 寫 run-store。約束：1) 同一 agent 同時只跑一個 run（in-flight map 擋重入）；2) 單次 run timeout 5 分鐘，超時記 failed；3) agent 被 PUT/DELETE 時動態重排（由 T2 埋的 hook 呼叫 rescheduleAgent/rescheduleAll）；4) agent loop 的 system prompt 注入 notifyTarget 資訊讓 LLM 知道通知目標。附 vitest 測試（fake timers）。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "平反：bootstrap 短版規則 + git 證據（089ff88, e648486 (scheduler)）",
+          "at": "2026-08-16T07:57:54.546Z",
+          "by": "migration"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.044Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
+      "updatedAt": "2026-08-16T07:57:54.546Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -414,10 +448,16 @@
           "at": "2026-08-15T13:05:41.044Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T07:57:54.546Z",
+          "note": "git commits 存在，補記"
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T07:57:54.546Z",
+          "note": "reconcile 2026-08-16 晚：git 證據 089ff88, e648486 (scheduler)"
         }
       },
       "loopModeOverride": null,
@@ -471,7 +511,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "in-progress",
+      "status": "resolved",
       "priority": "medium",
       "effort": null,
       "labels": [
@@ -492,12 +532,17 @@
           "text": "[12:58] 平行 session 已完成實作並 commit 48b42f2「feat(routes): add POST /api/agents/:id/run manual trigger (TASK-006)」：(1) scheduler.mjs 新增 beginRun(agentId) 同步前置 — getAgent→inFlight 檢查→startRun，回 {status:\"started\",run}|{status:\"not-found\"}|{status:\"conflict\"}；(2) executeScheduledRun 支援 {run, trigger:\"manual\"} 注入預建 run（manual 觸發訊息不同於排程訊息）；(3) routes.mjs POST /api/agents/:id/run → 202 {runId} / 404 / 409 {error:\"agent is already running\"} / 400 invalid id，fire-and-forget；(4) routes.test.mjs +6 cases（stub agent-loop）；(5) api-samples.json 新增 202/409 樣本。全套 301/301 綠。驗證 session 未動任何檔案（避免併發寫入衝突）。",
           "at": "2026-08-16T04:59:52.757Z",
           "by": "agent"
+        },
+        {
+          "text": "平反：bootstrap 短版規則 + git 證據（48b42f2 (manual run trigger)）",
+          "at": "2026-08-16T07:57:54.546Z",
+          "by": "migration"
         }
       ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.046Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
+      "updatedAt": "2026-08-16T07:57:54.546Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -517,7 +562,10 @@
           }
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T07:57:54.546Z",
+          "note": "reconcile 2026-08-16 晚：git 證據 48b42f2 (manual run trigger)"
         }
       },
       "loopModeOverride": null,
@@ -642,7 +690,7 @@
       "type": "chore",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "in-progress",
+      "status": "resolved",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -658,12 +706,17 @@
           "text": "驗證紀錄（2026-08-16 developer session）：\n- TASK-008 已由平行 session 完成並 commit（4a13b24：dev/mocks/grafana-mock.mjs 592 行 + package.json mock:grafana script），本 session 不重寫，改做完整驗證。\n- 端點驗證（mock 直接打）：/api/search（3 dashboards，含 type=dash-db、folderTitle、tags）、/api/dashboards/uid/:uid（panels+targets、未知 uid 404）、/api/ds/query（columnar frame schema.fields+data.values，status=success）、/api/prometheus/grafana/api/v1/rules（firing 情境：HighCPUUsage=firing、MemoryPressure=pending、DiskAlmostFull=ok，alerts[] 非空、type=alerting）、/api/datasources、/api/health — 全過（23 checks）。\n- E2E（真實 tools/grafana/handler.mjs vs mock）：grafana_list_dashboards / get_dashboard / query_panel（table 格式輸出正常）/ list_alerts（預設 state=firing 只剩 1 筆、state=all 含 firing+pending）/ search / list_datasources — 全過（7 checks）。\n- 情境切換：healthy（全 ok）、firing（firing+pending）、api-error（全部 /api/* 500）、slow（實測 8005ms ≥ 8s 設定）、無效情境 400 — 全過。\n- handler 讀取欄位與 fixture 形狀逐一比對一致（searchResults/dashboardResponse/rules frame 的欄位都有）。\n- 驗證暫存 script 已清理（.paaw/tmp/）。無 code 變更需求。",
           "at": "2026-08-16T05:07:11.135Z",
           "by": "agent"
+        },
+        {
+          "text": "平反：bootstrap 短版規則 + git 證據（4a13b24 (grafana mock)）",
+          "at": "2026-08-16T07:57:54.546Z",
+          "by": "migration"
         }
       ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.048Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
+      "updatedAt": "2026-08-16T07:57:54.546Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -678,7 +731,10 @@
           "at": "2026-08-16T05:04:30.159Z"
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T07:57:54.546Z",
+          "note": "reconcile 2026-08-16 晚：git 證據 4a13b24 (grafana mock)"
         }
       },
       "loopModeOverride": null,
@@ -1199,7 +1255,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "in-progress",
+      "status": "resolved",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -1220,12 +1276,17 @@
           "text": "實作完成（developer/Jai）。決策記錄：(1) auth gate 放 registerRoutes handler 最前而非抽 middleware — 單一 server、不重複檢查，index.mjs 已由 registerRoutes 統一掛 handler。(2) 豁免 /api/health 與所有非 /api/ 靜態路徑。(3) expectedToken 於 module-load 快取，export resetApiTokenCacheForTests() 供測試切換 env。(4) CORS Access-Control-Allow-Headers 加 X-API-Token（UI 之後 fetch wrapper 會帶，preflight 需要）。(5) dev-mode 警告印兩處：index.mjs 啟動時 + routes.mjs 第一個 /api 請求時（後者覆蓋直接 createServer+registerRoutes 的測試/嵌入場景）。(6) 測試策略：整套 suite 設 AGENT_SRE_API_TOKEN + httpJson 預設帶 token → 既有 41 個 /api 測試自動變成「token 正確時可用」的回歸；新增 9 個 TASK-015 case。api-samples.json 7 個 endpoint 全部補 X-API-Token header。",
           "at": "2026-08-16T03:54:29.231Z",
           "by": "agent"
+        },
+        {
+          "text": "平反：bootstrap 短版規則 + git 證據（060f0b2, dca65ae, e9333a9 (X-API-Token auth)）",
+          "at": "2026-08-16T07:57:54.546Z",
+          "by": "migration"
         }
       ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.057Z",
-      "updatedAt": "2026-08-16T06:01:36.887Z",
+      "updatedAt": "2026-08-16T07:57:54.546Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -1251,7 +1312,10 @@
           }
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T07:57:54.546Z",
+          "note": "reconcile 2026-08-16 晚：git 證據 060f0b2, dca65ae, e9333a9 (X-API-Token auth)"
         }
       },
       "loopModeOverride": null,
@@ -1297,6 +1361,6 @@
       "pipelineMode": "short"
     }
   ],
-  "updatedAt": "2026-08-16T06:01:36.887Z",
+  "updatedAt": "2026-08-16T07:57:54.546Z",
   "loopMode": "mini"
 }
