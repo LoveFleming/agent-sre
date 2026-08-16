@@ -6,7 +6,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "resolved",
+      "status": "in-progress",
       "priority": "critical",
       "effort": null,
       "labels": [
@@ -32,6 +32,11 @@
           "text": "收尾確認完成：QA 先前只將三個檔案 stage 並未真正 commit（git log 對三檔無任何歷史紀錄）。已用 pathspec commit 單獨提交：f3e68fc \"feat(agent-store): add file-based Agent Registry with atomic writes and traversal guards\"（server/agent-store.mjs 354 行、server/agent-store.test.mjs 270 行、agents/README.md 12 行，共 636 insertions）。TASK-005/006/007 的 staged 變更（conversation/routes/tool-loader 及其測試）完整保留在 index，未動、未 commit。未 push。",
           "at": "2026-08-15T14:06:32.096Z",
           "by": "agent"
+        },
+        {
+          "text": "狀態修正（pipeline 尚有 test/qa/docs/commit pending，不可為 resolved）",
+          "at": "2026-08-16T05:46:00.466Z",
+          "by": "reconciliation"
         }
       ],
       "executionResult": {
@@ -41,7 +46,7 @@
       },
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.040Z",
-      "updatedAt": "2026-08-15T14:06:45.952Z",
+      "updatedAt": "2026-08-16T05:46:00.466Z",
       "resolvedAt": "2026-08-15T14:06:45.952Z",
       "createdBy": "agent",
       "pipeline": {
@@ -209,7 +214,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "in-progress",
       "priority": "medium",
       "effort": null,
       "labels": [
@@ -220,11 +225,17 @@
       "assignee": null,
       "description": "升級 ui/src/pages/TaskManagementPage.tsx 成 AgentsPage：欄位擴充 schedule（cron 輸入 + 說明提示）、notifyTarget（targetType select + targetId）、cooldownMinutes、enabled toggle。頁面與 sidebar 選單文字從 Task 改為 Agent。沿用現有 Field/LinesField/ToolPicker 元件模式與 Tailwind 樣式慣例。串接新 /api/agents endpoints。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "Implement 完成（2026-08-16 13:16）。工作樹先前已有半成品（rename AgentsPage.tsx、types.ts Agent 型別、App.tsx 掛載），本 session 補完內容並對齊平行 session 留下的 385 行驗收測試 ui/src/pages/AgentsPage.test.tsx（11 cases）。\n\n關鍵決策與測試對齊細節：\n- 驗證順序 name → cron → targetId → cooldown；prompt 不做 client 端必填（測試 400 案例只填 name+target 就要打到 server，prompt 驗證留給 server 400 顯示）\n- cron 錯誤訊息需含「5 fields」（空格版）才符合 regex /5 fields/i\n- 成功訊息區分「Agent created.」（POST）與「Agent saved.」（PUT）\n- creating 模式按鈕文字「Create Agent」、編輯模式「Save」+ 條件渲染 Delete\n- label 設計：sr-only「Notify Target id」for targetId input（getByLabelText(/Notify Target/) 唯一命中）；select 用 aria-label=\"Notify target type\"（小寫 t 避開 /Notify Target/ 大小寫敏感 regex，probe 實測 getByLabelText 不會因此多重命中）\n- list item 顯示 ON/OFF badge + ⏰ schedule chip；manual only 文字\n- Delete 前用 window.confirm；empty list 時 empty-state 的 New Agent 按鈕也可開表單（測試用 btns[0]）\n- IME：name/targetId/schedule 輸入框 Enter 儲存用 composingRef useRef 三層保護\n- types.ts 刪除 deprecated Task/emptyTaskDraft（無引用者）；ViewId 已無 \"tasks\"\n- API contract 對齊 server/routes.mjs：GET /api/agents → {agents}、POST → {agent}、PUT /api/agents/:id、DELETE，error body {error} 顯示於 role=status banner\n\n測試：AgentsPage 11/11、UI 全套 54/54、server 全套 301/301、npm run build 通過。",
+          "at": "2026-08-16T05:17:18.385Z",
+          "by": "agent"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.042Z",
-      "updatedAt": "2026-08-15T13:05:41.042Z",
+      "updatedAt": "2026-08-16T05:17:18.385Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -234,13 +245,19 @@
           "at": "2026-08-15T13:05:41.042Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T05:16:53.700Z"
         },
         "review": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T05:17:03.639Z"
         },
         "test": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T05:17:05.894Z"
         },
         "qa": {
           "status": "pending"
@@ -294,7 +311,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "resolved",
+      "status": "in-progress",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -310,12 +327,17 @@
           "text": "實作完成 round 2（補齊 9ce9281 缺漏項）：1) fingerprint/notifyError 欄位（各截 200/2000 字元，null 可清除）；2) notified 三態語意（null=未觸發通知場景 ≠ false=觸發但未送）；3) GET /api/runs ?limit= 參數（正整數，無效 → 400 Invalid limit）；4) retention：每 agent 保留最新 200 筆（SRE_RUNS_RETENTION 可覆寫），startRun 後 best-effort 刪除超額；5) listRuns 摘要含 fingerprint。測試 run-store 25 + routes 58，全套 283/283 綠。",
           "at": "2026-08-16T04:16:18.540Z",
           "by": "agent"
+        },
+        {
+          "text": "狀態修正（review/test/qa/docs pending，commit 前不可 resolved；實作 commits 已落地）",
+          "at": "2026-08-16T05:46:00.466Z",
+          "by": "reconciliation"
         }
       ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.043Z",
-      "updatedAt": "2026-08-16T04:31:43.526Z",
+      "updatedAt": "2026-08-16T05:46:00.466Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -500,7 +522,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "in-progress",
       "priority": "medium",
       "effort": null,
       "labels": [
@@ -516,12 +538,17 @@
           "text": "實作決策：(1) routes.mjs 不直接跑 LLM，改呼叫 scheduler 的 executeScheduledRun(id, { run, trigger: \"manual\" })，與 cron tick 共用同一執行路徑與 inFlight 鎖。(2) scheduler 新增 export beginRun(agentId) — 同步做 404/409 檢查 + startRun()，讓 route 在回 202 前就拿到 runId 並鎖定，無 race window；executeScheduledRun 接受預建 run（向後相容，cron 路徑不變）。(3) trigger=\"manual\" 會把給 LLM 的觸發訊息改成「手動觸發」版本（buildTriggerMessage 支援分支）。(4) agent 在 beginRun 與執行間被刪掉的 edge case：executeScheduledRun 會把 run settle 成 failed 而非永久卡 running。(5) 404/409/400 錯誤格式與既有 agents routes 對齊。測試以 vi.mock stub agent-loop/conversation（與 scheduler.test.mjs 同技巧）。全套 301/301 綠。",
           "at": "2026-08-16T04:57:27.961Z",
           "by": "agent"
+        },
+        {
+          "text": "[12:58] 平行 session 已完成實作並 commit 48b42f2「feat(routes): add POST /api/agents/:id/run manual trigger (TASK-006)」：(1) scheduler.mjs 新增 beginRun(agentId) 同步前置 — getAgent→inFlight 檢查→startRun，回 {status:\"started\",run}|{status:\"not-found\"}|{status:\"conflict\"}；(2) executeScheduledRun 支援 {run, trigger:\"manual\"} 注入預建 run（manual 觸發訊息不同於排程訊息）；(3) routes.mjs POST /api/agents/:id/run → 202 {runId} / 404 / 409 {error:\"agent is already running\"} / 400 invalid id，fire-and-forget；(4) routes.test.mjs +6 cases（stub agent-loop）；(5) api-samples.json 新增 202/409 樣本。全套 301/301 綠。驗證 session 未動任何檔案（避免併發寫入衝突）。",
+          "at": "2026-08-16T04:59:52.757Z",
+          "by": "agent"
         }
       ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.046Z",
-      "updatedAt": "2026-08-16T04:57:27.961Z",
+      "updatedAt": "2026-08-16T04:59:52.757Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -531,10 +558,25 @@
           "at": "2026-08-15T13:05:41.046Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T04:59:37.905Z",
+          "result": {
+            "commit": "48b42f2",
+            "tests": "301/301 passed (3 consecutive full-suite runs stable)",
+            "testCases": "6 new: 202+runId polling, enabled=false bypass, 404, 400 traversal id, 409 conflict, 401 no-token"
+          }
         },
         "review": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T04:58:20.080Z",
+          "result": {
+            "coverage": "routes.test.mjs 64/64（TASK-006 新增 6 案）",
+            "failed": 0,
+            "passed": 301,
+            "total": 301
+          }
         },
         "test": {
           "status": "pending"
@@ -671,7 +713,7 @@
       "type": "chore",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "in-progress",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -682,11 +724,17 @@
       "assignee": null,
       "description": "dev/mocks/grafana-mock.mjs：標準 Node http server（port 3001），實作 grafana handler 用到的 endpoint：GET /api/search、GET /api/dashboards/uid/:uid、POST /api/ds/query、GET /api/prometheus/grafana/api/v1/rules（alerts）、GET /api/datasources。回 canned 資料（2-3 個 dashboard、panels、metric 序列）。核心：POST /__scenario { \"name\": \"healthy\" | \"firing\" | \"api-error\" | \"slow\" } 切換情境 — firing 讓 rules endpoint 回 firing 狀態的 alert、api-error 回 500、slow 延遲 8s。package.json 加 script：npm run mock:grafana。屬 dev fixture，不進 production 路徑。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "驗證紀錄（2026-08-16 developer session）：\n- TASK-008 已由平行 session 完成並 commit（4a13b24：dev/mocks/grafana-mock.mjs 592 行 + package.json mock:grafana script），本 session 不重寫，改做完整驗證。\n- 端點驗證（mock 直接打）：/api/search（3 dashboards，含 type=dash-db、folderTitle、tags）、/api/dashboards/uid/:uid（panels+targets、未知 uid 404）、/api/ds/query（columnar frame schema.fields+data.values，status=success）、/api/prometheus/grafana/api/v1/rules（firing 情境：HighCPUUsage=firing、MemoryPressure=pending、DiskAlmostFull=ok，alerts[] 非空、type=alerting）、/api/datasources、/api/health — 全過（23 checks）。\n- E2E（真實 tools/grafana/handler.mjs vs mock）：grafana_list_dashboards / get_dashboard / query_panel（table 格式輸出正常）/ list_alerts（預設 state=firing 只剩 1 筆、state=all 含 firing+pending）/ search / list_datasources — 全過（7 checks）。\n- 情境切換：healthy（全 ok）、firing（firing+pending）、api-error（全部 /api/* 500）、slow（實測 8005ms ≥ 8s 設定）、無效情境 400 — 全過。\n- handler 讀取欄位與 fixture 形狀逐一比對一致（searchResults/dashboardResponse/rules frame 的欄位都有）。\n- 驗證暫存 script 已清理（.paaw/tmp/）。無 code 變更需求。",
+          "at": "2026-08-16T05:07:11.135Z",
+          "by": "agent"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.048Z",
-      "updatedAt": "2026-08-15T13:05:41.048Z",
+      "updatedAt": "2026-08-16T05:07:11.135Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -696,7 +744,9 @@
           "at": "2026-08-15T13:05:41.048Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T05:04:30.159Z"
         },
         "review": {
           "status": "pending"
@@ -1366,6 +1416,6 @@
       "overnight": null
     }
   ],
-  "updatedAt": "2026-08-15T14:06:45.952Z",
+  "updatedAt": "2026-08-16T05:46:00.466Z",
   "loopMode": "mini"
 }

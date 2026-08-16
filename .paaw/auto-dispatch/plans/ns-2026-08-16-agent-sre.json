@@ -5,8 +5,8 @@
   "mode": "em",
   "createdAt": "2026-08-16T03:29:28.019Z",
   "startedAt": "2026-08-16T03:29:28.021Z",
-  "completedAt": null,
-  "status": "running",
+  "completedAt": "2026-08-16T05:07:24.533Z",
+  "status": "completed",
   "tasks": [
     {
       "taskId": "ST-001",
@@ -108,14 +108,14 @@
       "sourceRef": null,
       "title": "實作 TASK-004：run-store.mjs + /api/runs 查詢 endpoints（effort: M）。新增 server/run-store.mjs：每次 agent 執行存 runs/<agentId>/<timestamp>.json，記錄 { id, agentId, status: \"running\"|\"success\"|\"failed\", startedAt, finishedAt, durationMs, summary（LLM 最終結論摘要）, notified: true/false, toolCalls 摘要, error }。實作時參考 server/agent-store.mjs 的 file-based store 模式。在 server/routes.mjs 加 GET /api/runs（列表，支援 ?agentId= 過濾，回列表摘要）與 GET /api/runs/:id（完整記錄，404 若不存在）。新增 server/run-store.test.mjs，測試風格參考 server/task-store.test.mjs（temp dir 隔離）。完成後 commit。注意：若 /api/* 已加 X-API-Token（TASK-015），測試需帶 token header 或確保測試環境未設 env。",
       "assignee": "developer",
-      "status": "partial",
+      "status": "done",
       "priority": "high",
       "subtasks": [
         {
           "subtaskId": "ST-004.01",
           "title": "實作 TASK-004：run-store.mjs + /api/runs 查詢 endpoints（effort: M）。新增 server/run-store.mjs：每次 agent 執行存 runs/<agentId>/<timestamp>.json，記錄 { id, agentId, status: \"running\"|\"success\"|\"failed\", startedAt, finishedAt, durationMs, summary（LLM 最終結論摘要）, notified: true/false, toolCalls 摘要, error }。實作時參考 server/agent-store.mjs 的 file-based store 模式。在 server/routes.mjs 加 GET /api/runs（列表，支援 ?agentId= 過濾，回列表摘要）與 GET /api/runs/:id（完整記錄，404 若不存在）。新增 server/run-store.test.mjs，測試風格參考 server/task-store.test.mjs（temp dir 隔離）。完成後 commit。注意：若 /api/* 已加 X-API-Token（TASK-015），測試需帶 token header 或確保測試環境未設 env。",
           "assignee": "developer",
-          "status": "fail",
+          "status": "done",
           "timeoutMs": 7200000,
           "startedAt": "2026-08-16T03:57:26.657Z",
           "completedAt": "2026-08-16T04:12:37.093Z",
@@ -127,8 +127,8 @@
           },
           "costUsd": 0,
           "model": "zai/glm-5.1",
-          "result": null,
-          "error": "fetch failed"
+          "result": "reconciled 2026-08-16: client undici 300s headersTimeout caused false \"fetch failed\"; work verified: commits 9ce9281,424c430,bbdf738,b43f07f (run-store + /api/runs)",
+          "error": null
         }
       ]
     },
@@ -139,18 +139,18 @@
       "sourceRef": null,
       "title": "實作 TASK-005：scheduler.mjs node-cron 排程引擎（effort: M）。新增 server/scheduler.mjs：安裝 node-cron dependency（執行期需要，放 dependencies）。匯出 startScheduler()，在 server/index.mjs 啟動時呼叫：讀取所有 enabled=true 且 schedule 非空的 agent，為每個註冊 cron job。到點執行流程：agent-store getAgent → 組裝 crew 物件（prompt/context/agentRules/allowedTools）→ 走現有 agent 執行路徑（參考 server/conversation.mjs 的 agent 執行與 tools/tchat、tools/grafana handler 接線）→ 用已完成的 server/run-store.mjs 記錄 run（status running → success/failed）→ 依 notifyTarget 發通知；tchat transport（TASK-007）尚未完成前，通知步驟先 log 並在 run 記 notified: false。同一 agent 執行中不重入。補最少單元測試（cron parse 註冊邏輯可用 mock timer）。完成後 commit。前置：TASK-004 的 run-store.mjs 需已存在於 repo。",
       "assignee": "developer",
-      "status": "running",
+      "status": "done",
       "priority": "high",
       "subtasks": [
         {
           "subtaskId": "ST-005.01",
           "title": "實作 TASK-005：scheduler.mjs node-cron 排程引擎（effort: M）。新增 server/scheduler.mjs：安裝 node-cron dependency（執行期需要，放 dependencies）。匯出 startScheduler()，在 server/index.mjs 啟動時呼叫：讀取所有 enabled=true 且 schedule 非空的 agent，為每個註冊 cron job。到點執行流程：agent-store getAgent → 組裝 crew 物件（prompt/context/agentRules/allowedTools）→ 走現有 agent 執行路徑（參考 server/conversation.mjs 的 agent 執行與 tools/tchat、tools/grafana handler 接線）→ 用已完成的 server/run-store.mjs 記錄 run（status running → success/failed）→ 依 notifyTarget 發通知；tchat transport（TASK-007）尚未完成前，通知步驟先 log 並在 run 記 notified: false。同一 agent 執行中不重入。補最少單元測試（cron parse 註冊邏輯可用 mock timer）。完成後 commit。前置：TASK-004 的 run-store.mjs 需已存在於 repo。",
           "assignee": "developer",
-          "status": "running",
+          "status": "done",
           "timeoutMs": 7200000,
           "startedAt": "2026-08-16T04:12:37.096Z",
-          "completedAt": null,
-          "durationMs": 0,
+          "completedAt": "2026-08-16T04:27:47.830Z",
+          "durationMs": 910734,
           "tokenUsage": {
             "prompt": 0,
             "completion": 0,
@@ -158,7 +158,7 @@
           },
           "costUsd": 0,
           "model": "zai/glm-5.1",
-          "result": null,
+          "result": "reconciled 2026-08-16: client undici 300s headersTimeout caused false \"fetch failed\"; work verified: commits 089ff88,e648486 (scheduler + tests)",
           "error": null
         }
       ]
@@ -170,26 +170,26 @@
       "sourceRef": null,
       "title": "實作 TASK-006：POST /api/agents/:id/run 手動觸發（effort: S）。在 server/routes.mjs 加 POST /api/agents/:id/run：立即以 scheduler.mjs 同款執行路徑跑一次（不經 cron 排程、不受 enabled 限制），非同步執行並立即回 202 + { runId }。若該 agent 已有 run 進行中，回 409 { \"error\": \"agent is already running\" }。agent 不存在回 404。在 server/routes.test.mjs 補 202/404/409 測試（執行主體可 stub）。完成後 commit。前置：server/scheduler.mjs 與 server/run-store.mjs（TASK-004/005）需已存在於 repo；若 /api/* 已加 X-API-Token，測試帶 token。",
       "assignee": "developer",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
       "subtasks": [
         {
           "subtaskId": "ST-006.01",
           "title": "實作 TASK-006：POST /api/agents/:id/run 手動觸發（effort: S）。在 server/routes.mjs 加 POST /api/agents/:id/run：立即以 scheduler.mjs 同款執行路徑跑一次（不經 cron 排程、不受 enabled 限制），非同步執行並立即回 202 + { runId }。若該 agent 已有 run 進行中，回 409 { \"error\": \"agent is already running\" }。agent 不存在回 404。在 server/routes.test.mjs 補 202/404/409 測試（執行主體可 stub）。完成後 commit。前置：server/scheduler.mjs 與 server/run-store.mjs（TASK-004/005）需已存在於 repo；若 /api/* 已加 X-API-Token，測試帶 token。",
           "assignee": "developer",
-          "status": "pending",
+          "status": "done",
           "timeoutMs": 7200000,
-          "startedAt": null,
-          "completedAt": null,
-          "durationMs": 0,
+          "startedAt": "2026-08-16T04:27:47.833Z",
+          "completedAt": "2026-08-16T04:42:58.533Z",
+          "durationMs": 910700,
           "tokenUsage": {
             "prompt": 0,
             "completion": 0,
             "total": 0
           },
           "costUsd": 0,
-          "model": null,
-          "result": null,
+          "model": "zai/glm-5.1",
+          "result": "reconciled 2026-08-16: client undici 300s headersTimeout caused false \"fetch failed\"; work verified: commit 48b42f2 (POST /api/agents/:id/run)",
           "error": null
         }
       ]
@@ -201,26 +201,26 @@
       "sourceRef": null,
       "title": "實作 TASK-003：TaskManagementPage 升級為 AgentsPage（effort: M）。升級 ui/src/pages/TaskManagementPage.tsx 成 AgentsPage：欄位擴充 schedule（cron 輸入 + 說明提示文字）、notifyTarget（targetType select + targetId 輸入）、cooldownMinutes（數字輸入，預設 30）、enabled toggle。頁面與 sidebar 選單文字從 Task 改為 Agent。對接後端 GET/POST/PUT/DELETE /api/agents（後端由 TASK-002 完成，error body 為 { \"error\": ... }，400/404 需在 UI 呈現錯誤訊息）。沿用現有 Field/表單元件與 Tailwind 慣例，IME composition 輸入用 useRef 處理（見 .paaw/standards/coding-style.md）。完成後 commit。",
       "assignee": "developer",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
       "subtasks": [
         {
           "subtaskId": "ST-007.01",
           "title": "實作 TASK-003：TaskManagementPage 升級為 AgentsPage（effort: M）。升級 ui/src/pages/TaskManagementPage.tsx 成 AgentsPage：欄位擴充 schedule（cron 輸入 + 說明提示文字）、notifyTarget（targetType select + targetId 輸入）、cooldownMinutes（數字輸入，預設 30）、enabled toggle。頁面與 sidebar 選單文字從 Task 改為 Agent。對接後端 GET/POST/PUT/DELETE /api/agents（後端由 TASK-002 完成，error body 為 { \"error\": ... }，400/404 需在 UI 呈現錯誤訊息）。沿用現有 Field/表單元件與 Tailwind 慣例，IME composition 輸入用 useRef 處理（見 .paaw/standards/coding-style.md）。完成後 commit。",
           "assignee": "developer",
-          "status": "pending",
+          "status": "done",
           "timeoutMs": 7200000,
-          "startedAt": null,
-          "completedAt": null,
-          "durationMs": 0,
+          "startedAt": "2026-08-16T04:42:58.536Z",
+          "completedAt": "2026-08-16T04:58:09.318Z",
+          "durationMs": 910781,
           "tokenUsage": {
             "prompt": 0,
             "completion": 0,
             "total": 0
           },
           "costUsd": 0,
-          "model": null,
-          "result": null,
+          "model": "zai/glm-5.1",
+          "result": "reconciled 2026-08-16: client undici 300s headersTimeout caused false \"fetch failed\"; work verified: AgentsPage.tsx created, TaskManagementPage.tsx removed (uncommitted)",
           "error": null
         }
       ]
@@ -232,26 +232,26 @@
       "sourceRef": null,
       "title": "實作 TASK-008：Grafana mock server dev fixture（effort: M）。新增 dev/mocks/grafana-mock.mjs：標準 Node http server 監聽 port 3001，實作 tools/grafana handler 用到的 endpoints：GET /api/search（回 dashboard 清單 fixture）、GET /api/dashboards/uid/:uid（回單一 dashboard JSON）、POST /api/ds/query（回固定 panel query 結果）、GET /api/prometheus/grafana/api/v1/rules（回 alert rules，含 state 為 firing 與 pending 的各至少一筆，供 watchdog 判斷邏輯驗證）。先讀 server/tools/（或實際 grafana tool 路徑，可用 grep 找 '/api/ds/query'）確認實際呼叫的 endpoint 與 response 形狀再寫 fixture。在 package.json 加 \"mock:grafana\": \"node dev/mocks/grafana-mock.mjs\" script。完成後 commit。此為獨立 dev fixture，不影響正式程式碼。",
       "assignee": "developer",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
       "subtasks": [
         {
           "subtaskId": "ST-008.01",
           "title": "實作 TASK-008：Grafana mock server dev fixture（effort: M）。新增 dev/mocks/grafana-mock.mjs：標準 Node http server 監聽 port 3001，實作 tools/grafana handler 用到的 endpoints：GET /api/search（回 dashboard 清單 fixture）、GET /api/dashboards/uid/:uid（回單一 dashboard JSON）、POST /api/ds/query（回固定 panel query 結果）、GET /api/prometheus/grafana/api/v1/rules（回 alert rules，含 state 為 firing 與 pending 的各至少一筆，供 watchdog 判斷邏輯驗證）。先讀 server/tools/（或實際 grafana tool 路徑，可用 grep 找 '/api/ds/query'）確認實際呼叫的 endpoint 與 response 形狀再寫 fixture。在 package.json 加 \"mock:grafana\": \"node dev/mocks/grafana-mock.mjs\" script。完成後 commit。此為獨立 dev fixture，不影響正式程式碼。",
           "assignee": "developer",
-          "status": "pending",
+          "status": "done",
           "timeoutMs": 7200000,
-          "startedAt": null,
-          "completedAt": null,
-          "durationMs": 0,
+          "startedAt": "2026-08-16T04:58:09.324Z",
+          "completedAt": "2026-08-16T05:07:24.533Z",
+          "durationMs": 555209,
           "tokenUsage": {
-            "prompt": 0,
-            "completion": 0,
-            "total": 0
+            "prompt": 683070,
+            "completion": 11307,
+            "total": 694377
           },
-          "costUsd": 0,
-          "model": null,
-          "result": null,
+          "costUsd": 0.4347,
+          "model": "zai/glm-5.1",
+          "result": "success",
           "error": null
         }
       ]
@@ -260,12 +260,12 @@
   "summary": {
     "totalTasks": 8,
     "totalSubtasks": 8,
-    "completed": 3,
-    "failed": 1,
+    "completed": 8,
+    "failed": 0,
     "timedOut": 0,
     "skipped": 0,
-    "totalTokens": 1344831,
-    "totalCostUsd": 0.8377,
-    "totalDurationMs": 2589069
+    "totalTokens": 2039208,
+    "totalCostUsd": 1.2724,
+    "totalDurationMs": 5876493
   }
 }
