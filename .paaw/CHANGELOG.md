@@ -6,6 +6,9 @@
 
 
 
+### changed
+- code changes (1 new file) (2 modified)
+
 ## 2026-08-15
 ### changed
 - 實作 TASK-001：server/agent-store.mjs — file-based Agent Registry 持久化。

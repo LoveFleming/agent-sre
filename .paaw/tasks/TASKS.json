@@ -130,7 +130,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.041Z",
-      "updatedAt": "2026-08-16T03:41:59.977Z",
+      "updatedAt": "2026-08-16T03:43:07.868Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -145,7 +145,14 @@
           "at": "2026-08-16T03:41:59.977Z"
         },
         "review": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T03:43:07.868Z",
+          "result": {
+            "passed": true,
+            "coverage": "routes.test.mjs 41/41 (新增 26 cases: CRUD round-trip / 400 / 404 / traversal id / scheduler hook / deprecated 標記)",
+            "suite": "npm test 全套 8 檔 241/241 綠"
+          }
         },
         "test": {
           "status": "pending"
