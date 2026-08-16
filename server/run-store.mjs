@@ -55,7 +55,7 @@ const RUN_FILE_RE = /^[a-zA-Z0-9_-]+\.json$/;
 const SUMMARY_MAX_LENGTH = 4000;
 /** Cap for the `error` message — keeps a stack-trace-shaped string from bloating the record. */
 const ERROR_MAX_LENGTH = 2000;
-/** Cap for `fingerprint` / `notifyError` — digests, not transcripts. */
+/** Cap for the `fingerprint` — a short dedup key, not a transcript. */
 const DIGEST_MAX_LENGTH = 200;
 /** Default per-agent retention: keep the newest 200 runs, prune older ones. */
 const DEFAULT_RETENTION = 200;
@@ -347,7 +347,12 @@ export function listRuns(filter = {}) {
       }
     }
   }
-  runs.sort((a, b) => (b.startedAt || "").localeCompare(a.startedAt || ""));
+  // Newest first; same-millisecond runs tie-break on id (timestamp-prefixed,
+  // random suffix) so output order never depends on readdir order.
+  runs.sort((a, b) => {
+    const byTime = (b.startedAt || "").localeCompare(a.startedAt || "");
+    return byTime !== 0 ? byTime : (b.id || "").localeCompare(a.id || "");
+  });
   if (typeof filter.limit === "number" && Number.isFinite(filter.limit) && filter.limit >= 0) {
     return runs.slice(0, Math.floor(filter.limit));
   }
