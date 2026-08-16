@@ -9,6 +9,12 @@
 ### changed
 - code changes (1 new file) (2 modified)
 
+### added
+- TASK-015：所有 /api/* 動態 endpoint 加入 X-API-Token auth（值從 AGENT_SRE_API_TOKEN env，timingSafeEqual 常數時間比對），失敗回 401 { error: unauthorized }；/api/health 與靜態檔案豁免；env 未設時 dev-mode 放行並於啟動 log 警告。CORS allow-list 加入 X-API-Token。
+
+### added
+- 所有 /api/* endpoints（/api/health 與靜態檔案除外）要求 X-API-Token header，值從 env AGENT_SRE_API_TOKEN 讀取，crypto.timingSafeEqual 常數時間比對（長度先比對）。失敗回 401 { error: "unauthorized" }。env 未設時放行（dev mode）並於啟動時 log 警告。routes.test.mjs 新增 401/dev-mode/exempt 案例（41→50），全套 250/250 綠。
+
 ## 2026-08-15
 ### changed
 - 實作 TASK-001：server/agent-store.mjs — file-based Agent Registry 持久化。

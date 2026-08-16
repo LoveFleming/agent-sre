@@ -1,8 +1,8 @@
 {
   "_meta": {
     "crewId": "coding.em",
-    "lastUpdated": "2026-08-16T03:30:58.356Z",
-    "messageCount": 13
+    "lastUpdated": "2026-08-16T03:43:59.317Z",
+    "messageCount": 14
   },
   "messages": [
     {
@@ -130,8 +130,13 @@
     },
     {
       "role": "assistant",
-      "content": "### ⏳ 💻 developer 執行中...\n\n實作 TASK-002：/api/agents CRUD endpoints（effort: M）。在 server/routes.mjs 新增：GET /api/agents（列表）、POST /api/agents（建立，server 端產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。資料層使用已完成的 server/agent-store.mjs（commit f3e68fc），schema 為 { id, name, description, context, agentRules, prompt, allowedTools[], schedule（cron 或 null）, notifyTarget, cooldownMinutes, enabled }。錯誤處理沿用 routes.mjs 現有慣例：400（缺必填欄位 name、prompt）、404（id 不存在）、500，error body { \"error\": ... }。在 server/routes.test.mjs 補 CRUD 的 200/400/404 測試案例。完整規格見 .paaw/tasks/TASKS.json 的 TASK-002。完成後 commit。\n\n`[2/8]`",
-      "ts": "2026-08-16T03:30:56.121Z",
+      "content": "### ✅ 💻 developer 完成\n\nTASK-002 完成。實作內容在進入本次工作時已存在於工作樹（前一 session 寫完未 commit），本次完成了驗證與收尾 commit。\n\n📋 **Work Summary**\n├─ 改了什麼：\n│  - `server/routes.mjs` — 新增 4 條 `/api/agents` routes：GET 列表（200 `{agents:[...]}`）、POST 建立（201，",
+      "ts": "2026-08-16T03:43:56.738Z"
+    },
+    {
+      "role": "assistant",
+      "content": "### ⏳ 💻 developer 執行中...\n\n實作 TASK-015：API auth X-API-Token（effort: S）。在 server/routes.mjs（或抽出 middleware）為所有 /api/* 動態 endpoints 加 X-API-Token request header 檢查：值從 env AGENT_SRE_API_TOKEN 讀取，用 crypto.timingSafeEqual 做常數時間比對（先比長度並處理長度不符），失敗回 401 { \"error\": \"unauthorized\" }。env 未設定 AGENT_SRE_API_TOKEN 時放行並 log 警告（dev 便利性）。靜態檔案與健康檢查 endpoint 不受影響。同步更新 server/routes.test.mjs：既有 /api 測試補上合法 token header，並新增 401（無 token / 錯 token）與無 env 放行的測試。完成後 commit。此 task 排在 TASK-002 之後執行，記得 /api/agents 測試也要帶 token。\n\n`[3/8]`",
+      "ts": "2026-08-16T03:43:56.771Z",
       "_emProgress": true
     }
   ]

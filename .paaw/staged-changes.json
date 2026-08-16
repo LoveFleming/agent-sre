@@ -1,43 +1,23 @@
 {
-  "createdAt": "2026-08-16T03:42:28.750Z",
+  "createdAt": "2026-08-16T03:43:49.236Z",
   "agent": "developer",
-  "task": "實作 TASK-002：/api/agents CRUD endpoints（GET 列表、POST 建立 server 產 id、PUT/DELETE by id），資料層用 server/agent-store.mjs，錯誤處理沿用 routes.mjs 慣例，routes.test.mjs 補 CRUD 的 200/400/404 測試",
+  "task": "實作 TASK-002：/api/agents CRUD endpoints（GET 列表、POST 建立、PUT 更新、DELETE 刪除），資料層用 server/agent-store.mjs，錯誤處理沿用 400/404/500 慣例，補 routes.test.mjs 測試，完成後 commit",
   "taskId": "",
-  "summary": "TASK-002 實作：\n\n1. server/routes.mjs\n   - 新增 4 個 endpoints：GET /api/agents（列表，createdAt 升冪）、POST /api/agents（建立，id 由 agent-store 的 saveAgent 產生 UUID）、GET/PUT/DELETE /api/agents/:id（PUT 為 partial patch，未傳欄位保留舊值）\n   - 錯誤處理沿用現有慣例：400（缺 name、缺 prompt、body 非物件、schema 違規、invalid/traversal id）、404（Agent not found）、error body { \"error\": ... }\n   - /api/tasks 五個 endpoints 全部保留但回應加 \"deprecated\": true（GET list、POST、GET :id、PUT :id、DELETE :id）\n   - 新增 scheduler hook：export setSchedulerNotifier(fn)，POST/PUT/DELETE 成功後以 { type: \"created\"|\"updated\"|\"deleted\", agent } 事件通知；notifier 未註冊或 throw 都不影響 HTTP 回應（ADR-003 介面預留，scheduler 落地後註冊即可）\n\n2. server/routes.test.mjs（41 案例，原 12 → 41）\n   - /api/agents CRUD：201 建立 + UUID id、列表含新建、GET/:id、PUT 更新、DELETE 後 GET 404\n   - 400：缺 name、缺 prompt、body 非物件、PUT schema 違規（cooldownMinutes 非數字）、invalid id（../traversal 樣式）\n   - 404：GET/PUT/DELETE 不存在的 id\n   - scheduler hook：created/updated/deleted 各觸發一次、notifier throw 時仍 201、未註冊時 CRUD 照常\n   - /api/tasks：五個 endpoints 皆驗證 deprecated: true 且功能不變\n   - 測試隔離：SRE_AGENTS_DIR 指向 temp dir（在 dynamic import routes.mjs 前設定，比照 agent-store.test.mjs 慣例），不污染版控的 agents/ 目錄\n\n3. .paaw/api-samples.json（新檔）：七個 endpoint 的 request/response/error 範例（agents CRUD × 5 + tasks deprecated × 2），供 Tester/QA 產 E2E 案例",
+  "summary": "TASK-002 完成，已 commit 為 26c8cb7（feat）+ aa558e7 / aa3fb2b（chore .paaw）三個 commit。\n\nserver/routes.mjs：\n- GET /api/agents → { agents: [...] }（listAgents()，按 createdAt 排序）\n- POST /api/agents → 201 { agent }（saveAgent 產 UUID；缺 name/prompt 回 400；schema 違規回 400）\n- GET /api/agents/:id → 200 { agent } / 404 / 400（traversal id）\n- PUT /api/agents/:id → 200 { agent }（partial patch 語意；缺 name/prompt 回 400；不存在 id 回 404）\n- DELETE /api/agents/:id → 200 { success: true } / 404 / 400\n- setSchedulerNotifier(fn) hook：created/updated/deleted 三種事件通知 scheduler 重排；notifier throw 不影響 HTTP 回應（TASK-002 規格要求的 call-site 預埋）\n- /api/tasks 全部 endpoints 回應加 \"deprecated\": true（過渡期並存）\n\nserver/routes.test.mjs：新增 26 個測試案例，涵蓋 CRUD round-trip、400（缺 name/prompt、body 非物件、invalid id）、404（不存在 id）、scheduler hook 觸發與錯誤隔離、/api/tasks deprecated 標記。SRE_AGENTS_DIR 指向 temp dir，agents/ 正式目錄零污染。\n\n全套測試 8 檔 241/241 綠（原 214 + 新增）。.paaw/api-samples.json 補齊 /api/agents 四個 endpoints 的 samples 供 Tester/QA 使用。",
   "files": [
     {
       "path": "server/routes.mjs",
-      "reason": "新增 /api/agents CRUD 四個 endpoint + scheduler notifier hook；/api/tasks 全部回應加 deprecated: true"
+      "reason": "新增 /api/agents CRUD 四個 endpoints + setSchedulerNotifier hook + /api/tasks deprecated 標記"
     },
     {
       "path": "server/routes.test.mjs",
-      "reason": "擴充測試：agents CRUD 27 案例（200/400/404、invalid id、scheduler hook）+ tasks deprecated 5 案例，共 41 案例"
+      "reason": "新增 26 個測試案例（CRUD round-trip、400/404、traversal id、scheduler hook、deprecated 標記）"
     },
     {
       "path": ".paaw/api-samples.json",
-      "reason": "新檔：agents CRUD 與 tasks deprecated 的 API samples，供 Tester/QA 產 E2E 案例"
-    },
-    {
-      "path": ".paaw/tasks/TASKS.json",
-      "reason": "TASK-002 pipeline 前進到 implement done"
-    },
-    {
-      "path": ".paaw/staged-changes.json",
-      "reason": "staged summary 系統自動更新"
-    },
-    {
-      "path": ".paaw/auto-dispatch/plans/ns-2026-08-16-agent-sre.json",
-      "reason": "dispatch 系統自動更新"
-    },
-    {
-      "path": ".paaw/coding-memory/actions.jsonl",
-      "reason": "action log 自動累加"
-    },
-    {
-      "path": ".paaw/coding-memory/conversations/coding.em/active.json",
-      "reason": "對話紀錄自動更新"
+      "reason": "新增 /api/agents 四個 endpoints 的 API Tester samples"
     }
   ],
-  "howToTest": "1. cd agent-sre && npx vitest run server/routes.test.mjs — 應 41/41 綠（agents CRUD + tasks deprecated + 原有 traversal）\n2. npx vitest run — 全套應 241/241 綠\n3. 手動 smoke：node server/index.mjs 起本地 server，curl -X POST localhost:PORT/api/agents -d '{\"name\":\"T\",\"prompt\":\"p\",\"notifyTarget\":{\"targetType\":\"user\",\"targetId\":\"u1\"}}' → 201 帶 UUID id；GET /api/agents → 列表含該筆；GET /api/tasks → 200 帶 deprecated:true",
-  "risk": "PUT /api/agents/:id 的 404/400 判斷依賚 store 的 \"Agent not found\" 訊息前綴（TASK-001 既定契約，route 層沿用）；若未來 agent-store 改錯誤訊息字串，404 mapping 會退回 400 — 已在 route 註解標明此耦合。"
+  "howToTest": "1. `npm test` → 8 檔 241/241 全綠（routes.test.mjs 41/41）\n2. `git log --oneline -4` → 看到 26c8cb7 feat(routes)、aa558e7 / aa3fb2b chore(.paaw)\n3. `ls agents/` → 只有 README.md，無測試污染\n4. 手動驗證：`npm start` 後 curl http://localhost:3000/api/agents → 200 { agents: [] }；POST 建立後 GET 列表可見；POST 缺 name → 400 { error: \"Missing required field: name\" }；PUT /api/agents/<不存在的 id> → 404\n5. 預期結果：所有 acceptance criteria 達成（列表完整、缺 name/prompt 回 400、不存在 id 回 404、/api/tasks 帶 deprecated:true、測試全綠）",
+  "risk": "/api/tasks 舊 UI（TaskManagementPage.tsx）仍在用舊 endpoints，回應多了 deprecated 欄位但 schema 不變，前端不受影響。setSchedulerNotifier 是預留介面，scheduler 模組（後續 task）實作時需註冊 callback。"
 }

@@ -2,6 +2,7 @@
  * routes.test.mjs — Regression tests for:
  *   1. Path traversal protection in static file serving (TASK-005/006/007).
  *   2. /api/agents CRUD endpoints + /api/tasks deprecation flags (TASK-002).
+ *   3. X-API-Token auth on /api/* (TASK-015).
  *
  * Covers:
  *   - Normal path `/` serves the UI (index.html) with HTTP 200.
@@ -12,16 +13,21 @@
  *     400 on missing required fields (name, prompt) and invalid ids,
  *     404 on unknown ids, scheduler notifier hook fired on mutations.
  *   - /api/tasks endpoints still work but carry "deprecated": true.
+ *   - X-API-Token: 401 on missing/wrong token (both length-mismatch and
+ *     same-length-mismatch branches), 200 with the correct token,
+ *     /api/health and static files exempt, and permissive pass-through
+ *     when AGENT_SRE_API_TOKEN is unset (dev mode).
  *
  * Spins up a real http.Server via registerRoutes to exercise the HTTP wiring.
  *
- * Isolation: SRE_AGENTS_DIR env var is set BEFORE the dynamic import of
- * routes.mjs — agent-store.mjs resolves its directory at module-load time
- * (same trick as agent-store.test.mjs; agents/ is version-controlled
- * config-as-code and must never be polluted by tests).
+ * Isolation: SRE_AGENTS_DIR and AGENT_SRE_API_TOKEN env vars are set BEFORE
+ * the dynamic import of routes.mjs — agent-store.mjs resolves its directory
+ * and routes.mjs caches the expected token at module-load time (same trick
+ * as agent-store.test.mjs; agents/ is version-controlled config-as-code and
+ * must never be polluted by tests).
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from "vitest";
 import { createServer, request as httpRequest } from "http";
 import { resolve, dirname, join } from "path";
 import { fileURLToPath } from "url";
@@ -36,18 +42,34 @@ const UI_DIR = resolve(ROOT, "ui-dist");
 const AGENTS_TMP = mkdtempSync(join(tmpdir(), "routes-agents-test-"));
 process.env.SRE_AGENTS_DIR = AGENTS_TMP;
 
-const { registerRoutes, setSchedulerNotifier } = await import("./routes.mjs");
+// TASK-015: enable auth for the whole suite so every existing /api test is
+// implicitly re-run WITH the token requirement in force (they call httpJson
+// which now always sends the correct header). Dedicated 401/dev-mode cases
+// live in their own describe block that flips env + cached value.
+const TOKEN = "test-secret-token-015";
+process.env.AGENT_SRE_API_TOKEN = TOKEN;
+
+const { registerRoutes, setSchedulerNotifier, resetApiTokenCacheForTests } = await import("./routes.mjs");
 const { safeResolve } = await import("./tool-loader.mjs");
 
 let server;
 
-/** Perform an HTTP request against the running test server; JSON body in/out. */
-function httpJson(method, pathname, body) {
+/** Perform an HTTP request against the running test server; JSON body in/out.
+ *  Always sends X-API-Token (TASK-015); pass opts.token = null to omit,
+ *  or opts.token = "<wrong>" to send a bad one. */
+function httpJson(method, pathname, body, opts = {}) {
   return new Promise((resolvePromise, reject) => {
     const payload = body === undefined ? null : JSON.stringify(body);
     const headers = payload
       ? { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) }
       : {};
+    if (opts.token === null) {
+      // deliberately no X-API-Token header
+    } else if (opts.token !== undefined) {
+      headers["X-API-Token"] = opts.token;
+    } else {
+      headers["X-API-Token"] = TOKEN;
+    }
     const req = httpRequest(
       { host: "127.0.0.1", port: server.address().port, path: pathname, method, headers },
       (res) => {
@@ -403,5 +425,112 @@ describe("routes.mjs — /api/tasks deprecated 標記 (TASK-002)", () => {
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.deprecated).toBe(true);
+  });
+});
+
+describe("routes.mjs — X-API-Token auth (TASK-015)", () => {
+  // NOTE: every preceding describe block already exercised the happy path
+  // implicitly — AGENT_SRE_API_TOKEN is set at module load and httpJson
+  // always sends the correct header, so all /api/agents + /api/tasks tests
+  // double as "token 正確時全 API 可用" regressions. This block covers the
+  // failure modes and the exemption rules.
+
+  beforeAll(async () => {
+    server = createServer();
+    registerRoutes(server);
+    await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  });
+
+  afterAll(() => {
+    if (server) server.close();
+    // restore auth-on state for any test file that runs after this one
+    process.env.AGENT_SRE_API_TOKEN = TOKEN;
+    resetApiTokenCacheForTests();
+  });
+
+  // ---------------------------------------------------------------
+  // 401 — token 錯誤
+  // ---------------------------------------------------------------
+  describe("401 — 缺 token / 錯 token", () => {
+    it("GET /api/agents 無 X-API-Token → 401 { error: unauthorized }", async () => {
+      const res = await httpJson("GET", "/api/agents", undefined, { token: null });
+      expect(res.status).toBe(401);
+      expect(res.body).toEqual({ error: "unauthorized" });
+    });
+
+    it("GET /api/agents 錯 token（長度不同）→ 401", async () => {
+      const res = await httpJson("GET", "/api/agents", undefined, { token: "short" });
+      expect(res.status).toBe(401);
+      expect(res.body).toEqual({ error: "unauthorized" });
+    });
+
+    it("GET /api/agents 錯 token（同長度、內容不同）→ 401（timingSafeEqual 路徑）", async () => {
+      const res = await httpJson("GET", "/api/agents", undefined, {
+        token: "test-secret-token-999",
+      });
+      expect(res.status).toBe(401);
+      expect(res.body).toEqual({ error: "unauthorized" });
+    });
+
+    it("POST /api/agents 帶正確 body 但無 token → 401，且不建立 agent", async () => {
+      const res = await httpJson(
+        "POST",
+        "/api/agents",
+        { name: "X", prompt: "Y", notifyTarget: { targetType: "user", targetId: "u" } },
+        { token: null }
+      );
+      expect(res.status).toBe(401);
+      const list = await httpJson("GET", "/api/agents");
+      expect(list.body.agents.some(a => a.name === "X")).toBe(false);
+    });
+
+    it("401 也適用於其他 /api/* endpoint（/api/tasks）", async () => {
+      const res = await httpJson("GET", "/api/tasks", undefined, { token: null });
+      expect(res.status).toBe(401);
+      expect(res.body).toEqual({ error: "unauthorized" });
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // 豁免：health check 與靜態檔案
+  // ---------------------------------------------------------------
+  describe("豁免 — /api/health 與靜態檔案", () => {
+    it("GET /api/health 不需要 token → 200", async () => {
+      const res = await httpJson("GET", "/api/health", undefined, { token: null });
+      expect(res.status).toBe(200);
+      expect(res.body.status).toBe("ok");
+    });
+
+    it("GET / 靜態檔案不需要 token → 200（UI title 仍在）", async () => {
+      const res = await httpGet("/");
+      expect(res.status).toBe(200);
+      expect(res.text).toContain("<title>");
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // dev mode — env 未設定時放行
+  // ---------------------------------------------------------------
+  describe("dev mode — AGENT_SRE_API_TOKEN 未設定時放行", () => {
+    beforeEach(() => {
+      delete process.env.AGENT_SRE_API_TOKEN;
+      resetApiTokenCacheForTests();
+    });
+
+    afterEach(() => {
+      process.env.AGENT_SRE_API_TOKEN = TOKEN;
+      resetApiTokenCacheForTests();
+    });
+
+    it("無 token 的請求在 dev mode 放行 → 200", async () => {
+      const res = await httpJson("GET", "/api/agents", undefined, { token: null });
+      expect(res.status).toBe(200);
+      expect(res.body.agents).toEqual([]);
+    });
+
+    it("dev mode 帶錯 token 也放行（一致性：無 secret 即無可比對）", async () => {
+      const res = await httpJson("GET", "/api/agents", undefined, { token: "wrong" });
+      expect(res.status).toBe(200);
+    });
   });
 });

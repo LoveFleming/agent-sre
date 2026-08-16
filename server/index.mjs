@@ -59,6 +59,15 @@ async function main() {
   const server = createServer();
   registerRoutes(server);
 
+  // ── API auth status (TASK-015) ──
+  if (!process.env.AGENT_SRE_API_TOKEN) {
+    console.warn(
+      "\n⚠️  [auth] AGENT_SRE_API_TOKEN is not set — running in permissive dev mode.\n" +
+      "   All /api/* endpoints (except /api/health) are UNPROTECTED.\n" +
+      "   Set this env var before exposing the server beyond localhost.\n"
+    );
+  }
+
   server.listen(PORT, () => {
     console.log(`\n✅ Agent SRE listening on http://localhost:${PORT}`);
     console.log(`   Health:  GET  /api/health`);

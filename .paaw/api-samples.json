@@ -1,13 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-16T11:41:00+08:00",
-  "note": "API Tester samples. Source of truth for request/response shapes — Tester (Divya) and QA (大安) derive E2E cases from these. TASK-002 added /api/agents CRUD.",
+  "updatedAt": "2026-08-16T11:54:00+08:00",
+  "note": "API Tester samples. Source of truth for request/response shapes — Tester (Divya) and QA (大安) derive E2E cases from these. TASK-002 added /api/agents CRUD. TASK-015: 所有 /api/* endpoint（/api/health 除外）都要求 X-API-Token header，值 = env AGENT_SRE_API_TOKEN；env 未設時 server 以 dev mode 放行。靜態檔案與 /api/health 不需要 token。",
   "endpoints": [
     {
       "method": "GET",
       "endpoint": "/api/agents",
-      "description": "列出所有 agents（按 createdAt 升冪）。TASK-002 新增，取代 /api/tasks。",
-      "request": { "headers": {} },
+      "description": "需 X-API-Token header（TASK-015）。列出所有 agents（按 createdAt 升冪）。TASK-002 新增，取代 /api/tasks。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
       "response": {
         "status": 200,
         "body": {
@@ -18,10 +22,19 @@
               "description": "Watches CPU saturation",
               "context": "",
               "prompt": "You watch CPU metrics and alert on saturation.",
-              "agentRules": { "guardrails": [], "redirectRules": [], "refuseTopics": [] },
-              "allowedTools": ["grafana_query_metrics"],
+              "agentRules": {
+                "guardrails": [],
+                "redirectRules": [],
+                "refuseTopics": []
+              },
+              "allowedTools": [
+                "grafana_query_metrics"
+              ],
               "schedule": "*/5 * * * *",
-              "notifyTarget": { "targetType": "user", "targetId": "u-ops" },
+              "notifyTarget": {
+                "targetType": "user",
+                "targetId": "u-ops"
+              },
               "cooldownMinutes": 30,
               "enabled": true,
               "createdAt": "2026-08-16T03:41:00.000Z",
@@ -34,16 +47,24 @@
     {
       "method": "POST",
       "endpoint": "/api/agents",
-      "description": "建立 agent。id 由 server 端產生（client 傳入的 id/createdAt/updatedAt 會被忽略）。name 與 prompt 為必填；notifyTarget 為 store 必填 schema。",
+      "description": "需 X-API-Token header（TASK-015）。建立 agent。id 由 server 端產生（client 傳入的 id/createdAt/updatedAt 會被忽略）。name 與 prompt 為必填；notifyTarget 為 store 必填 schema。",
       "request": {
-        "headers": { "Content-Type": "application/json" },
+        "headers": {
+          "Content-Type": "application/json",
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        },
         "body": {
           "name": "Disk Watchdog",
           "description": "Watches disk usage",
           "prompt": "You watch disk usage and alert above 85%.",
-          "allowedTools": ["grafana_query_metrics"],
+          "allowedTools": [
+            "grafana_query_metrics"
+          ],
           "schedule": "*/10 * * * *",
-          "notifyTarget": { "targetType": "channel", "targetId": "c-alerts" },
+          "notifyTarget": {
+            "targetType": "channel",
+            "targetId": "c-alerts"
+          },
           "cooldownMinutes": 15,
           "enabled": true
         }
@@ -57,10 +78,19 @@
             "description": "Watches disk usage",
             "context": "",
             "prompt": "You watch disk usage and alert above 85%.",
-            "agentRules": { "guardrails": [], "redirectRules": [], "refuseTopics": [] },
-            "allowedTools": ["grafana_query_metrics"],
+            "agentRules": {
+              "guardrails": [],
+              "redirectRules": [],
+              "refuseTopics": []
+            },
+            "allowedTools": [
+              "grafana_query_metrics"
+            ],
             "schedule": "*/10 * * * *",
-            "notifyTarget": { "targetType": "channel", "targetId": "c-alerts" },
+            "notifyTarget": {
+              "targetType": "channel",
+              "targetId": "c-alerts"
+            },
             "cooldownMinutes": 15,
             "enabled": true,
             "createdAt": "2026-08-16T03:41:00.000Z",
@@ -69,16 +99,38 @@
         }
       },
       "errors": [
-        { "status": 400, "when": "缺 name", "body": { "error": "Missing required field: name" } },
-        { "status": 400, "when": "缺 prompt", "body": { "error": "Missing required field: prompt" } },
-        { "status": 400, "when": "缺 notifyTarget（store schema）", "body": { "error": "Agent \"notifyTarget\" is required: { targetType: \"user\"|\"channel\", targetId: string }" } }
+        {
+          "status": 400,
+          "when": "缺 name",
+          "body": {
+            "error": "Missing required field: name"
+          }
+        },
+        {
+          "status": 400,
+          "when": "缺 prompt",
+          "body": {
+            "error": "Missing required field: prompt"
+          }
+        },
+        {
+          "status": 400,
+          "when": "缺 notifyTarget（store schema）",
+          "body": {
+            "error": "Agent \"notifyTarget\" is required: { targetType: \"user\"|\"channel\", targetId: string }"
+          }
+        }
       ]
     },
     {
       "method": "GET",
       "endpoint": "/api/agents/{id}",
-      "description": "取得單一 agent。",
-      "request": { "headers": {} },
+      "description": "需 X-API-Token header（TASK-015）。取得單一 agent。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
       "response": {
         "status": 200,
         "body": {
@@ -86,22 +138,40 @@
             "id": "3f1c2a4e-5b6d-4a7e-8f90-1a2b3c4d5e6f",
             "name": "CPU Watchdog",
             "prompt": "You watch CPU metrics and alert on saturation.",
-            "notifyTarget": { "targetType": "user", "targetId": "u-ops" },
+            "notifyTarget": {
+              "targetType": "user",
+              "targetId": "u-ops"
+            },
             "enabled": true
           }
         }
       },
       "errors": [
-        { "status": 404, "when": "id 不存在", "body": { "error": "Agent not found: <id>" } },
-        { "status": 400, "when": "id 不符合 [a-zA-Z0-9_-]（含 traversal 樣式）", "body": { "error": "Invalid agent id: \"..\"" } }
+        {
+          "status": 404,
+          "when": "id 不存在",
+          "body": {
+            "error": "Agent not found: <id>"
+          }
+        },
+        {
+          "status": 400,
+          "when": "id 不符合 [a-zA-Z0-9_-]（含 traversal 樣式）",
+          "body": {
+            "error": "Invalid agent id: \"..\""
+          }
+        }
       ]
     },
     {
       "method": "PUT",
       "endpoint": "/api/agents/{id}",
-      "description": "更新 agent（partial patch：只傳要改的欄位，未傳欄位保留舊值；name 與 prompt 為必填）。agentRules 為 per-key merge。createdAt 保留、updatedAt 更新。",
+      "description": "需 X-API-Token header（TASK-015）。更新 agent（partial patch：只傳要改的欄位，未傳欄位保留舊值；name 與 prompt 為必填）。agentRules 為 per-key merge。createdAt 保留、updatedAt 更新。",
       "request": {
-        "headers": { "Content-Type": "application/json" },
+        "headers": {
+          "Content-Type": "application/json",
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        },
         "body": {
           "name": "CPU Watchdog v2",
           "prompt": "You watch CPU metrics and alert on saturation.",
@@ -118,53 +188,113 @@
             "prompt": "You watch CPU metrics and alert on saturation.",
             "schedule": null,
             "enabled": false,
-            "notifyTarget": { "targetType": "user", "targetId": "u-ops" },
+            "notifyTarget": {
+              "targetType": "user",
+              "targetId": "u-ops"
+            },
             "createdAt": "2026-08-16T03:41:00.000Z",
             "updatedAt": "2026-08-16T03:45:00.000Z"
           }
         }
       },
       "errors": [
-        { "status": 404, "when": "id 不存在", "body": { "error": "Agent not found: <id>" } },
-        { "status": 400, "when": "缺 name 或 prompt", "body": { "error": "Missing required field: name | prompt" } },
-        { "status": 400, "when": "schema 違規（如 cooldownMinutes 非正整數）", "body": { "error": "Agent \"cooldownMinutes\" must be a positive integer" } }
+        {
+          "status": 404,
+          "when": "id 不存在",
+          "body": {
+            "error": "Agent not found: <id>"
+          }
+        },
+        {
+          "status": 400,
+          "when": "缺 name 或 prompt",
+          "body": {
+            "error": "Missing required field: name | prompt"
+          }
+        },
+        {
+          "status": 400,
+          "when": "schema 違規（如 cooldownMinutes 非正整數）",
+          "body": {
+            "error": "Agent \"cooldownMinutes\" must be a positive integer"
+          }
+        }
       ]
     },
     {
       "method": "DELETE",
       "endpoint": "/api/agents/{id}",
-      "description": "刪除 agent。",
-      "request": { "headers": {} },
+      "description": "需 X-API-Token header（TASK-015）。刪除 agent。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
       "response": {
         "status": 200,
-        "body": { "success": true, "id": "3f1c2a4e-5b6d-4a7e-8f90-1a2b3c4d5e6f" }
+        "body": {
+          "success": true,
+          "id": "3f1c2a4e-5b6d-4a7e-8f90-1a2b3c4d5e6f"
+        }
       },
       "errors": [
-        { "status": 404, "when": "id 不存在", "body": { "error": "Agent not found: <id>" } },
-        { "status": 400, "when": "id 無效", "body": { "error": "Invalid agent id: ..." } }
+        {
+          "status": 404,
+          "when": "id 不存在",
+          "body": {
+            "error": "Agent not found: <id>"
+          }
+        },
+        {
+          "status": 400,
+          "when": "id 無效",
+          "body": {
+            "error": "Invalid agent id: ..."
+          }
+        }
       ]
     },
     {
       "method": "GET",
       "endpoint": "/api/tasks",
-      "description": "（DEPRECATED — 改用 /api/agents）舊 task 列表，過渡期並存。",
-      "request": { "headers": {} },
+      "description": "需 X-API-Token header（TASK-015）。（DEPRECATED — 改用 /api/agents）舊 task 列表，過渡期並存。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
       "response": {
         "status": 200,
-        "body": { "tasks": [], "deprecated": true }
+        "body": {
+          "tasks": [],
+          "deprecated": true
+        }
       }
     },
     {
       "method": "POST",
       "endpoint": "/api/tasks",
-      "description": "（DEPRECATED — 改用 POST /api/agents）舊 task 建立。",
+      "description": "需 X-API-Token header（TASK-015）。（DEPRECATED — 改用 POST /api/agents）舊 task 建立。",
       "request": {
-        "headers": { "Content-Type": "application/json" },
-        "body": { "name": "legacy task" }
+        "headers": {
+          "Content-Type": "application/json",
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        },
+        "body": {
+          "name": "legacy task"
+        }
       },
       "response": {
         "status": 201,
-        "body": { "task": { "id": "…", "name": "legacy task", "createdAt": "…", "updatedAt": "…" }, "deprecated": true }
+        "body": {
+          "task": {
+            "id": "…",
+            "name": "legacy task",
+            "createdAt": "…",
+            "updatedAt": "…"
+          },
+          "deprecated": true
+        }
       }
     }
   ]

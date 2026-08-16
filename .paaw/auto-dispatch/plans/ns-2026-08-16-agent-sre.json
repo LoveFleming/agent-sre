@@ -46,26 +46,26 @@
       "sourceRef": null,
       "title": "實作 TASK-002：/api/agents CRUD endpoints（effort: M）。在 server/routes.mjs 新增：GET /api/agents（列表）、POST /api/agents（建立，server 端產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。資料層使用已完成的 server/agent-store.mjs（commit f3e68fc），schema 為 { id, name, description, context, agentRules, prompt, allowedTools[], schedule（cron 或 null）, notifyTarget, cooldownMinutes, enabled }。錯誤處理沿用 routes.mjs 現有慣例：400（缺必填欄位 name、prompt）、404（id 不存在）、500，error body { \"error\": ... }。在 server/routes.test.mjs 補 CRUD 的 200/400/404 測試案例。完整規格見 .paaw/tasks/TASKS.json 的 TASK-002。完成後 commit。",
       "assignee": "developer",
-      "status": "running",
+      "status": "done",
       "priority": "high",
       "subtasks": [
         {
           "subtaskId": "ST-002.01",
           "title": "實作 TASK-002：/api/agents CRUD endpoints（effort: M）。在 server/routes.mjs 新增：GET /api/agents（列表）、POST /api/agents（建立，server 端產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。資料層使用已完成的 server/agent-store.mjs（commit f3e68fc），schema 為 { id, name, description, context, agentRules, prompt, allowedTools[], schedule（cron 或 null）, notifyTarget, cooldownMinutes, enabled }。錯誤處理沿用 routes.mjs 現有慣例：400（缺必填欄位 name、prompt）、404（id 不存在）、500，error body { \"error\": ... }。在 server/routes.test.mjs 補 CRUD 的 200/400/404 測試案例。完整規格見 .paaw/tasks/TASKS.json 的 TASK-002。完成後 commit。",
           "assignee": "developer",
-          "status": "running",
+          "status": "done",
           "timeoutMs": 7200000,
           "startedAt": "2026-08-16T03:30:56.121Z",
-          "completedAt": null,
-          "durationMs": 0,
+          "completedAt": "2026-08-16T03:43:56.737Z",
+          "durationMs": 780616,
           "tokenUsage": {
-            "prompt": 0,
-            "completion": 0,
-            "total": 0
+            "prompt": 522714,
+            "completion": 6977,
+            "total": 529691
           },
-          "costUsd": 0,
+          "costUsd": 0.329,
           "model": "zai/glm-5.1",
-          "result": null,
+          "result": "success",
           "error": null
         }
       ]
@@ -77,16 +77,16 @@
       "sourceRef": null,
       "title": "實作 TASK-015：API auth X-API-Token（effort: S）。在 server/routes.mjs（或抽出 middleware）為所有 /api/* 動態 endpoints 加 X-API-Token request header 檢查：值從 env AGENT_SRE_API_TOKEN 讀取，用 crypto.timingSafeEqual 做常數時間比對（先比長度並處理長度不符），失敗回 401 { \"error\": \"unauthorized\" }。env 未設定 AGENT_SRE_API_TOKEN 時放行並 log 警告（dev 便利性）。靜態檔案與健康檢查 endpoint 不受影響。同步更新 server/routes.test.mjs：既有 /api 測試補上合法 token header，並新增 401（無 token / 錯 token）與無 env 放行的測試。完成後 commit。此 task 排在 TASK-002 之後執行，記得 /api/agents 測試也要帶 token。",
       "assignee": "developer",
-      "status": "pending",
+      "status": "running",
       "priority": "high",
       "subtasks": [
         {
           "subtaskId": "ST-003.01",
           "title": "實作 TASK-015：API auth X-API-Token（effort: S）。在 server/routes.mjs（或抽出 middleware）為所有 /api/* 動態 endpoints 加 X-API-Token request header 檢查：值從 env AGENT_SRE_API_TOKEN 讀取，用 crypto.timingSafeEqual 做常數時間比對（先比長度並處理長度不符），失敗回 401 { \"error\": \"unauthorized\" }。env 未設定 AGENT_SRE_API_TOKEN 時放行並 log 警告（dev 便利性）。靜態檔案與健康檢查 endpoint 不受影響。同步更新 server/routes.test.mjs：既有 /api 測試補上合法 token header，並新增 401（無 token / 錯 token）與無 env 放行的測試。完成後 commit。此 task 排在 TASK-002 之後執行，記得 /api/agents 測試也要帶 token。",
           "assignee": "developer",
-          "status": "pending",
+          "status": "running",
           "timeoutMs": 7200000,
-          "startedAt": null,
+          "startedAt": "2026-08-16T03:43:56.737Z",
           "completedAt": null,
           "durationMs": 0,
           "tokenUsage": {
@@ -95,7 +95,7 @@
             "total": 0
           },
           "costUsd": 0,
-          "model": null,
+          "model": "zai/glm-5.1",
           "result": null,
           "error": null
         }
@@ -260,12 +260,12 @@
   "summary": {
     "totalTasks": 8,
     "totalSubtasks": 8,
-    "completed": 1,
+    "completed": 2,
     "failed": 0,
     "timedOut": 0,
     "skipped": 0,
-    "totalTokens": 231611,
-    "totalCostUsd": 0.1446,
-    "totalDurationMs": 88098
+    "totalTokens": 761302,
+    "totalCostUsd": 0.4736,
+    "totalDurationMs": 868714
   }
 }

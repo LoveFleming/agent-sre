@@ -1224,7 +1224,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "in-progress",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -1235,11 +1235,17 @@
       "assignee": null,
       "description": "⚠️ 前置於 T8（datasource CRUD 管理 secrets）。最小可行方案：所有 /api/* 加 X-API-Token header 檢查（值從 env AGENT_SRE_API_TOKEN 讀），用 crypto.timingSafeEqual 常數時間比對，失敗回 401 { error }。UI 端把 token 存 localStorage 並在 fetch wrapper 統一帶上（ui/src 內集中一個 api client 模組）。未設 env 時 server 啟動 log 明確警告（本地開發模式）。優先序理由：T8 起 API 具備讀寫 secret 能力，任何非 localhost 暴露都必須先有 auth。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "實作完成（server 端）：checkApiToken gate 在 registerRoutes handler 最前面，safeTokenEqual 用 crypto.timingSafeEqual（先比長度）；/api/health 與靜態檔案豁免；env 未設放行 + 啟動警告（index.mjs）+ 每進程一次的 runtime 警告；CORS Access-Control-Allow-Headers 加入 X-API-Token。測試：routes.test.mjs 全 suite 在 AGENT_SRE_API_TOKEN 開啟下跑（既有測試自動帶正確 token），新增 401（無 token/長度不符/同長度不符）、dev-mode 放行、health/static 豁免案例。API samples 已同步標註 header。UI 端 localStorage + fetch wrapper 未包含在此 commit（task spec 的 UI 部分另行處理）。",
+          "at": "2026-08-16T03:54:22.476Z",
+          "by": "agent"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.057Z",
-      "updatedAt": "2026-08-15T13:05:41.057Z",
+      "updatedAt": "2026-08-16T03:54:22.476Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -1249,7 +1255,14 @@
           "at": "2026-08-15T13:05:41.057Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T03:54:20.330Z",
+          "result": {
+            "passed": true,
+            "tests": "routes.test.mjs 41→50 cases；全套 250/250 綠",
+            "notes": "auth gate 加在 registerRoutes handler 開頭；豁免 /api/health 與靜態檔案；CORS allow-list 加 X-API-Token；index.mjs 啟動時印 dev-mode 警告"
+          }
         },
         "review": {
           "status": "pending"
