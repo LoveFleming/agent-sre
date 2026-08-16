@@ -11,7 +11,8 @@
     "ui:build": "cd ui && npx vite build",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "mock:grafana": "node dev/mocks/grafana-mock.mjs"
   },
   "engines": {
     "node": ">=20"
