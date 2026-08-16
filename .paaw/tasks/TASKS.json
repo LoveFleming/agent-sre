@@ -615,7 +615,7 @@
       "type": "refactor",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "resolved",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -626,11 +626,17 @@
       "assignee": null,
       "description": "依 ADR-004 拆 tools/tchat/handler.mjs：(1) 工具層 tchat_send_message({ targetType: \"user\"|\"channel\", targetId, text }) 保持 LLM 介面不變，負責驗證與錯誤格式化；(2) 新增 tools/tchat/client.mjs transport 層實作契約 v0：POST {api_url}/api/messages，body { targetType, targetId, text }，200 { ok: true, messageId } / 4xx-5xx { ok: false, error }。config.json 支援 api_url 欄位。tchat_read_history 與 tchat_next_unread 標記 deprecated（schema description 加註，功能保留但契約未定），本期不納入契約。契約文件寫 specs/tchat-contract.md（含進公司 swap 清單：僅換 client.mjs + config）。重構 handler 現有測試並補 client 層測試（可用 mock server 或 fetch stub）。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "平反：developer agent 16:30 已 commit 81fbe64 但未回寫 task（舊碼 server 無 _syncTaskAfterDispatch 保底）",
+          "at": "2026-08-16T10:13:52.697Z",
+          "by": "migration"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.047Z",
-      "updatedAt": "2026-08-16T08:28:12.873Z",
+      "updatedAt": "2026-08-16T10:13:52.697Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -640,10 +646,16 @@
           "at": "2026-08-15T13:05:41.047Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T10:13:52.697Z",
+          "note": "git 81fbe64 存在，補記"
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "migration",
+          "at": "2026-08-16T10:13:52.697Z",
+          "note": "git 證據 81fbe64 (tchat transport + contract v0, 329/329 tests)"
         }
       },
       "loopModeOverride": null,
@@ -670,7 +682,7 @@
         "baseCommit": null,
         "branch": null,
         "staged": false,
-        "committedSha": null
+        "committedSha": "81fbe64"
       },
       "testResult": null,
       "qaResult": null,
@@ -1361,6 +1373,6 @@
       "pipelineMode": "short"
     }
   ],
-  "updatedAt": "2026-08-16T07:57:54.546Z",
+  "updatedAt": "2026-08-16T10:13:52.697Z",
   "loopMode": "mini"
 }
