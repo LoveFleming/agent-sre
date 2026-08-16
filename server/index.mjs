@@ -24,7 +24,8 @@ import { createServer } from "http";
 import { PORT } from "./config.mjs";
 import { loadAllTools } from "./tool-loader.mjs";
 import { loadAllCrews } from "./crew-loader.mjs";
-import { registerRoutes } from "./routes.mjs";
+import { registerRoutes, setSchedulerNotifier } from "./routes.mjs";
+import { startScheduler, rescheduleAgent } from "./scheduler.mjs";
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -54,6 +55,13 @@ async function main() {
   for (const t of tools) {
     console.log(`  🔧 ${t}`);
   }
+
+  // ── Start the agent scheduler (TASK-005) ──
+  // API mutations (created/updated/deleted) flow back through the routes
+  // notifier hook so cron jobs reschedule without a restart. The scheduler
+  // deliberately does not import routes.mjs (cycle); we connect them here.
+  setSchedulerNotifier(({ type, agent }) => rescheduleAgent(type, agent));
+  startScheduler();
 
   // ── Start HTTP server ──
   const server = createServer();
