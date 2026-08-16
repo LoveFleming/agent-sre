@@ -1,23 +1,31 @@
 {
-  "createdAt": "2026-08-16T03:43:49.236Z",
+  "createdAt": "2026-08-16T03:54:56.161Z",
   "agent": "developer",
-  "task": "實作 TASK-002：/api/agents CRUD endpoints（GET 列表、POST 建立、PUT 更新、DELETE 刪除），資料層用 server/agent-store.mjs，錯誤處理沿用 400/404/500 慣例，補 routes.test.mjs 測試，完成後 commit",
+  "task": "實作 TASK-015：API auth X-API-Token（effort: S）。在 server/routes.mjs 為所有 /api/* 動態 endpoints 加 X-API-Token request header 檢查：值從 env AGENT_SRE_API_TOKEN 讀取，用 crypto.timingSafeEqual 做常數時間比對（先比長度並處理長度不符），失敗回 401 { \"error\": \"unauthorized\" }。env 未設定時放行並 log 警告。靜態檔案與健康檢查 endpoint 不受影響。同步更新 server/routes.test.mjs。完成後 commit。",
   "taskId": "",
-  "summary": "TASK-002 完成，已 commit 為 26c8cb7（feat）+ aa558e7 / aa3fb2b（chore .paaw）三個 commit。\n\nserver/routes.mjs：\n- GET /api/agents → { agents: [...] }（listAgents()，按 createdAt 排序）\n- POST /api/agents → 201 { agent }（saveAgent 產 UUID；缺 name/prompt 回 400；schema 違規回 400）\n- GET /api/agents/:id → 200 { agent } / 404 / 400（traversal id）\n- PUT /api/agents/:id → 200 { agent }（partial patch 語意；缺 name/prompt 回 400；不存在 id 回 404）\n- DELETE /api/agents/:id → 200 { success: true } / 404 / 400\n- setSchedulerNotifier(fn) hook：created/updated/deleted 三種事件通知 scheduler 重排；notifier throw 不影響 HTTP 回應（TASK-002 規格要求的 call-site 預埋）\n- /api/tasks 全部 endpoints 回應加 \"deprecated\": true（過渡期並存）\n\nserver/routes.test.mjs：新增 26 個測試案例，涵蓋 CRUD round-trip、400（缺 name/prompt、body 非物件、invalid id）、404（不存在 id）、scheduler hook 觸發與錯誤隔離、/api/tasks deprecated 標記。SRE_AGENTS_DIR 指向 temp dir，agents/ 正式目錄零污染。\n\n全套測試 8 檔 241/241 綠（原 214 + 新增）。.paaw/api-samples.json 補齊 /api/agents 四個 endpoints 的 samples 供 Tester/QA 使用。",
+  "summary": "TASK-015 API auth X-API-Token：所有 /api/* 動態 endpoints（/api/health 與靜態檔案除外）要求 X-API-Token header，值從 env AGENT_SRE_API_TOKEN 讀取，crypto.timingSafeEqual 常數時間比對（先比長度處理不符）。失敗回 401 { \"error\": \"unauthorized\" }。env 未設定時放行（dev 便利性），server 啟動時 log 醒目警告 + 每進程一次 runtime 警告。CORS Access-Control-Allow-Headers 加入 X-API-Token 供瀏覽器 UI 使用。routes.test.mjs：既有 /api 測試改為在 token 開啟下執行（httpJson 自動帶正確 header），新增 401（無 token / 長度不符 / 同長度錯值）、無 env 放行（dev mode）、health 與靜態檔案豁免案例。測試 41→50 案例，全套 250/250 綠。已 commit 060f0b2。",
   "files": [
     {
       "path": "server/routes.mjs",
-      "reason": "新增 /api/agents CRUD 四個 endpoints + setSchedulerNotifier hook + /api/tasks deprecated 標記"
+      "reason": "新增 safeTokenEqual（crypto.timingSafeEqual + 長度先比）與 checkApiToken gate，掛在 request handler 最前面；CORS allow-list 加入 X-API-Token"
     },
     {
       "path": "server/routes.test.mjs",
-      "reason": "新增 26 個測試案例（CRUD round-trip、400/404、traversal id、scheduler hook、deprecated 標記）"
+      "reason": "整個 suite 在 AGENT_SRE_API_TOKEN 開啟下執行（既有測試自動帶正確 token），新增 401（無/錯長度/同長度錯值）、dev-mode 放行、health/static 豁免案例（41→50）"
+    },
+    {
+      "path": "server/index.mjs",
+      "reason": "啟動時 AGENT_SRE_API_TOKEN 未設 → log 醒目 dev mode 警告"
     },
     {
       "path": ".paaw/api-samples.json",
-      "reason": "新增 /api/agents 四個 endpoints 的 API Tester samples"
+      "reason": "每個 sample 補上 X-API-Token request header 與 401 contract 說明"
+    },
+    {
+      "path": ".paaw/CHANGELOG.md / TASKS.json / sessions 等",
+      "reason": "changelog 條目與 task 狀態同步"
     }
   ],
-  "howToTest": "1. `npm test` → 8 檔 241/241 全綠（routes.test.mjs 41/41）\n2. `git log --oneline -4` → 看到 26c8cb7 feat(routes)、aa558e7 / aa3fb2b chore(.paaw)\n3. `ls agents/` → 只有 README.md，無測試污染\n4. 手動驗證：`npm start` 後 curl http://localhost:3000/api/agents → 200 { agents: [] }；POST 建立後 GET 列表可見；POST 缺 name → 400 { error: \"Missing required field: name\" }；PUT /api/agents/<不存在的 id> → 404\n5. 預期結果：所有 acceptance criteria 達成（列表完整、缺 name/prompt 回 400、不存在 id 回 404、/api/tasks 帶 deprecated:true、測試全綠）",
-  "risk": "/api/tasks 舊 UI（TaskManagementPage.tsx）仍在用舊 endpoints，回應多了 deprecated 欄位但 schema 不變，前端不受影響。setSchedulerNotifier 是預留介面，scheduler 模組（後續 task）實作時需註冊 callback。"
+  "howToTest": "1. 跑測試：`npx vitest run` → 預期 250/250 全綠，其中 routes.test.mjs 有 9 個新 X-API-Token 案例（401 x4、dev-mode x2、豁免 x3）\n2. 設定 token 重啟 server：`AGENT_SRE_API_TOKEN=secret123 node server/index.mjs`，然後 `curl -i http://localhost:PORT/api/agents` → 預期 401 {\"error\":\"unauthorized\"}；`curl -i -H \"X-API-Token: secret123\" http://localhost:PORT/api/agents` → 預期 200；`curl -i http://localhost:PORT/api/health` → 預期 200（不需要 token）\n3. 不設 token 啟動：`node server/index.mjs` → 預期啟動 log 出現 ⚠️ permissive dev mode 警告，且 API 不帶 token 也能用（本地開發模式）",
+  "risk": "所有 /api/* 現在預設要求 token：任何外部呼叫方（curl 腳本、瀏覽器 UI 的 fetch、其他服務整合）若 AGENT_SRE_API_TOKEN 有設定但沒帶 header 會收到 401。UI 端 fetch wrapper 尚未加上 token 支援（task spec 的 UI 部分），已透過 CORS allow-list 預留，屆時 localStorage + fetch wrapper 集中處理即可。"
 }
