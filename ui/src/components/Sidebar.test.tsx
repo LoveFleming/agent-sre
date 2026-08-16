@@ -10,7 +10,6 @@ const ITEMS: NavItem[] = [
   { id: "home", label: "首頁", icon: "🏠" },
   { id: "agents", label: "Agents", icon: "👥" },
   { id: "tools", label: "Tools", icon: "🔧" },
-  { id: "tasks", label: "Tasks", icon: "📋" },
   { id: "monitor", label: "Monitor", icon: "📊" },
   { id: "console", label: "Console", icon: "💬" },
   { id: "config", label: "Config", icon: "⚙️", badge: "soon" },

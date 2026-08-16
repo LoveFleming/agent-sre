@@ -8,7 +8,6 @@ export type ViewId =
   | "home"
   | "agents"
   | "tools"
-  | "tasks"
   | "monitor"
   | "console"
   | "config";
@@ -68,7 +67,7 @@ export interface HealthInfo {
   tools?: string[];
 }
 
-// ── Task management ──
+// ── Agent management (supersedes Task — /api/agents, TASK-003) ──
 
 export interface AgentRules {
   guardrails: string[];
@@ -76,35 +75,90 @@ export interface AgentRules {
   refuseTopics: string[];
 }
 
-export interface Task {
+/** Where a scheduled agent's report gets delivered (tchat user or channel). */
+export interface NotifyTarget {
+  targetType: "user" | "channel";
+  targetId: string;
+}
+
+/** A persisted agent — mirrors server/agent-store.mjs `Agent` schema. */
+export interface Agent {
   id: string;
   name: string;
   description: string;
-  tools: string[];
-  agentRules: AgentRules;
   context: string;
   prompt: string;
+  agentRules: AgentRules;
+  allowedTools: string[];
+  /** 5-field cron expression (`min hour dom mon dow`) or null = manual only. */
+  schedule: string | null;
+  notifyTarget: NotifyTarget;
+  /** Minimum minutes between scheduled runs. */
+  cooldownMinutes: number;
+  enabled: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-/** Factory for a blank task draft (used by the "New Task" button). */
-export function emptyTaskDraft(): Task {
+/** Factory for a blank agent draft (used by the "New Agent" button). */
+export function emptyAgentDraft(): Agent {
   return {
     id: "",
     name: "",
     description: "",
-    tools: [],
+    context: "",
+    prompt: "",
     agentRules: {
       guardrails: [],
       redirectRules: [],
       refuseTopics: [],
     },
-    context: "",
-    prompt: "",
+    allowedTools: [],
+    schedule: null,
+    notifyTarget: { targetType: "user", targetId: "" },
+    cooldownMinutes: 30,
+    enabled: true,
     createdAt: "",
     updatedAt: "",
   };
+}
+
+/**
+ * Validate a 5-field numeric cron expression client-side (mirrors
+ * server/agent-store.mjs `isValidCron` so obvious typos are caught
+ * before the round-trip; the server re-validates authoritatively).
+ * Supports `*`, ranges (`1-5`), steps (`0/15`, `1-30/2`), lists (`1,15,30`).
+ */
+const CRON_FIELD_BOUNDS: Array<[number, number]> = [
+  [0, 59], // minute
+  [0, 23], // hour
+  [1, 31], // day of month
+  [1, 12], // month
+  [0, 7], // day of week (0 and 7 = Sunday)
+];
+
+function isValidCronPart(part: string, [min, max]: [number, number]): boolean {
+  const m = part.match(/^(\*|\d{1,2})(?:-(\d{1,2}))?(?:\/(\d{1,3}))?$/);
+  if (!m) return false;
+  const [, startRaw, endRaw, stepRaw] = m;
+  if (stepRaw !== undefined && parseInt(stepRaw, 10) < 1) return false;
+  if (startRaw === "*") return endRaw === undefined; // `*-5` is not valid cron
+  const start = parseInt(startRaw, 10);
+  if (start < min || start > max) return false;
+  if (endRaw !== undefined) {
+    const end = parseInt(endRaw, 10);
+    if (end < start || end > max) return false;
+  }
+  return true;
+}
+
+export function isValidCron(expr: string): boolean {
+  const fields = expr.trim().split(/\s+/);
+  if (fields.length !== 5) return false;
+  return fields.every((field, i) => {
+    if (field === "") return false;
+    return field.split(",").every((part) => isValidCronPart(part, CRON_FIELD_BOUNDS[i]));
+  });
 }
 
 /** Convert a string array to a newline-separated textarea value. */
