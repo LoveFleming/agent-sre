@@ -1,8 +1,8 @@
 {
   "_meta": {
     "crewId": "coding.em",
-    "lastUpdated": "2026-08-16T03:29:30.066Z",
-    "messageCount": 12
+    "lastUpdated": "2026-08-16T03:30:58.356Z",
+    "messageCount": 13
   },
   "messages": [
     {
@@ -125,8 +125,13 @@
     },
     {
       "role": "assistant",
-      "content": "### ⏳ 💻 developer 執行中...\n\n工作區清理與未提交變更 commit（effort: S）：目前有未提交的 server/conversation.mjs、server/routes.mjs、server/tool-loader.mjs 修改，加上 6 個 untracked 測試檔（server/config.test.mjs, conversation.test.mjs, llm.test.mjs, routes.test.mjs, task-store.test.mjs, tool-registry.test.mjs）。先跑 npm test 確認全套綠燈，然後：(1) 將 server 程式碼修改 + 對應測試檔整理成一個 commit；(2) .paaw/ 中繼資料變更另開一個 chore(.paaw) commit；(3) 刪除根目錄垃圾檔 nul（Windows shell 重定向產物）並加入 .gitignore。注意 server/agent-store.mjs 相關已完成並提交於 f3e68fc，不要重複。只 commit 不 push（9de054a 亦待人工 push）。\n\n`[1/8]`",
-      "ts": "2026-08-16T03:29:28.042Z",
+      "content": "### ✅ 💻 developer 完成\n\n清理完成。\n\n**執行結果：**\n\n| 步驟 | 結果 |\n|---|---|\n| `npm test` | ✅ 8 檔 214/214 全綠 |\n| Commit 1 | `c7e19b4` `fix(server): harden path traversal guards and add unit tests`（3 程式碼 + 6 測試檔） |\n| Commit 2 | `a4a3517` ",
+      "ts": "2026-08-16T03:30:56.121Z"
+    },
+    {
+      "role": "assistant",
+      "content": "### ⏳ 💻 developer 執行中...\n\n實作 TASK-002：/api/agents CRUD endpoints（effort: M）。在 server/routes.mjs 新增：GET /api/agents（列表）、POST /api/agents（建立，server 端產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。資料層使用已完成的 server/agent-store.mjs（commit f3e68fc），schema 為 { id, name, description, context, agentRules, prompt, allowedTools[], schedule（cron 或 null）, notifyTarget, cooldownMinutes, enabled }。錯誤處理沿用 routes.mjs 現有慣例：400（缺必填欄位 name、prompt）、404（id 不存在）、500，error body { \"error\": ... }。在 server/routes.test.mjs 補 CRUD 的 200/400/404 測試案例。完整規格見 .paaw/tasks/TASKS.json 的 TASK-002。完成後 commit。\n\n`[2/8]`",
+      "ts": "2026-08-16T03:30:56.121Z",
       "_emProgress": true
     }
   ]

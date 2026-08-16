@@ -8,6 +8,7 @@ import { toolRegistry } from "./tool-registry.mjs";
 import { safeResolve } from "./tool-loader.mjs";
 import { loadConversation, saveConversation, archiveConversation, listArchives, loadArchive } from "./conversation.mjs";
 import { taskStore } from "./task-store.mjs";
+import { listAgents, getAgent, saveAgent, deleteAgent } from "./agent-store.mjs";
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -17,6 +18,33 @@ const __dirname = dirname(__filename);
 const ROOT = resolve(__dirname, "..");
 const UI_DIR = resolve(ROOT, "ui-dist");
 const MIME = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml" };
+
+/**
+ * Scheduler reschedule hook (ADR-003 / TASK-002 call-site placeholder).
+ * The scheduler module does not exist yet; when it does, it registers a
+ * callback here via setSchedulerNotifier() and gets told about every agent
+ * create/update/delete so it can re-evaluate cron jobs.
+ * @type {((event: {type: "created"|"updated"|"deleted", agent: object}) => void) | null}
+ */
+let schedulerNotifier = null;
+
+/**
+ * Register the scheduler callback. Call with null to unregister.
+ * @param {((event: {type: "created"|"updated"|"deleted", agent: object}) => void) | null} fn
+ */
+export function setSchedulerNotifier(fn) {
+  schedulerNotifier = typeof fn === "function" ? fn : null;
+}
+
+/** Fire the scheduler hook; never lets a scheduler error fail the HTTP request. */
+function notifyScheduler(type, agent) {
+  if (!schedulerNotifier) return;
+  try {
+    schedulerNotifier({ type, agent });
+  } catch (err) {
+    console.error(`[route] scheduler notifier failed for ${type} ${agent?.id}: ${err.message}`);
+  }
+}
 
 /** Read request body as JSON */
 function readBody(req) {
@@ -75,19 +103,19 @@ export function registerRoutes(server) {
         return json(res, 200, { tools });
       }
 
-      // ── GET /api/tasks — list all tasks ──
+      // ── GET /api/tasks — list all tasks (deprecated → /api/agents) ──
       if (path === "/api/tasks" && method === "GET") {
-        return json(res, 200, { tasks: taskStore.list() });
+        return json(res, 200, { tasks: taskStore.list(), deprecated: true });
       }
 
-      // ── POST /api/tasks — create a new task ──
+      // ── POST /api/tasks — create a new task (deprecated → POST /api/agents) ──
       if (path === "/api/tasks" && method === "POST") {
         const body = await readBody(req);
         if (!body.name) {
           return json(res, 400, { error: "Missing required field: name" });
         }
         const task = taskStore.create(body);
-        return json(res, 201, { task });
+        return json(res, 201, { task, deprecated: true });
       }
 
       // ── Task by-id routes: GET / PUT / DELETE ──
@@ -99,7 +127,7 @@ export function registerRoutes(server) {
         if (method === "GET") {
           const task = taskStore.get(id);
           if (!task) return json(res, 404, { error: `Task not found: ${id}` });
-          return json(res, 200, { task });
+          return json(res, 200, { task, deprecated: true });
         }
 
         // PUT /api/tasks/:id — update a task
@@ -111,13 +139,90 @@ export function registerRoutes(server) {
             return json(res, 400, { error: "Request body must be a JSON object" });
           }
           const updated = taskStore.update(id, body);
-          return json(res, 200, { task: updated });
+          return json(res, 200, { task: updated, deprecated: true });
         }
 
         // DELETE /api/tasks/:id — delete a task
         if (method === "DELETE") {
           const deleted = taskStore.delete(id);
           if (!deleted) return json(res, 404, { error: `Task not found: ${id}` });
+          return json(res, 200, { success: true, id, deprecated: true });
+        }
+      }
+
+      // ── GET /api/agents — list all agents ──
+      if (path === "/api/agents" && method === "GET") {
+        return json(res, 200, { agents: listAgents() });
+      }
+
+      // ── POST /api/agents — create an agent (id generated server-side) ──
+      if (path === "/api/agents" && method === "POST") {
+        const body = await readBody(req);
+        if (!body || typeof body !== "object" || Array.isArray(body)) {
+          return json(res, 400, { error: "Request body must be a JSON object" });
+        }
+        if (!body.name) return json(res, 400, { error: "Missing required field: name" });
+        if (!body.prompt) return json(res, 400, { error: "Missing required field: prompt" });
+        try {
+          const agent = saveAgent(body);
+          notifyScheduler("created", agent);
+          return json(res, 201, { agent });
+        } catch (err) {
+          return json(res, 400, { error: err.message });
+        }
+      }
+
+      // ── Agent by-id routes: GET / PUT / DELETE ──
+      const agentMatch = path.match(/^\/api\/agents\/([^/]+)$/);
+      if (agentMatch) {
+        const id = decodeURIComponent(agentMatch[1]);
+
+        // GET /api/agents/:id — retrieve a single agent
+        if (method === "GET") {
+          let agent = null;
+          try {
+            agent = getAgent(id);
+          } catch (err) {
+            // invalid/traversal id — store contract says these throw
+            return json(res, 400, { error: err.message });
+          }
+          if (!agent) return json(res, 404, { error: `Agent not found: ${id}` });
+          return json(res, 200, { agent });
+        }
+
+        // PUT /api/agents/:id — update an agent
+        if (method === "PUT") {
+          const body = await readBody(req);
+          if (!body || typeof body !== "object" || Array.isArray(body)) {
+            return json(res, 400, { error: "Request body must be a JSON object" });
+          }
+          if (!body.name) return json(res, 400, { error: "Missing required field: name" });
+          if (!body.prompt) return json(res, 400, { error: "Missing required field: prompt" });
+          try {
+            const agent = saveAgent({ ...body, id });
+            notifyScheduler("updated", agent);
+            return json(res, 200, { agent });
+          } catch (err) {
+            // Store throws "Agent not found: <id>" for missing ids (404 flavor),
+            // everything else is a schema violation (400).
+            if (err.message && err.message.startsWith("Agent not found")) {
+              return json(res, 404, { error: err.message });
+            }
+            return json(res, 400, { error: err.message });
+          }
+        }
+
+        // DELETE /api/agents/:id — delete an agent
+        if (method === "DELETE") {
+          let deleted = false;
+          try {
+            deleted = deleteAgent(id);
+          } catch (err) {
+            // invalid/traversal id
+            return json(res, 400, { error: err.message });
+          }
+          if (!deleted) return json(res, 404, { error: `Agent not found: ${id}` });
+          notifyScheduler("deleted", { id });
           return json(res, 200, { success: true, id });
         }
       }

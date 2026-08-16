@@ -15,26 +15,26 @@
       "sourceRef": null,
       "title": "工作區清理與未提交變更 commit（effort: S）：目前有未提交的 server/conversation.mjs、server/routes.mjs、server/tool-loader.mjs 修改，加上 6 個 untracked 測試檔（server/config.test.mjs, conversation.test.mjs, llm.test.mjs, routes.test.mjs, task-store.test.mjs, tool-registry.test.mjs）。先跑 npm test 確認全套綠燈，然後：(1) 將 server 程式碼修改 + 對應測試檔整理成一個 commit；(2) .paaw/ 中繼資料變更另開一個 chore(.paaw) commit；(3) 刪除根目錄垃圾檔 nul（Windows shell 重定向產物）並加入 .gitignore。注意 server/agent-store.mjs 相關已完成並提交於 f3e68fc，不要重複。只 commit 不 push（9de054a 亦待人工 push）。",
       "assignee": "developer",
-      "status": "running",
+      "status": "done",
       "priority": "medium",
       "subtasks": [
         {
           "subtaskId": "ST-001.01",
           "title": "工作區清理與未提交變更 commit（effort: S）：目前有未提交的 server/conversation.mjs、server/routes.mjs、server/tool-loader.mjs 修改，加上 6 個 untracked 測試檔（server/config.test.mjs, conversation.test.mjs, llm.test.mjs, routes.test.mjs, task-store.test.mjs, tool-registry.test.mjs）。先跑 npm test 確認全套綠燈，然後：(1) 將 server 程式碼修改 + 對應測試檔整理成一個 commit；(2) .paaw/ 中繼資料變更另開一個 chore(.paaw) commit；(3) 刪除根目錄垃圾檔 nul（Windows shell 重定向產物）並加入 .gitignore。注意 server/agent-store.mjs 相關已完成並提交於 f3e68fc，不要重複。只 commit 不 push（9de054a 亦待人工 push）。",
           "assignee": "developer",
-          "status": "running",
+          "status": "done",
           "timeoutMs": 7200000,
           "startedAt": "2026-08-16T03:29:28.022Z",
-          "completedAt": null,
-          "durationMs": 0,
+          "completedAt": "2026-08-16T03:30:56.120Z",
+          "durationMs": 88098,
           "tokenUsage": {
-            "prompt": 0,
-            "completion": 0,
-            "total": 0
+            "prompt": 228090,
+            "completion": 3521,
+            "total": 231611
           },
-          "costUsd": 0,
+          "costUsd": 0.1446,
           "model": "zai/glm-5.1",
-          "result": null,
+          "result": "success",
           "error": null
         }
       ]
@@ -46,16 +46,16 @@
       "sourceRef": null,
       "title": "實作 TASK-002：/api/agents CRUD endpoints（effort: M）。在 server/routes.mjs 新增：GET /api/agents（列表）、POST /api/agents（建立，server 端產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。資料層使用已完成的 server/agent-store.mjs（commit f3e68fc），schema 為 { id, name, description, context, agentRules, prompt, allowedTools[], schedule（cron 或 null）, notifyTarget, cooldownMinutes, enabled }。錯誤處理沿用 routes.mjs 現有慣例：400（缺必填欄位 name、prompt）、404（id 不存在）、500，error body { \"error\": ... }。在 server/routes.test.mjs 補 CRUD 的 200/400/404 測試案例。完整規格見 .paaw/tasks/TASKS.json 的 TASK-002。完成後 commit。",
       "assignee": "developer",
-      "status": "pending",
+      "status": "running",
       "priority": "high",
       "subtasks": [
         {
           "subtaskId": "ST-002.01",
           "title": "實作 TASK-002：/api/agents CRUD endpoints（effort: M）。在 server/routes.mjs 新增：GET /api/agents（列表）、POST /api/agents（建立，server 端產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。資料層使用已完成的 server/agent-store.mjs（commit f3e68fc），schema 為 { id, name, description, context, agentRules, prompt, allowedTools[], schedule（cron 或 null）, notifyTarget, cooldownMinutes, enabled }。錯誤處理沿用 routes.mjs 現有慣例：400（缺必填欄位 name、prompt）、404（id 不存在）、500，error body { \"error\": ... }。在 server/routes.test.mjs 補 CRUD 的 200/400/404 測試案例。完整規格見 .paaw/tasks/TASKS.json 的 TASK-002。完成後 commit。",
           "assignee": "developer",
-          "status": "pending",
+          "status": "running",
           "timeoutMs": 7200000,
-          "startedAt": null,
+          "startedAt": "2026-08-16T03:30:56.121Z",
           "completedAt": null,
           "durationMs": 0,
           "tokenUsage": {
@@ -64,7 +64,7 @@
             "total": 0
           },
           "costUsd": 0,
-          "model": null,
+          "model": "zai/glm-5.1",
           "result": null,
           "error": null
         }
@@ -260,12 +260,12 @@
   "summary": {
     "totalTasks": 8,
     "totalSubtasks": 8,
-    "completed": 0,
+    "completed": 1,
     "failed": 0,
     "timedOut": 0,
     "skipped": 0,
-    "totalTokens": 0,
-    "totalCostUsd": 0,
-    "totalDurationMs": 0
+    "totalTokens": 231611,
+    "totalCostUsd": 0.1446,
+    "totalDurationMs": 88098
   }
 }

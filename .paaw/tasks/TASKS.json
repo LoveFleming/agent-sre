@@ -115,7 +115,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "in-progress",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -130,7 +130,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.041Z",
-      "updatedAt": "2026-08-15T13:05:41.041Z",
+      "updatedAt": "2026-08-16T03:41:59.977Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -140,7 +140,9 @@
           "at": "2026-08-15T13:05:41.041Z"
         },
         "implement": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T03:41:59.977Z"
         },
         "review": {
           "status": "pending"
