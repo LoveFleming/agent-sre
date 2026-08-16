@@ -6,3 +6,4 @@ dist/
 *.log
 nul
 runs/
+dev/mocks/tchat-sent.jsonl

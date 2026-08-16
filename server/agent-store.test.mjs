@@ -95,7 +95,17 @@ describe("agent-store — 2. defaults", () => {
     expect(a.allowedTools).toEqual([]);
     expect(a.schedule).toBeNull();
     expect(a.cooldownMinutes).toBe(30);
+    expect(a.notifyPolicy).toBe("always");
     expect(a.enabled).toBe(true);
+  });
+
+  it("persists a valid notifyPolicy (TASK-010)", () => {
+    const a = saveAgent(baseInput({ notifyPolicy: "on-signal" }));
+    expect(a.notifyPolicy).toBe("on-signal");
+    expect(getAgent(a.id).notifyPolicy).toBe("on-signal");
+    // update path preserves it too
+    const updated = saveAgent({ id: a.id, name: "renamed" });
+    expect(updated.notifyPolicy).toBe("on-signal");
   });
 
   it("normalizes partial agentRules without dropping stored keys on update", () => {
@@ -108,6 +118,11 @@ describe("agent-store — 2. defaults", () => {
 });
 
 describe("agent-store — 3. schema validation throws", () => {
+  it("notifyPolicy: non-enum value is rejected (TASK-010)", () => {
+    expect(() => saveAgent(baseInput({ notifyPolicy: "sometimes" }))).toThrow(/notifyPolicy/);
+    expect(() => saveAgent(baseInput({ notifyPolicy: 1 }))).toThrow(/notifyPolicy/);
+  });
+
   it("name: empty / whitespace / non-string / >100 chars", () => {
     expect(() => saveAgent(baseInput({ name: "" }))).toThrow(/name/);
     expect(() => saveAgent(baseInput({ name: "   " }))).toThrow(/name/);
@@ -117,8 +132,7 @@ describe("agent-store — 3. schema validation throws", () => {
   });
 
   it("notifyTarget: missing / bad targetType / empty targetId", () => {
-    expect(() => saveAgent({ name: "X" })).toThrow(/notifyTarget/);
-    expect(() => saveAgent(baseInput({ notifyTarget: { targetType: "group", targetId: "1" } }))).toThrow(/targetType/);
+    expect(() => saveAgent({ name: "X" })).toThrow(/notifyTarget/);    expect(() => saveAgent(baseInput({ notifyTarget: { targetType: "group", targetId: "1" } }))).toThrow(/targetType/);
     expect(() => saveAgent(baseInput({ notifyTarget: { targetType: "user", targetId: "" } }))).toThrow(/targetId/);
     expect(() => saveAgent(baseInput({ notifyTarget: { targetType: "user" } }))).toThrow(/targetId/);
   });

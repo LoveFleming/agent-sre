@@ -91,6 +91,7 @@ beforeEach(() => {
   resetDir(TMP_AGENTS);
   resetDir(TMP_RUNS);
   runAgentLoop.mockReset();
+  tchatMock.mockClear();
   runAgentLoop.mockImplementation(async () => ({ content: "ok", history: [] }));
 });
 
@@ -268,6 +269,63 @@ describe("scheduler — executeScheduledRun", () => {
   it("an unknown agent id throws before any run is created", async () => {
     await expect(scheduler.executeScheduledRun("ghost")).rejects.toThrow(/not found/i);
     expect(allRuns()).toHaveLength(0);
+  });
+});
+
+describe("scheduler — notifyPolicy (TASK-010)", () => {
+  it("on-signal: run where the agent already called tchat_send_message counts as notified (no duplicate push)", async () => {
+    const a = seedAgent({ notifyPolicy: "on-signal" });
+    runAgentLoop.mockImplementationOnce(async (opts) => {
+      // simulate the LLM notifying mid-run: onToolCall fires as agent-loop does
+      opts.onToolCall?.({ name: "tchat_send_message", args: "{}", result: "sent" });
+      return { content: "firing alerts notified", history: [] };
+    });
+
+    const out = await scheduler.executeScheduledRun(a.id);
+
+    expect(out.run.status).toBe("success");
+    expect(out.run.notified).toBe(true); // the human was told — by the agent
+    expect(out.run.notifyError).toBeNull(); // skip is not an error
+    expect(tchatMock).not.toHaveBeenCalled(); // scheduler never duplicated it
+  });
+
+  it("on-signal: healthy run without a tool notify stays quiet (watchdog acceptance)", async () => {
+    const a = seedAgent({ notifyPolicy: "on-signal" });
+    runAgentLoop.mockImplementationOnce(async () => ({ content: "巡檢正常", history: [] }));
+
+    const out = await scheduler.executeScheduledRun(a.id);
+
+    expect(out.run.status).toBe("success");
+    expect(out.run.notified).toBe(false);
+    expect(out.run.notifyError).toBeNull();
+    expect(tchatMock).not.toHaveBeenCalled();
+  });
+
+  it("on-fail: successful run skips notify, failed run still notifies", async () => {
+    const a = seedAgent({ notifyPolicy: "on-fail" });
+    runAgentLoop.mockImplementationOnce(async () => ({ content: "ok", history: [] }));
+
+    const okOut = await scheduler.executeScheduledRun(a.id);
+    expect(okOut.run.notified).toBe(false);
+    expect(okOut.run.notifyError).toBeNull();
+    expect(tchatMock).not.toHaveBeenCalled();
+
+    runAgentLoop.mockImplementationOnce(async () => { throw new Error("LLM 500"); });
+    tchatMock.mockResolvedValueOnce({ ok: true, messageId: "m_err" });
+
+    const failOut = await scheduler.executeScheduledRun(a.id);
+    expect(failOut.run.status).toBe("failed");
+    expect(failOut.run.notified).toBe(true); // failure notify bypasses policy
+  });
+
+  it("always (default): every successful run notifies — legacy behavior preserved", async () => {
+    const a = seedAgent(); // no notifyPolicy → "always"
+    runAgentLoop.mockImplementationOnce(async () => ({ content: "ok", history: [] }));
+    tchatMock.mockResolvedValueOnce({ ok: true, messageId: "m_1" });
+
+    const out = await scheduler.executeScheduledRun(a.id);
+    expect(out.run.notified).toBe(true);
+    expect(a.notifyPolicy).toBe("always");
   });
 });
 

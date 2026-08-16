@@ -47,6 +47,7 @@ import { toolRegistry } from "./tool-registry.mjs";
  * @property {Object} notifyTarget                  - Where results are sent
  * @property {"user"|"channel"} notifyTarget.targetType
  * @property {string} notifyTarget.targetId         - Non-empty string
+ * @property {"always"|"on-fail"|"on-signal"} notifyPolicy - Scheduler notify policy, defaults "always"
  * @property {number} cooldownMinutes               - Positive integer, defaults 30
  * @property {boolean} enabled                      - Defaults true
  * @property {string} createdAt                     - ISO timestamp, store-owned
@@ -55,6 +56,8 @@ import { toolRegistry } from "./tool-registry.mjs";
 
 const NAME_MAX_LENGTH = 100;
 const DEFAULT_COOLDOWN_MINUTES = 30;
+/** Valid notifyPolicy values — when the scheduler pushes run summaries (TASK-010). */
+const NOTIFY_POLICIES = ["always", "on-fail", "on-signal"];
 
 /** Whitelist for agent ids used as filenames (first layer of traversal defense). */
 const FILENAME_SAFE_RE = /^[a-zA-Z0-9_-]+$/;
@@ -207,6 +210,16 @@ function normalizeAgent(raw) {
     throw new Error(`Agent "cooldownMinutes" must be a positive integer (got ${JSON.stringify(raw.cooldownMinutes)})`);
   }
 
+  // notifyPolicy: when the scheduler pushes a run summary to tchat
+  // (TASK-010). "always" is the legacy default; "on-fail" / "on-signal"
+  // exist for agents like the watchdog that only speak up when relevant.
+  const notifyPolicy = raw.notifyPolicy ?? "always";
+  if (!NOTIFY_POLICIES.includes(notifyPolicy)) {
+    throw new Error(
+      `Agent "notifyPolicy" must be one of ${JSON.stringify(NOTIFY_POLICIES)} (got ${JSON.stringify(raw.notifyPolicy)})`
+    );
+  }
+
   const schedule = raw.schedule ?? null;
   if (schedule !== null && (typeof schedule !== "string" || !isValidCron(schedule))) {
     throw new Error('Agent "schedule" must be a valid 5-field cron expression or null');
@@ -241,6 +254,7 @@ function normalizeAgent(raw) {
     allowedTools,
     schedule,
     notifyTarget: { targetType: notifyTarget.targetType, targetId: notifyTarget.targetId },
+    notifyPolicy,
     cooldownMinutes,
     enabled,
   };

@@ -122,11 +122,57 @@ function buildTriggerMessage(agent, trigger = "scheduled") {
  * (sendTchatMessage) so the notify path is exercised by the same code the
  * LLM uses — mock server (TASK-009) and production client are swappable
  * behind client.mjs without touching this file.
- * @returns {Promise<{sent: boolean, error: string|null}>}
  */
-async function deliverNotification(agent, summary) {
-  const text = String(summary ?? "");
+/**
+ * Send one notification through the contract-v0 transport, honoring the
+ * agent's notify policy:
+ *   - "always"   (default) — every successful run notifies (legacy behavior)
+ *   - "on-fail"  — only failed runs notify (failure notify bypasses this)
+ *   - "on-signal"— no scheduler notify when the run already notified via
+ *                  tchat_send_message (the LLM judged the situation worth
+ *                  telling the human about). Quiet, healthy runs stay quiet.
+ *
+ * "on-signal" exists because agents like the watchdog patrol are expected
+ * to call tchat_send_message themselves when something is wrong; a second
+ * scheduler-pushed summary would duplicate the message.
+ *
+ * @param {object} agent - stored agent record
+ * @param {string} summary - text to deliver
+ * @param {{agentNotified?: boolean}} [opts] - true when a tchat_send_message
+ *   tool call already ran inside this run (on-signal dedupe)
+ * @returns {Promise<{sent: boolean, error: string|null, skippedByPolicy?: boolean}>}
+ */
+/**
+ * Send one notification through the contract-v0 transport, honoring the
+ * agent's notify policy (applies to SUCCESS-run summaries only — failure
+ * notifications always go through, a crashed run is exactly what a human
+ * must hear about):
+ *   - "always"   (default) — every successful run notifies (legacy behavior)
+ *   - "on-fail"  — successful runs stay quiet; failures still notify
+ *   - "on-signal"— the agent itself decides: it calls tchat_send_message
+ *                  when something is worth saying (firing alerts). The
+ *                  scheduler never pushes a success summary; healthy quiet
+ *                  runs stay quiet (TASK-010 watchdog acceptance).
+ *
+ * @param {object} agent - stored agent record
+ * @param {string} summary - text to deliver
+ * @param {{agentNotified?: boolean, isFailure?: boolean}} [opts]
+ *   agentNotified: true when a tchat_send_message tool call already ran
+ *   inside this run (reported back as notifiedByAgent so the run record
+ *   can say the human WAS told, by the agent itself).
+ *   isFailure: true for the failure path — bypasses all policies.
+ * @returns {Promise<{sent: boolean, error: string|null, skippedByPolicy?: boolean, notifiedByAgent?: boolean}>}
+ */
+async function deliverNotification(agent, summary, { agentNotified = false, isFailure = false } = {}) {
+  const policy = agent.notifyPolicy === "on-fail" || agent.notifyPolicy === "on-signal" ? agent.notifyPolicy : "always";
   const target = agent.notifyTarget || {};
+
+  if (!isFailure && policy !== "always") {
+    console.log(`[scheduler] notify skipped by policy (${policy}) agent=${agent.id}`);
+    return { sent: false, error: null, skippedByPolicy: true, ...(agentNotified ? { notifiedByAgent: true } : {}) };
+  }
+
+  const text = String(summary ?? "");
   console.log(
     `[scheduler] notify agent=${agent.id} ` +
     `→ ${target.targetType}:${target.targetId} ` +
@@ -223,7 +269,11 @@ export async function executeScheduledRun(agentId, { timeoutMs = resolveRunTimeo
   try {
     const crew = buildCrew(agent);
     const history = loadConversation(crew.id);
+    // on-signal notify dedupe: whether the LLM called tchat_send_message
+    // itself during this run (then the scheduler stays quiet — TASK-010).
+    let agentNotified = false;
     const onToolCall = ({ name, result }) => {
+      if (name === "tchat_send_message") agentNotified = true;
       // agent-loop fires onToolCall after each execute() and exposes no
       // per-call timing, so durationMs stays null (honest > wrong number).
       toolCalls.push({ name, durationMs: null });
@@ -250,13 +300,17 @@ export async function executeScheduledRun(agentId, { timeoutMs = resolveRunTimeo
     }
 
     saveConversation(crew.id, result.history);
-    const notify = await deliverNotification(agent, result.content);
+    const notify = await deliverNotification(agent, result.content, { agentNotified });
 
     return finish({
       status: "success",
       summary: result.content,
       toolCalls,
-      notified: notify.sent,
+      // skippedByPolicy (on-fail / on-signal quiet) is a deliberate
+      // "no message" outcome, not an error — leave notifyError null.
+      // When the agent already notified mid-run (on-signal), `notified`
+      // reports the human WAS told, by the agent's own tool call.
+      notified: notify.sent || notify.notifiedByAgent === true,
       ...(notify.sent ? {} : { notifyError: notify.error }),
     });
   } catch (err) {
@@ -265,7 +319,7 @@ export async function executeScheduledRun(agentId, { timeoutMs = resolveRunTimeo
     // about — best-effort notify through the contract-v0 transport.
     let failNotify = { sent: false, error: null };
     try {
-      failNotify = await deliverNotification(agent, `❌ 排程執行失敗: ${err.message}`);
+      failNotify = await deliverNotification(agent, `❌ 排程執行失敗: ${err.message}`, { isFailure: true });
     } catch (notifyErr) {
       // deliverNotification is designed never to throw, but guard anyway —
       // a notify failure must never mask the run's own error.
