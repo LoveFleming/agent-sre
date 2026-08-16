@@ -95,8 +95,17 @@ export function buildCrew(agent) {
   };
 }
 
-/** The user message a scheduled tick sends to the agent loop. */
-function buildTriggerMessage(agent) {
+/** The user message a scheduled tick sends to the agent loop.
+ *  trigger="manual" (TASK-006 /api/agents/:id/run) says a human asked for
+ *  this run; otherwise it reads as the cron tick it is. */
+function buildTriggerMessage(agent, trigger = "scheduled") {
+  if (trigger === "manual") {
+    return [
+      `[手動觸發] ${new Date().toISOString()}`,
+      "",
+      "有人透過 API 手動觸發本次執行。請依你的設定執行本次檢查，完成後回報發現與建議。",
+    ].join("\n");
+  }
   return [
     `[排程觸發] ${new Date().toISOString()}`,
     `排程: "${agent.schedule}"`,
@@ -125,21 +134,54 @@ async function deliverNotification(agent, summary) {
  * Execute one agent run end-to-end: store → crew → agent loop → run-store
  * → notify. A tick landing while the agent is already running is skipped.
  *
+ * TASK-006: when the caller passes a pre-created `run` (from beginRun()),
+ * the in-flight lock is already held and the skip check is bypassed —
+ * this is the manual-trigger path from POST /api/agents/:id/run. Without
+ * `run`, this behaves exactly like the cron tick it has always been.
+ *
  * @param {string} agentId
- * @param {{timeoutMs?: number}} [options]
+ * @param {{timeoutMs?: number, run?: object|null, trigger?: "scheduled"|"manual"}} [options]
  * @returns {Promise<{skipped?: boolean, reason?: string, run?: object}>}
  */
-export async function executeScheduledRun(agentId, { timeoutMs = resolveRunTimeoutMs() } = {}) {
-  const agent = getAgent(agentId);
-  if (!agent) throw new Error(`Agent not found: ${agentId}`);
-
-  if (inFlight.has(agentId)) {
-    console.warn(`[scheduler] agent "${agent.name}" (${agentId}) is still running — skipping this tick`);
-    return { skipped: true, reason: "already-running" };
+export async function executeScheduledRun(agentId, { timeoutMs = resolveRunTimeoutMs(), run = null, trigger = "scheduled" } = {}) {
+  let agent = null;
+  try {
+    agent = getAgent(agentId);
+  } catch (err) {
+    // Manual path: an id that passed beginRun() cannot become invalid, but
+    // if it somehow does, release the lock so the agent is not wedged.
+    if (run) {
+      inFlight.delete(agentId);
+      try {
+        return { run: finishRun(run.id, { status: "failed", error: err.message }) };
+      } catch {
+        return { run: null };
+      }
+    }
+    throw err;
   }
-  inFlight.add(agentId);
+  if (!agent) {
+    // Agent was deleted between beginRun() and now — settle the run instead
+    // of leaving it stuck in "running" forever.
+    if (run) {
+      inFlight.delete(agentId);
+      try {
+        return { run: finishRun(run.id, { status: "failed", error: `Agent not found: ${agentId}` }) };
+      } catch {
+        return { run: null };
+      }
+    }
+    throw new Error(`Agent not found: ${agentId}`);
+  }
 
-  const run = startRun(agentId);
+  if (!run) {
+    if (inFlight.has(agentId)) {
+      console.warn(`[scheduler] agent "${agent.name}" (${agentId}) is still running — skipping this tick`);
+      return { skipped: true, reason: "already-running" };
+    }
+    inFlight.add(agentId);
+    run = startRun(agentId);
+  }
   const toolCalls = [];
   let settled = false;
 
@@ -177,7 +219,7 @@ export async function executeScheduledRun(agentId, { timeoutMs = resolveRunTimeo
     let result;
     try {
       result = await Promise.race([
-        runAgentLoop({ crew, message: buildTriggerMessage(agent), history, onToolCall }),
+        runAgentLoop({ crew, message: buildTriggerMessage(agent, trigger), history, onToolCall }),
         timeoutPromise,
       ]);
     } finally {
@@ -317,4 +359,35 @@ export function activeCount() {
 /** Whether a scheduled run for this agent is currently in flight. */
 export function isRunning(agentId) {
   return inFlight.has(agentId);
+}
+
+/**
+ * Synchronous entry point for manual triggering (TASK-006,
+ * POST /api/agents/:id/run): validates the agent exists, refuses when a
+ * run is already in flight (single lock source of truth for both cron and
+ * manual paths), marks the in-flight lock, and creates the run record —
+ * all before the HTTP 202 goes out, so the route can hand the caller the
+ * runId immediately with no race window.
+ *
+ * The caller then passes the returned run to executeScheduledRun(agentId,
+ * { run }) which picks it up and always releases the lock in its finally.
+ *
+ * @param {string} agentId
+ * @returns {{status: "started", run: object} | {status: "not-found"} | {status: "conflict"}}
+ * @throws {Error} On invalid/traversal agentId (agent-store contract)
+ */
+export function beginRun(agentId) {
+  // getAgent throws for invalid ids (same 400-flavored contract the other
+  // agent routes rely on) and returns null for unknown ones.
+  const agent = getAgent(agentId);
+  if (!agent) return { status: "not-found" };
+  if (inFlight.has(agentId)) return { status: "conflict" };
+  inFlight.add(agentId);
+  try {
+    const run = startRun(agentId);
+    return { status: "started", run };
+  } catch (err) {
+    inFlight.delete(agentId);
+    throw err;
+  }
 }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-16T12:15:00+08:00",
+  "updatedAt": "2026-08-16T04:57:12.099Z",
   "note": "API Tester samples. Source of truth for request/response shapes — Tester (Divya) and QA (大安) derive E2E cases from these. TASK-002 added /api/agents CRUD. TASK-015: 所有 /api/* endpoint（/api/health 除外）都要求 X-API-Token header，值 = env AGENT_SRE_API_TOKEN；env 未設時 server 以 dev mode 放行。靜態檔案與 /api/health 不需要 token。 TASK-004 新增 /api/runs 查詢 endpoints（run 歷史記錄）。 TASK-004 補齊：fingerprint / notifyError 欄位、notified null 三態語意、GET /api/runs ?limit= 參數、每 agent 保留 200 筆的 retention 策略（SRE_RUNS_RETENTION 可覆寫）。",
   "endpoints": [
     {
@@ -377,6 +377,38 @@
         "status": 404,
         "body": {
           "error": "Run not found: <id>"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "endpoint": "/api/agents/{id}/run",
+      "description": "手動觸發 agent 立即執行一次（TASK-006）。以 scheduler 同款執行路徑（executeScheduledRun）跑，不經 cron、不受 enabled/schedule 限制。非同步執行、立即回 202 + runId；結果用 GET /api/runs/:id 輪詢。agent 不存在 → 404；該 agent 已有 run 進行中 → 409 agent is already running；無效 id（traversal 樣式）→ 400。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
+      "response": {
+        "status": 202,
+        "body": {
+          "runId": "20260816T045657-537-54f60533"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "endpoint": "/api/agents/{id}/run (conflict)",
+      "description": "agent 已有 run 進行中 → 409；agent 不存在 → 404。",
+      "request": {
+        "headers": {
+          "X-API-Token": "AGENT_SRE_API_TOKEN 的值"
+        }
+      },
+      "response": {
+        "status": 409,
+        "body": {
+          "error": "agent is already running"
         }
       }
     }

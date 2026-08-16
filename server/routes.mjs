@@ -10,6 +10,7 @@ import { loadConversation, saveConversation, archiveConversation, listArchives, 
 import { taskStore } from "./task-store.mjs";
 import { listAgents, getAgent, saveAgent, deleteAgent } from "./agent-store.mjs";
 import { listRuns, getRun } from "./run-store.mjs";
+import { beginRun, executeScheduledRun } from "./scheduler.mjs";
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -301,6 +302,35 @@ export function registerRoutes(server) {
           notifyScheduler("deleted", { id });
           return json(res, 200, { success: true, id });
         }
+      }
+
+      // ── POST /api/agents/:id/run — manual trigger (TASK-006) ──
+      // Runs the agent through the exact same execution path as a cron tick
+      // (executeScheduledRun), but immediately: no cron involved, and the
+      // agent's enabled/schedule settings do NOT gate it. Returns 202 with
+      // the runId right away; the run itself continues in the background
+      // and its result lands in GET /api/runs/:id.
+      const agentRunMatch = path.match(/^\/api\/agents\/([^/]+)\/run$/);
+      if (agentRunMatch && method === "POST") {
+        const id = decodeURIComponent(agentRunMatch[1]);
+        let outcome;
+        try {
+          outcome = beginRun(id);
+        } catch (err) {
+          // invalid/traversal id (agent-store throws) — same 400 as siblings
+          return json(res, 400, { error: err.message });
+        }
+        if (outcome.status === "not-found") return json(res, 404, { error: `Agent not found: ${id}` });
+        if (outcome.status === "conflict") {
+          return json(res, 409, { error: "agent is already running" });
+        }
+
+        // Fire-and-forget: executeScheduledRun owns the lock release (its
+        // finally always clears inFlight) and settles the run record itself.
+        executeScheduledRun(id, { run: outcome.run, trigger: "manual" }).catch(err => {
+          console.error(`[routes] manual run for agent ${id} crashed before settling: ${err.message}`);
+        });
+        return json(res, 202, { runId: outcome.run.id });
       }
 
       // ── GET /api/runs — list run summaries, ?agentId= filter + ?limit= (TASK-004) ──

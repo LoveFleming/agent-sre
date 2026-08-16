@@ -3,6 +3,8 @@
  *   1. Path traversal protection in static file serving (TASK-005/006/007).
  *   2. /api/agents CRUD endpoints + /api/tasks deprecation flags (TASK-002).
  *   3. X-API-Token auth on /api/* (TASK-015).
+ *   4. POST /api/agents/:id/run manual trigger (TASK-006) — 202/404/409/400,
+ *      enabled/schedule bypass, background run lands in run-store, auth gate.
  *
  * Covers:
  *   - Normal path `/` serves the UI (index.html) with HTTP 200.
@@ -27,11 +29,11 @@
  * must never be polluted by tests).
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, vi } from "vitest";
 import { createServer, request as httpRequest } from "http";
 import { resolve, dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { mkdtempSync, rmSync, readdirSync } from "fs";
+import { mkdtempSync, rmSync, readdirSync, readFileSync, mkdirSync } from "fs";
 import { tmpdir } from "os";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -492,6 +494,171 @@ describe("routes.mjs — /api/runs 查詢 (TASK-004)", () => {
     expect(res.status).toBe(401);
   });
 });
+
+// TASK-006: POST /api/agents/:id/run — manual trigger. The execution body
+// is the scheduler's executeScheduledRun() which talks to the real LLM;
+// here we stub the agent-loop module (same technique as scheduler.test.mjs)
+// so the route tests stay hermetic. Everything else — run record creation,
+// 202 shape, 404/409, enabled/schedule bypass — runs for real.
+//
+// NOTE: vi.mock("./agent-loop.mjs") at this file's top-level is hoisted and
+// applies to routes.mjs's imports too (it imports runAgentLoop directly),
+// so /api/chat-style LLM tests in this file would see the stub as well.
+// This suite has none, which is why the stub is safe to register here.
+vi.mock("./agent-loop.mjs", () => ({
+  runAgentLoop: vi.fn(async () => ({ content: "manual-ok", history: [] })),
+  runAgentLoopStream: vi.fn(async function* () {}),
+}));
+vi.mock("./conversation.mjs", () => ({
+  loadConversation: vi.fn(() => []),
+  saveConversation: vi.fn(() => {}),
+  archiveConversation: vi.fn(() => null),
+  listArchives: vi.fn(() => []),
+  loadArchive: vi.fn(() => null),
+}));
+const { runAgentLoop } = await import("./agent-loop.mjs");
+
+describe("routes.mjs — POST /api/agents/:id/run 手動觸發 (TASK-006)", () => {
+  beforeAll(async () => {
+    // Earlier describes rmSync'd these tmp dirs in their afterAll; the
+    // agent/run stores cache their paths at module load, so re-create the
+    // same directories instead of minting new ones.
+    mkdirSync(AGENTS_TMP, { recursive: true });
+    mkdirSync(RUNS_TMP, { recursive: true });
+    server = createServer();
+    registerRoutes(server);
+    await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  });
+
+  afterAll(() => {
+    if (server) server.close();
+    rmSync(AGENTS_TMP, { recursive: true, force: true });
+    rmSync(RUNS_TMP, { recursive: true, force: true });
+  });
+
+  beforeEach(() => {
+    for (const f of readdirSync(AGENTS_TMP)) rmSync(join(AGENTS_TMP, f), { force: true });
+    for (const entry of readdirSync(RUNS_TMP)) {
+      rmSync(join(RUNS_TMP, entry), { recursive: true, force: true });
+    }
+    vi.mocked(runAgentLoop).mockClear();
+    vi.mocked(runAgentLoop).mockImplementation(async () => ({ content: "manual-ok", history: [] }));
+  });
+
+  function validAgent(overrides = {}) {
+    return {
+      name: "Manual Trigger Bot",
+      prompt: "You are a manual trigger test agent.",
+      notifyTarget: { targetType: "user", targetId: "u-ops" },
+      ...overrides,
+    };
+  }
+
+  /** Create an agent via the API and return its id. */
+  async function createAgent(overrides = {}) {
+    const res = await httpJson("POST", "/api/agents", validAgent(overrides));
+    expect(res.status).toBe(201);
+    return res.body.agent.id;
+  }
+
+  /** Wait until the fire-and-forget background run settles. */
+  async function waitFor(predicate, { timeoutMs = 3000, stepMs = 10 } = {}) {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+      if (predicate()) return true;
+      await new Promise((r) => setTimeout(r, stepMs));
+    }
+    return predicate();
+  }
+
+  it("POST /api/agents/:id/run → 202 + { runId }，結果可從 GET /api/runs/:id 查到 (success)", async () => {
+    const id = await createAgent();
+    const res = await httpJson("POST", `/api/agents/${id}/run`);
+    expect(res.status).toBe(202);
+    expect(typeof res.body.runId).toBe("string");
+    expect(res.body.runId).toMatch(/^[0-9T-]+-[0-9a-f]+$/);
+
+    // Background run settles through the scheduler path into run-store
+    const settled = await waitFor(() => {
+      const r = getRunRaw(res.body.runId);
+      return r && r.status !== "running";
+    });
+    expect(settled).toBe(true);
+    const run = getRunRaw(res.body.runId);
+    expect(run.agentId).toBe(id);
+    expect(run.status).toBe("success");
+    expect(run.summary).toBe("manual-ok");
+
+    // Same execution path as a cron tick: runAgentLoop got called
+    expect(runAgentLoop).toHaveBeenCalledTimes(1);
+  });
+
+  it("enabled=false / schedule=null 的 agent 仍可手動觸發（不受排程限制）", async () => {
+    const id = await createAgent({ enabled: false, schedule: null });
+    const res = await httpJson("POST", `/api/agents/${id}/run`);
+    expect(res.status).toBe(202);
+    expect(res.body.runId).toBeTruthy();
+    const settled = await waitFor(() => {
+      const r = getRunRaw(res.body.runId);
+      return r && r.status !== "running";
+    });
+    expect(settled).toBe(true);
+    expect(getRunRaw(res.body.runId).status).toBe("success");
+  });
+
+  it("POST /api/agents/:id/run agent 不存在 → 404", async () => {
+    const res = await httpJson("POST", "/api/agents/00000000-0000-4000-8000-000000000000/run");
+    expect(res.status).toBe(404);
+    expect(res.body.error).toContain("Agent not found");
+  });
+
+  it("POST /api/agents/:id/run 無效 id（traversal 樣式）→ 400", async () => {
+    const res = await httpJson("POST", "/api/agents/..%2f..%2fetc%2fpasswd/run");
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("Invalid agent id");
+  });
+
+  it("agent 已有 run 進行中 → 409 { error: 'agent is already running' }", async () => {
+    const id = await createAgent();
+    // Hold the first run open: never-resolving loop keeps status running
+    vi.mocked(runAgentLoop).mockImplementationOnce(
+      () => new Promise(() => {}) // hangs until the test ends
+    );
+
+    const first = await httpJson("POST", `/api/agents/${id}/run`);
+    expect(first.status).toBe(202);
+
+    const second = await httpJson("POST", `/api/agents/${id}/run`);
+    expect(second.status).toBe(409);
+    expect(second.body.error).toBe("agent is already running");
+
+    // Different agent is NOT blocked by this agent's in-flight run
+    const other = await createAgent({ name: "Other Bot" });
+    const third = await httpJson("POST", `/api/agents/${other}/run`);
+    expect(third.status).toBe(202);
+  });
+
+  it("X-API-Token 缺失 → 401（manual run 也受 gate 保護）", async () => {
+    const id = await createAgent();
+    const res = await httpJson("POST", `/api/agents/${id}/run`, undefined, { token: null });
+    expect(res.status).toBe(401);
+  });
+
+  /** Read a run record straight from the runs dir (bypasses GET /api/runs). */
+  function getRunRaw(runId) {
+    let entries = [];
+    try { entries = readdirSync(RUNS_TMP, { withFileTypes: true }); } catch { return null; }
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      try {
+        const file = join(RUNS_TMP, entry.name, `${runId}.json`);
+        return JSON.parse(readFileSync(file, "utf-8"));
+      } catch { /* try next dir */ }
+    }
+    return null;
+  }
+});
+
 
 describe("routes.mjs — /api/tasks deprecated 標記 (TASK-002)", () => {
   beforeAll(async () => {

@@ -30,6 +30,39 @@
 ### added
 - TASK-004 run-store 補齊：fingerprint/notifyError 欄位、notified 三態（null=未觸發通知場景）、GET /api/runs ?limit= 參數（無效 → 400）、每 agent 保留 200 筆 retention（SRE_RUNS_RETENTION 可覆寫）。測試全套 283/283 綠。
 
+### changed
+- code changes (4 modified)
+
+### changed
+- +36 −46 lines across 3 files
+
+### changed
+- code changes (1 modified)
+
+### changed
+- +115 −76 lines across 10 files
+
+### changed
+- code changes (1 new file) (2 modified)
+
+### changed
+- +109 −86 lines across 7 files
+
+### changed
+- code changes (1 new file) (2 modified)
+
+### changed
+- +133 −80 lines across 7 files
+
+### changed
+- code changes (1 new file) (2 modified)
+
+### changed
+- +137 −80 lines across 7 files
+
+### added
+- feat(api): POST /api/agents/:id/run 手動觸發 agent 立即執行（TASK-006）— 202 + runId 非同步執行、404 agent 不存在、409 已有 run 進行中、400 無效 id；不受 enabled/schedule 限制，與 cron tick 共用 executeScheduledRun 執行路徑與 in-flight 鎖。scheduler 新增 beginRun() 同步入口供 route 在回應前鎖定。
+
 ## 2026-08-15
 ### changed
 - 實作 TASK-001：server/agent-store.mjs — file-based Agent Registry 持久化。

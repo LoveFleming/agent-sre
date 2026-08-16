@@ -294,7 +294,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "in-progress",
+      "status": "resolved",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -315,7 +315,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.043Z",
-      "updatedAt": "2026-08-16T04:16:18.540Z",
+      "updatedAt": "2026-08-16T04:31:43.526Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -346,7 +346,21 @@
           "status": "pending"
         },
         "commit": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T04:31:43.526Z",
+          "result": {
+            "commits": [
+              "9ce9281",
+              "424c430",
+              "b43f07f",
+              "bbdf738"
+            ],
+            "coverage": "run-store.test.mjs 26 cases + routes.test.mjs 8 cases",
+            "failed": 0,
+            "flakyFix": "bbdf738 deterministic sort tie-break",
+            "passed": 283
+          }
         }
       },
       "loopModeOverride": null,
@@ -392,7 +406,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "open",
+      "status": "in-progress",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -407,7 +421,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.044Z",
-      "updatedAt": "2026-08-15T13:05:41.044Z",
+      "updatedAt": "2026-08-16T04:40:48.086Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -423,7 +437,13 @@
           "status": "pending"
         },
         "test": {
-          "status": "pending"
+          "status": "done",
+          "by": "agent",
+          "at": "2026-08-16T04:40:48.086Z",
+          "result": {
+            "passed": true,
+            "tests": "13/13 scheduler.test.mjs, 296/296 full suite, boot smoke + E2E live-reschedule smoke"
+          }
         },
         "qa": {
           "status": "pending"
@@ -491,11 +511,17 @@
       "assignee": null,
       "description": "routes.mjs 加 POST /api/agents/:id/run：立即以 scheduler 同款的執行路徑跑一次（不經 cron 排程、不受 enabled 限制），回 202 + { runId }。供 UI「立即測試」按鈕與驗收 demo 使用。若該 agent 已有 run 進行中，回 409 { error: \"agent is already running\" }。",
       "relatedFiles": [],
-      "notes": [],
+      "notes": [
+        {
+          "text": "實作決策：(1) routes.mjs 不直接跑 LLM，改呼叫 scheduler 的 executeScheduledRun(id, { run, trigger: \"manual\" })，與 cron tick 共用同一執行路徑與 inFlight 鎖。(2) scheduler 新增 export beginRun(agentId) — 同步做 404/409 檢查 + startRun()，讓 route 在回 202 前就拿到 runId 並鎖定，無 race window；executeScheduledRun 接受預建 run（向後相容，cron 路徑不變）。(3) trigger=\"manual\" 會把給 LLM 的觸發訊息改成「手動觸發」版本（buildTriggerMessage 支援分支）。(4) agent 在 beginRun 與執行間被刪掉的 edge case：executeScheduledRun 會把 run settle 成 failed 而非永久卡 running。(5) 404/409/400 錯誤格式與既有 agents routes 對齊。測試以 vi.mock stub agent-loop/conversation（與 scheduler.test.mjs 同技巧）。全套 301/301 綠。",
+          "at": "2026-08-16T04:57:27.961Z",
+          "by": "agent"
+        }
+      ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.046Z",
-      "updatedAt": "2026-08-15T13:05:41.046Z",
+      "updatedAt": "2026-08-16T04:57:27.961Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
