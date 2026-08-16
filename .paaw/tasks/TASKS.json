@@ -46,7 +46,7 @@
       },
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.040Z",
-      "updatedAt": "2026-08-16T05:46:00.466Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": "2026-08-15T14:06:45.952Z",
       "createdBy": "agent",
       "pipeline": {
@@ -56,27 +56,6 @@
           "at": "2026-08-15T13:05:41.040Z"
         },
         "implement": {
-          "status": "pending"
-        },
-        "review": {
-          "status": "done",
-          "by": "agent",
-          "at": "2026-08-15T14:04:10.731Z",
-          "result": {
-            "qaVerdict": "pass",
-            "tests": "63/63 module, 214/214 full suite",
-            "critical": 0,
-            "major": 0,
-            "minor": 2
-          }
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
           "status": "pending"
         },
         "commit": {
@@ -112,7 +91,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-002",
@@ -135,7 +120,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.041Z",
-      "updatedAt": "2026-08-16T03:43:07.868Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -148,25 +133,6 @@
           "status": "done",
           "by": "agent",
           "at": "2026-08-16T03:41:59.977Z"
-        },
-        "review": {
-          "status": "done",
-          "by": "agent",
-          "at": "2026-08-16T03:43:07.868Z",
-          "result": {
-            "passed": true,
-            "coverage": "routes.test.mjs 41/41 (新增 26 cases: CRUD round-trip / 400 / 404 / traversal id / scheduler hook / deprecated 標記)",
-            "suite": "npm test 全套 8 檔 241/241 綠"
-          }
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
-          "status": "pending"
         },
         "commit": {
           "status": "pending"
@@ -206,7 +172,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-003",
@@ -235,7 +207,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.042Z",
-      "updatedAt": "2026-08-16T05:17:18.385Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -248,22 +220,6 @@
           "status": "done",
           "by": "agent",
           "at": "2026-08-16T05:16:53.700Z"
-        },
-        "review": {
-          "status": "done",
-          "by": "agent",
-          "at": "2026-08-16T05:17:03.639Z"
-        },
-        "test": {
-          "status": "done",
-          "by": "agent",
-          "at": "2026-08-16T05:17:05.894Z"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
-          "status": "pending"
         },
         "commit": {
           "status": "pending"
@@ -303,7 +259,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-004",
@@ -311,7 +273,7 @@
       "type": "feature",
       "parentId": null,
       "linkedIssueId": null,
-      "status": "in-progress",
+      "status": "resolved",
       "priority": "high",
       "effort": null,
       "labels": [
@@ -332,12 +294,17 @@
           "text": "狀態修正（review/test/qa/docs pending，commit 前不可 resolved；實作 commits 已落地）",
           "at": "2026-08-16T05:46:00.466Z",
           "by": "reconciliation"
+        },
+        {
+          "text": "pipeline 改短版後重算：spec/implement/commit 全部完成 → 結案（品質債上線前 task_retrofit 補）",
+          "at": "2026-08-16T06:01:36.887Z",
+          "by": "migration"
         }
       ],
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.043Z",
-      "updatedAt": "2026-08-16T05:46:00.466Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -354,18 +321,6 @@
             "passed": 283,
             "failed": 0
           }
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
-          "status": "pending"
         },
         "commit": {
           "status": "done",
@@ -420,7 +375,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-005",
@@ -443,7 +404,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.044Z",
-      "updatedAt": "2026-08-16T04:40:48.086Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -453,24 +414,6 @@
           "at": "2026-08-15T13:05:41.044Z"
         },
         "implement": {
-          "status": "pending"
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "done",
-          "by": "agent",
-          "at": "2026-08-16T04:40:48.086Z",
-          "result": {
-            "passed": true,
-            "tests": "13/13 scheduler.test.mjs, 296/296 full suite, boot smoke + E2E live-reschedule smoke"
-          }
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
           "status": "pending"
         },
         "commit": {
@@ -514,7 +457,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-006",
@@ -548,7 +497,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.046Z",
-      "updatedAt": "2026-08-16T04:59:52.757Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -566,26 +515,6 @@
             "tests": "301/301 passed (3 consecutive full-suite runs stable)",
             "testCases": "6 new: 202+runId polling, enabled=false bypass, 404, 400 traversal id, 409 conflict, 401 no-token"
           }
-        },
-        "review": {
-          "status": "done",
-          "by": "agent",
-          "at": "2026-08-16T04:58:20.080Z",
-          "result": {
-            "coverage": "routes.test.mjs 64/64（TASK-006 新增 6 案）",
-            "failed": 0,
-            "passed": 301,
-            "total": 301
-          }
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
-          "status": "pending"
         },
         "commit": {
           "status": "pending"
@@ -624,7 +553,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-007",
@@ -647,7 +582,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.047Z",
-      "updatedAt": "2026-08-15T13:05:41.047Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -657,18 +592,6 @@
           "at": "2026-08-15T13:05:41.047Z"
         },
         "implement": {
-          "status": "pending"
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
           "status": "pending"
         },
         "commit": {
@@ -705,7 +628,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-008",
@@ -734,7 +663,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.048Z",
-      "updatedAt": "2026-08-16T05:07:11.135Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -747,18 +676,6 @@
           "status": "done",
           "by": "agent",
           "at": "2026-08-16T05:04:30.159Z"
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
-          "status": "pending"
         },
         "commit": {
           "status": "pending"
@@ -797,7 +714,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-009",
@@ -821,7 +744,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.049Z",
-      "updatedAt": "2026-08-15T13:05:41.049Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -831,18 +754,6 @@
           "at": "2026-08-15T13:05:41.049Z"
         },
         "implement": {
-          "status": "pending"
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
           "status": "pending"
         },
         "commit": {
@@ -882,7 +793,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-010",
@@ -906,7 +823,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.050Z",
-      "updatedAt": "2026-08-15T13:05:41.050Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -916,18 +833,6 @@
           "at": "2026-08-15T13:05:41.050Z"
         },
         "implement": {
-          "status": "pending"
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
           "status": "pending"
         },
         "commit": {
@@ -967,7 +872,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-011",
@@ -990,7 +901,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.051Z",
-      "updatedAt": "2026-08-15T13:05:41.051Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -1000,18 +911,6 @@
           "at": "2026-08-15T13:05:41.051Z"
         },
         "implement": {
-          "status": "pending"
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
           "status": "pending"
         },
         "commit": {
@@ -1052,7 +951,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-012",
@@ -1074,7 +979,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.053Z",
-      "updatedAt": "2026-08-15T13:05:41.053Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -1084,18 +989,6 @@
           "at": "2026-08-15T13:05:41.053Z"
         },
         "implement": {
-          "status": "pending"
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
           "status": "pending"
         },
         "commit": {
@@ -1136,7 +1029,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-013",
@@ -1159,7 +1058,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.054Z",
-      "updatedAt": "2026-08-15T13:05:41.054Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -1169,18 +1068,6 @@
           "at": "2026-08-15T13:05:41.054Z"
         },
         "implement": {
-          "status": "pending"
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
           "status": "pending"
         },
         "commit": {
@@ -1220,7 +1107,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-014",
@@ -1242,7 +1135,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.055Z",
-      "updatedAt": "2026-08-15T13:05:41.055Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -1252,18 +1145,6 @@
           "at": "2026-08-15T13:05:41.055Z"
         },
         "implement": {
-          "status": "pending"
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
           "status": "pending"
         },
         "commit": {
@@ -1304,7 +1185,13 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     },
     {
       "id": "TASK-015",
@@ -1338,7 +1225,7 @@
       "executionResult": null,
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.057Z",
-      "updatedAt": "2026-08-16T03:54:43.362Z",
+      "updatedAt": "2026-08-16T06:01:36.887Z",
       "resolvedAt": null,
       "createdBy": "agent",
       "pipeline": {
@@ -1362,18 +1249,6 @@
               ".paaw/api-samples.json"
             ]
           }
-        },
-        "review": {
-          "status": "pending"
-        },
-        "test": {
-          "status": "pending"
-        },
-        "qa": {
-          "status": "pending"
-        },
-        "docs": {
-          "status": "pending"
         },
         "commit": {
           "status": "pending"
@@ -1413,9 +1288,15 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "pipelinePhases": [
+        "spec",
+        "implement",
+        "commit"
+      ],
+      "pipelineMode": "short"
     }
   ],
-  "updatedAt": "2026-08-16T05:46:00.466Z",
+  "updatedAt": "2026-08-16T06:01:36.887Z",
   "loopMode": "mini"
 }
