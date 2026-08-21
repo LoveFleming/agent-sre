@@ -14,6 +14,7 @@ import HomePage from "./pages/HomePage";
 import ConsolePage from "./pages/ConsolePage";
 import ToolsPage from "./pages/ToolsPage";
 import AgentsPage from "./pages/AgentsPage";
+import MonitorWorkspace from "./pages/MonitorWorkspace";
 import Placeholder from "./pages/Placeholder";
 import type { NavItem, ViewId } from "./types";
 
@@ -99,9 +100,7 @@ export default function App() {
         {view === "tools" && <ToolsPage />}
 
         {view === "agents" && <AgentsPage />}
-        {view === "monitor" && (
-          <Placeholder title="Monitor" phase="Phase 4 · SRE Dashboard integration" icon="📊" />
-        )}
+        {view === "monitor" && <MonitorWorkspace />}
         {view === "config" && (
           <Placeholder title="Config" phase="Phase 7 · Provider & Crew settings" icon="⚙️" />
         )}

@@ -12,6 +12,7 @@ import { listAgents, getAgent, saveAgent, deleteAgent } from "./agent-store.mjs"
 import { listRuns, getRun } from "./run-store.mjs";
 import { listDatasources, getDatasource, saveDatasource, deleteDatasource, TOKEN_MASK } from "./datasource-store.mjs";
 import { beginRun, executeScheduledRun } from "./scheduler.mjs";
+import { handleMonitorRoutes } from "./monitor-routes.mjs";
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -152,6 +153,12 @@ export function registerRoutes(server) {
     try {
       // ── API token auth (TASK-015) — gates every /api/* route below ──
       if (!checkApiToken(req, res)) return;
+
+      // ── SRE Agentic Monitoring (/api/monitors*) — handled before crew routes ──
+      if (path.startsWith("/api/monitor")) {
+        const handled = await handleMonitorRoutes(req, res, json);
+        if (handled) return;
+      }
 
       // ── GET /api/health ──
       if (path === "/api/health" && method === "GET") {

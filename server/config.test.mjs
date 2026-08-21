@@ -8,7 +8,12 @@
  */
 
 import { describe, it, expect, afterEach } from "vitest";
-import { config, resolveLLM, ROOT, PORT } from "./config.mjs";
+
+// Fixed fixture — the real config/providers.json is local runtime config
+// (untracked since it holds real API keys) and its contents vary per machine.
+process.env.SRE_PROVIDERS_PATH = new URL("./__fixtures__/providers.test.json", import.meta.url).pathname;
+
+const { config, resolveLLM, ROOT, PORT } = await import("./config.mjs");
 
 // Snapshot original env keys we may mutate, restore after each test.
 const ENV_KEYS = ["SRE_LLM_API_KEY", "OPENAI_API_KEY", "SRE_LLM_BASE_URL"];

@@ -3,21 +3,16 @@
   "defaultModel": "glm-5.1",
   "providers": {
     "zai": {
-      "name": "ZhipuAI",
+      "name": "Z.ai (GLM)",
       "baseURL": "https://open.bigmodel.cn/api/paas/v4",
       "apiKey": "YOUR_API_KEY",
-      "models": [
-        { "id": "glm-5.1", "name": "GLM-5.1" }
-      ]
+      "models": []
     },
     "openrouter": {
       "name": "OpenRouter",
       "baseURL": "https://openrouter.ai/api/v1",
       "apiKey": "YOUR_OPENROUTER_KEY",
-      "models": [
-        { "id": "z-ai/glm-5.1", "name": "GLM-5.1 (OR)" },
-        { "id": "deepseek/deepseek-v4-flash", "name": "DeepSeek V4 Flash" }
-      ]
+      "models": []
     }
   }
 }

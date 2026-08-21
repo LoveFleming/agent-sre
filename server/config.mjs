@@ -14,7 +14,11 @@ export const ROOT = resolve(__dirname, "..");
 
 /** Load provider config (LLM API keys, endpoints) */
 function loadProviderConfig() {
-  const configPath = resolve(ROOT, "config/providers.json");
+  // SRE_PROVIDERS_PATH lets tests (and multi-env deployments) point at a
+  // fixed fixture instead of the local runtime config/providers.json.
+  const configPath = process.env.SRE_PROVIDERS_PATH
+    ? resolve(process.env.SRE_PROVIDERS_PATH)
+    : resolve(ROOT, "config/providers.json");
   if (existsSync(configPath)) {
     try {
       return JSON.parse(readFileSync(configPath, "utf-8"));

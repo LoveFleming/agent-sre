@@ -11,3 +11,8 @@ dev/mocks/tchat-sent.jsonl
 # TASK-011: datasource store + tool configs hold plaintext tokens — never commit
 datasources/
 tools/*/config.json
+
+# LLM provider keys — never commit (example: providers.example.json)
+config/providers.json
+data/monitors/
+data/monitor-state/

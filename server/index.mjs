@@ -26,6 +26,7 @@ import { loadAllTools } from "./tool-loader.mjs";
 import { loadAllCrews } from "./crew-loader.mjs";
 import { registerRoutes, setSchedulerNotifier } from "./routes.mjs";
 import { startScheduler, rescheduleAgent } from "./scheduler.mjs";
+import { startMonitorScheduler } from "./monitor-scheduler.mjs";
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
@@ -62,6 +63,9 @@ async function main() {
   // deliberately does not import routes.mjs (cycle); we connect them here.
   setSchedulerNotifier(({ type, agent }) => rescheduleAgent(type, agent));
   startScheduler();
+
+  // ── Start the monitor scheduler (SRE Agentic Monitoring MVP) ──
+  startMonitorScheduler();
 
   // ── Start HTTP server ──
   const server = createServer();
