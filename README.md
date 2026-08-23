@@ -1,6 +1,7 @@
 # Agent SRE
 
 > Standalone AI SRE Agent Crew — Kubernetes, Prometheus, Loki operations.
+> **SRE Agentic Monitoring Workspace** — Connect an MCP → Create a Monitor → Persistent Agent Instance → Start monitoring.
 > Zero PAAW dependency. Runs on Node.js 20+.
 
 ## Quick Start
@@ -28,6 +29,13 @@ curl -X POST http://localhost:4200/api/chat \
 | GET | `/api/crews/:id` | Get crew detail |
 | GET | `/api/tools` | List registered tools |
 | POST | `/api/chat` | Chat with a crew member |
+| GET/POST | `/api/monitors` | List / create monitors (MonitorDefinition) |
+| GET/PUT/DELETE | `/api/monitors/:id` | Monitor detail / update / delete |
+| POST | `/api/monitors/:id/run` | Run Now (manual agent loop) |
+| GET/POST | `/api/monitors/:id/chat` | Agent-scoped chat history / send |
+| GET/PUT | `/api/monitors/:id/memory` | Memory viewer/editor (knowledge/incident) |
+| GET | `/api/monitors/:id/runs` | Execution history |
+| GET | `/api/monitor-meta` | Pickers (sources / flows / outputs) |
 | GET | `/api/conversations/:crewId` | Load conversation history |
 | POST | `/api/conversations/:crewId` | Save conversation |
 | DELETE | `/api/conversations/:crewId` | Clear conversation |

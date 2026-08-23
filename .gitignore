@@ -14,5 +14,4 @@ tools/*/config.json
 
 # LLM provider keys — never commit (example: providers.example.json)
 config/providers.json
-data/monitors/
-data/monitor-state/
+data/

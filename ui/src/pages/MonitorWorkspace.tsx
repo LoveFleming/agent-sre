@@ -212,7 +212,7 @@ export default function MonitorWorkspace() {
   }, [activeId, runBusy, showToast, loadMonitors]);
 
   const activeSummary = useMemo(() => monitors.find(m => m.id === activeId) || null, [monitors, activeId]);
-  const flowNodes = useMemo(() => meta?.flowTemplates.find(f => f.id === detail?.monitor.processFlow.templateId) ?? meta?.flowTemplates[0], [meta, detail]);
+  const flowNodes = useMemo(() => meta?.flowTemplates?.find(f => f.id === detail?.monitor.processFlow.templateId) ?? meta?.flowTemplates?.[0] ?? [], [meta, detail]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -509,7 +509,7 @@ function ModelSettingsModal({ meta, monitor, instance, onClose, onSaved, showToa
     }).catch(() => {});
   }, [section, monitor.id]);
 
-  const flow = meta.flowTemplates.find(f => f.id === draft.processFlow.templateId);
+  const flow = meta?.flowTemplates?.find(f => f.id === draft.processFlow.templateId) ?? null;
   const patch = (fn: (d: MonitorDef) => void) => setDraft(prev => { const next = JSON.parse(JSON.stringify(prev)); fn(next); return next; });
 
   const save = async () => {
