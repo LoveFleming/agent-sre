@@ -1,7 +1,7 @@
 {
   "name": "agent-sre",
   "version": "1.0.0",
-  "description": "AI SRE Agent Crew — standalone Kubernetes/Prometheus/Loki operations",
+  "description": "SRE Agentic Monitoring — persistent monitoring agents on MCP sources",
   "type": "module",
   "main": "server/index.mjs",
   "scripts": {
@@ -13,8 +13,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "mock:grafana": "node dev/mocks/grafana-mock.mjs",
-    "mock:tchat": "node dev/mocks/tchat-mock.mjs",
-    "e2e:watchdog": "node dev/e2e/watchdog-e2e.mjs"
+    "mock:tchat": "node dev/mocks/tchat-mock.mjs"
   },
   "engines": {
     "node": ">=20"

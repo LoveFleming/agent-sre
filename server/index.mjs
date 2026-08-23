@@ -1,70 +1,43 @@
 #!/usr/bin/env node
 
 /**
- * agent-sre — Standalone AI SRE Agent Server
+ * agent-sre — SRE Agentic Monitoring server
  *
  * Usage:
- *   node server/index.mjs              # start server
+ *   node server/index.mjs               # start server
  *   SRE_PORT=8080 node server/index.mjs # custom port
  *
- * API:
- *   GET  /api/health              — health check
- *   GET  /api/crews               — list SRE crew members
- *   GET  /api/crews/:id           — get crew detail
- *   GET  /api/tools               — list registered tools
- *   POST /api/chat                — chat with crew member
- *   GET  /api/conversations/:id   — load conversation
- *   POST /api/conversations/:id   — save conversation
- *   DELETE /api/conversations/:id — clear conversation
- *   POST /api/conversations/:id/archive — archive + new session
- *   GET  /api/conversations/:id/archives — list archived
+ * API (all behind X-API-Token except /api/health):
+ *   GET  /api/health                    — health check
+ *   GET  /api/monitors                  — list monitors + instance summary
+ *   POST /api/monitors                  — create monitor + agent instance
+ *   GET/PUT/DELETE /api/monitors/:id    — definition CRUD
+ *   POST /api/monitors/:id/run          — Run Now (manual agent loop)
+ *   GET/POST /api/monitors/:id/chat     — agent-scoped chat
+ *   GET/PUT /api/monitors/:id/memory    — memory viewer/editor
+ *   GET  /api/monitors/:id/runs         — execution history
+ *   GET  /api/monitor-meta              — pickers (flows/schedules/sources)
  */
 
 import { createServer } from "http";
 import { PORT } from "./config.mjs";
 import { loadAllTools } from "./tool-loader.mjs";
-import { loadAllCrews } from "./crew-loader.mjs";
-import { registerRoutes, setSchedulerNotifier } from "./routes.mjs";
-import { startScheduler, rescheduleAgent } from "./scheduler.mjs";
+import { registerRoutes } from "./routes.mjs";
 import { startMonitorScheduler } from "./monitor-scheduler.mjs";
-import { existsSync, readFileSync } from "fs";
-import { resolve, dirname, extname } from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const ROOT = resolve(__dirname, "..");
-
-const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml" 
-};
 
 async function main() {
   console.log("╔══════════════════════════════════════╗");
-  console.log("║     🤖 Agent SRE — Standalone        ║");
+  console.log("║  🤖 SRE Agentic Monitoring — Agent    ║");
   console.log("╚══════════════════════════════════════╝\n");
 
-  // ── Load crews ──
-  const crews = loadAllCrews();
-  console.log(`[crew] Loaded ${crews.length} crew members:`);
-  for (const c of crews) {
-    console.log(`  ${c.emoji || "👤"} ${c.codename || c.title} (${c.id})`);
-  }
-
-  // ── Load tool providers ──
+  // ── Load tool providers (source MCP handlers underneath) ──
   const tools = await loadAllTools();
-  console.log(`\n[tools] Loaded ${tools.length} built-in tools:`);
+  console.log(`[tools] Loaded ${tools.length} tools:`);
   for (const t of tools) {
     console.log(`  🔧 ${t}`);
   }
 
-  // ── Start the agent scheduler (TASK-005) ──
-  // API mutations (created/updated/deleted) flow back through the routes
-  // notifier hook so cron jobs reschedule without a restart. The scheduler
-  // deliberately does not import routes.mjs (cycle); we connect them here.
-  setSchedulerNotifier(({ type, agent }) => rescheduleAgent(type, agent));
-  startScheduler();
-
-  // ── Start the monitor scheduler (SRE Agentic Monitoring MVP) ──
+  // ── Start the monitor scheduler (persistent agent instances) ──
   startMonitorScheduler();
 
   // ── Start HTTP server ──
@@ -76,16 +49,15 @@ async function main() {
     console.warn(
       "\n⚠️  [auth] AGENT_SRE_API_TOKEN is not set — running in permissive dev mode.\n" +
       "   All /api/* endpoints (except /api/health) are UNPROTECTED.\n" +
-      "   Set this env var before exposing the server beyond localhost.\n"
+      "   Set this env var before exposing this server beyond localhost.\n"
     );
   }
 
   server.listen(PORT, () => {
     console.log(`\n✅ Agent SRE listening on http://localhost:${PORT}`);
-    console.log(`   Health:  GET  /api/health`);
-    console.log(`   Crews:   GET  /api/crews`);
-    console.log(`   Chat:    POST /api/chat`);
-    console.log(`   UI:      http://localhost:${PORT}/`);
+    console.log(`   Health:   GET  /api/health`);
+    console.log(`   Monitors: GET  /api/monitors`);
+    console.log(`   UI:       http://localhost:${PORT}/`);
   });
 
   // ── Graceful shutdown ──

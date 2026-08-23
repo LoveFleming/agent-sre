@@ -1,21 +1,11 @@
+/* Agent SRE — global reset. All workspace styles live in MonitorWorkspace.css */
+html, body, #root { height: 100%; margin: 0; }
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Noto Color Emoji", sans-serif;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #07111f;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* ── Design tokens (tPAAW accent palette) ── */
-:root {
-  --accent: #f97316;        /* orange-500 */
-  --accent-bg: #fff7ed;     /* orange-50  */
-  --accent-text: #9a3412;   /* orange-800 */
-  --accent-hover: #ea580c;  /* orange-600 */
-}
-
-/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+::-webkit-scrollbar-thumb { background: #223a55; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #2e4d70; }

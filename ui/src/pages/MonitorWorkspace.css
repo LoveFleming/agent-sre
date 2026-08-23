@@ -15,7 +15,7 @@
   --mw-yellow: #ffd36c;
   --mw-red: #ff758c;
   --mw-cyan: #66d9ff;
-  flex: 1;
+  height: 100vh;
   min-width: 0;
   display: grid;
   grid-template-columns: 292px 1fr;
