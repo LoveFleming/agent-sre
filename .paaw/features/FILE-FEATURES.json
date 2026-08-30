@@ -3,7 +3,7 @@
     "server/index.mjs": [
       {
         "id": "F-001",
-        "name": "HTTP Server Bootstrap",
+        "name": "Server Bootstrap & HTTP Entry",
         "tags": [
           "core",
           "server"
@@ -13,7 +13,7 @@
     "server/routes.mjs": [
       {
         "id": "F-002",
-        "name": "API Route Layer",
+        "name": "API Gateway & Route Registration",
         "tags": [
           "api",
           "core"
@@ -21,42 +21,65 @@
       },
       {
         "id": "F-003",
-        "name": "Agent Loop",
+        "name": "API Token Authentication",
         "tags": [
-          "ai",
-          "core"
-        ]
-      },
-      {
-        "id": "F-007",
-        "name": "Crew Loader",
-        "tags": [
-          "ai",
-          "orchestration"
+          "security",
+          "api"
         ]
       },
       {
         "id": "F-008",
-        "name": "Conversation Persistence & Archive",
+        "name": "Crew System",
         "tags": [
-          "data",
-          "persistence"
+          "ai",
+          "data"
         ]
       },
       {
         "id": "F-009",
-        "name": "Task Management",
+        "name": "Tool Registry & Loader",
         "tags": [
-          "data",
-          "api",
-          "ui"
+          "core",
+          "tools"
         ]
       },
       {
-        "id": "F-010",
-        "name": "Tool Registry & Tool API",
+        "id": "F-019",
+        "name": "Agent Management (Store & API)",
         "tags": [
-          "tooling",
+          "core",
+          "api"
+        ]
+      },
+      {
+        "id": "F-021",
+        "name": "Task Store & API",
+        "tags": [
+          "data",
+          "api"
+        ]
+      },
+      {
+        "id": "F-022",
+        "name": "Datasource Management",
+        "tags": [
+          "data",
+          "api"
+        ]
+      },
+      {
+        "id": "F-023",
+        "name": "Run History & Retention",
+        "tags": [
+          "data",
+          "api"
+        ]
+      },
+      {
+        "id": "F-024",
+        "name": "Chat API",
+        "tags": [
+          "ai",
           "api"
         ]
       }
@@ -64,26 +87,68 @@
     "server/routes.test.mjs": [
       {
         "id": "F-002",
-        "name": "API Route Layer",
+        "name": "API Gateway & Route Registration",
         "tags": [
           "api",
           "core"
         ]
-      }
-    ],
-    "server/agent-loop.mjs": [
+      },
       {
         "id": "F-003",
-        "name": "Agent Loop",
+        "name": "API Token Authentication",
+        "tags": [
+          "security",
+          "api"
+        ]
+      },
+      {
+        "id": "F-019",
+        "name": "Agent Management (Store & API)",
+        "tags": [
+          "core",
+          "api"
+        ]
+      },
+      {
+        "id": "F-023",
+        "name": "Run History & Retention",
+        "tags": [
+          "data",
+          "api"
+        ]
+      },
+      {
+        "id": "F-024",
+        "name": "Chat API",
         "tags": [
           "ai",
+          "api"
+        ]
+      }
+    ],
+    "server/config.mjs": [
+      {
+        "id": "F-004",
+        "name": "Configuration & LLM Provider Resolution",
+        "tags": [
+          "config",
+          "core"
+        ]
+      }
+    ],
+    "server/config.test.mjs": [
+      {
+        "id": "F-004",
+        "name": "Configuration & LLM Provider Resolution",
+        "tags": [
+          "config",
           "core"
         ]
       }
     ],
     "server/llm.mjs": [
       {
-        "id": "F-004",
+        "id": "F-005",
         "name": "LLM Client",
         "tags": [
           "ai",
@@ -93,7 +158,7 @@
     ],
     "server/llm.test.mjs": [
       {
-        "id": "F-004",
+        "id": "F-005",
         "name": "LLM Client",
         "tags": [
           "ai",
@@ -103,251 +168,478 @@
     ],
     "server/tool-engine/provider.mjs": [
       {
-        "id": "F-005",
-        "name": "LLM Provider Adapter",
+        "id": "F-006",
+        "name": "Tool Engine LLM Provider Adapter",
         "tags": [
           "ai",
-          "integration"
+          "adapter"
         ]
       }
     ],
-    "server/llm-utils.mjs": [
+    "server/agent-loop.mjs": [
       {
-        "id": "F-005",
-        "name": "LLM Provider Adapter",
+        "id": "F-007",
+        "name": "Agent Loop",
         "tags": [
           "ai",
-          "integration"
-        ]
-      }
-    ],
-    "server/config.mjs": [
-      {
-        "id": "F-006",
-        "name": "Configuration Management",
-        "tags": [
-          "config",
-          "core"
-        ]
-      }
-    ],
-    "server/config.test.mjs": [
-      {
-        "id": "F-006",
-        "name": "Configuration Management",
-        "tags": [
-          "config",
           "core"
         ]
       }
     ],
     "server/crew-loader.mjs": [
       {
-        "id": "F-007",
-        "name": "Crew Loader",
+        "id": "F-008",
+        "name": "Crew System",
         "tags": [
           "ai",
-          "orchestration"
-        ]
-      }
-    ],
-    "server/conversation.mjs": [
-      {
-        "id": "F-008",
-        "name": "Conversation Persistence & Archive",
-        "tags": [
-          "data",
-          "persistence"
-        ]
-      }
-    ],
-    "server/conversation.test.mjs": [
-      {
-        "id": "F-008",
-        "name": "Conversation Persistence & Archive",
-        "tags": [
-          "data",
-          "persistence"
-        ]
-      }
-    ],
-    "server/task-store.mjs": [
-      {
-        "id": "F-009",
-        "name": "Task Management",
-        "tags": [
-          "data",
-          "api",
-          "ui"
-        ]
-      }
-    ],
-    "ui/src/pages/TaskManagementPage.tsx": [
-      {
-        "id": "F-009",
-        "name": "Task Management",
-        "tags": [
-          "data",
-          "api",
-          "ui"
-        ]
-      }
-    ],
-    "server/task-store.test.mjs": [
-      {
-        "id": "F-009",
-        "name": "Task Management",
-        "tags": [
-          "data",
-          "api",
-          "ui"
+          "data"
         ]
       }
     ],
     "server/tool-registry.mjs": [
       {
-        "id": "F-010",
-        "name": "Tool Registry & Tool API",
+        "id": "F-009",
+        "name": "Tool Registry & Loader",
         "tags": [
-          "tooling",
-          "api"
-        ]
-      }
-    ],
-    "server/tool-registry.test.mjs": [
-      {
-        "id": "F-010",
-        "name": "Tool Registry & Tool API",
-        "tags": [
-          "tooling",
-          "api"
+          "core",
+          "tools"
         ]
       }
     ],
     "server/tool-loader.mjs": [
       {
-        "id": "F-011",
-        "name": "Tool Loader (Secure Dynamic Loading)",
+        "id": "F-009",
+        "name": "Tool Registry & Loader",
         "tags": [
-          "tooling",
-          "security"
+          "core",
+          "tools"
+        ]
+      }
+    ],
+    "server/tool-registry.test.mjs": [
+      {
+        "id": "F-009",
+        "name": "Tool Registry & Loader",
+        "tags": [
+          "core",
+          "tools"
         ]
       }
     ],
     "server/tool-loader.test.mjs": [
       {
-        "id": "F-011",
-        "name": "Tool Loader (Secure Dynamic Loading)",
+        "id": "F-009",
+        "name": "Tool Registry & Loader",
         "tags": [
-          "tooling",
-          "security"
+          "core",
+          "tools"
+        ]
+      }
+    ],
+    "tools/docs/handler.mjs": [
+      {
+        "id": "F-010",
+        "name": "Docs & Runbook Search Tool",
+        "tags": [
+          "tools",
+          "docs"
         ]
       }
     ],
     "tools/grafana/handler.mjs": [
       {
-        "id": "F-012",
+        "id": "F-011",
         "name": "Grafana Tool",
         "tags": [
-          "observability",
-          "tool"
-        ]
-      }
-    ],
-    "tools/prometheus/handler.mjs": [
-      {
-        "id": "F-013",
-        "name": "Prometheus Tool",
-        "tags": [
-          "observability",
-          "tool"
-        ]
-      }
-    ],
-    "tools/loki/handler.mjs": [
-      {
-        "id": "F-014",
-        "name": "Loki Log Query Tool",
-        "tags": [
-          "observability",
-          "tool"
+          "tools",
+          "observability"
         ]
       }
     ],
     "tools/k8s/handler.mjs": [
       {
-        "id": "F-015",
-        "name": "Kubernetes (kubectl) Tool",
+        "id": "F-012",
+        "name": "Kubernetes Tool",
         "tags": [
-          "infra",
-          "tool"
+          "tools",
+          "k8s"
+        ]
+      }
+    ],
+    "tools/loki/handler.mjs": [
+      {
+        "id": "F-013",
+        "name": "Loki Logs Tool",
+        "tags": [
+          "tools",
+          "observability"
+        ]
+      }
+    ],
+    "tools/prometheus/handler.mjs": [
+      {
+        "id": "F-014",
+        "name": "Prometheus Tool",
+        "tags": [
+          "tools",
+          "observability"
+        ]
+      }
+    ],
+    "tools/security/handler.mjs": [
+      {
+        "id": "F-015",
+        "name": "Security Audit Tool",
+        "tags": [
+          "tools",
+          "security"
         ]
       }
     ],
     "tools/shell/handler.mjs": [
       {
         "id": "F-016",
-        "name": "Shell Execution Tool",
+        "name": "Shell Tool",
         "tags": [
-          "tool",
-          "security"
+          "tools",
+          "exec"
         ]
       }
     ],
-    "tools/security/handler.mjs": [
+    "tools/tchat/client.mjs": [
       {
         "id": "F-017",
-        "name": "Security Scanning Tool",
+        "name": "TChat Messaging Tool",
         "tags": [
-          "security",
-          "tool"
-        ]
-      }
-    ],
-    "tools/docs/handler.mjs": [
-      {
-        "id": "F-018",
-        "name": "Docs & Runbook Search Tool",
-        "tags": [
-          "docs",
-          "tool"
+          "tools",
+          "messaging"
         ]
       }
     ],
     "tools/tchat/handler.mjs": [
       {
-        "id": "F-019",
-        "name": "tchat Messaging Tool",
+        "id": "F-017",
+        "name": "TChat Messaging Tool",
         "tags": [
-          "messaging",
-          "tool"
+          "tools",
+          "messaging"
         ]
       }
     ],
-    "ui/SREConsole.tsx": [
+    "tools/tchat/client.test.mjs": [
+      {
+        "id": "F-017",
+        "name": "TChat Messaging Tool",
+        "tags": [
+          "tools",
+          "messaging"
+        ]
+      }
+    ],
+    "tools/tchat/handler.test.mjs": [
+      {
+        "id": "F-017",
+        "name": "TChat Messaging Tool",
+        "tags": [
+          "tools",
+          "messaging"
+        ]
+      }
+    ],
+    "server/conversation.mjs": [
+      {
+        "id": "F-018",
+        "name": "Conversation Persistence",
+        "tags": [
+          "data"
+        ]
+      }
+    ],
+    "server/conversation.test.mjs": [
+      {
+        "id": "F-018",
+        "name": "Conversation Persistence",
+        "tags": [
+          "data"
+        ]
+      }
+    ],
+    "server/agent-store.mjs": [
+      {
+        "id": "F-019",
+        "name": "Agent Management (Store & API)",
+        "tags": [
+          "core",
+          "api"
+        ]
+      }
+    ],
+    "server/agent-store.test.mjs": [
+      {
+        "id": "F-019",
+        "name": "Agent Management (Store & API)",
+        "tags": [
+          "core",
+          "api"
+        ]
+      }
+    ],
+    "ui/src/pages/AgentsPage.test.tsx": [
+      {
+        "id": "F-019",
+        "name": "Agent Management (Store & API)",
+        "tags": [
+          "core",
+          "api"
+        ]
+      },
+      {
+        "id": "F-030",
+        "name": "Agents Page UI",
+        "tags": [
+          "ui"
+        ]
+      }
+    ],
+    "server/scheduler.mjs": [
       {
         "id": "F-020",
-        "name": "SRE Console (Legacy UI)",
+        "name": "Agent Cron Scheduler",
+        "tags": [
+          "core",
+          "scheduling"
+        ]
+      }
+    ],
+    "server/scheduler.test.mjs": [
+      {
+        "id": "F-020",
+        "name": "Agent Cron Scheduler",
+        "tags": [
+          "core",
+          "scheduling"
+        ]
+      }
+    ],
+    "server/task-store.mjs": [
+      {
+        "id": "F-021",
+        "name": "Task Store & API",
+        "tags": [
+          "data",
+          "api"
+        ]
+      }
+    ],
+    "server/task-store.test.mjs": [
+      {
+        "id": "F-021",
+        "name": "Task Store & API",
+        "tags": [
+          "data",
+          "api"
+        ]
+      }
+    ],
+    "server/datasource-store.mjs": [
+      {
+        "id": "F-022",
+        "name": "Datasource Management",
+        "tags": [
+          "data",
+          "api"
+        ]
+      }
+    ],
+    "server/datasource-store.test.mjs": [
+      {
+        "id": "F-022",
+        "name": "Datasource Management",
+        "tags": [
+          "data",
+          "api"
+        ]
+      }
+    ],
+    "server/run-store.mjs": [
+      {
+        "id": "F-023",
+        "name": "Run History & Retention",
+        "tags": [
+          "data",
+          "api"
+        ]
+      }
+    ],
+    "server/run-store.test.mjs": [
+      {
+        "id": "F-023",
+        "name": "Run History & Retention",
+        "tags": [
+          "data",
+          "api"
+        ]
+      }
+    ],
+    "server/monitor-flows.mjs": [
+      {
+        "id": "F-025",
+        "name": "Monitor Flow Templates",
+        "tags": [
+          "monitoring",
+          "ai"
+        ]
+      }
+    ],
+    "server/monitor-store.mjs": [
+      {
+        "id": "F-026",
+        "name": "Monitor Store & Monitor API",
+        "tags": [
+          "monitoring",
+          "api"
+        ]
+      }
+    ],
+    "server/monitor-routes.mjs": [
+      {
+        "id": "F-026",
+        "name": "Monitor Store & Monitor API",
+        "tags": [
+          "monitoring",
+          "api"
+        ]
+      }
+    ],
+    "server/monitor-store.test.mjs": [
+      {
+        "id": "F-026",
+        "name": "Monitor Store & Monitor API",
+        "tags": [
+          "monitoring",
+          "api"
+        ]
+      }
+    ],
+    "server/monitor-routes.test.mjs": [
+      {
+        "id": "F-026",
+        "name": "Monitor Store & Monitor API",
+        "tags": [
+          "monitoring",
+          "api"
+        ]
+      }
+    ],
+    "server/monitor-instance.mjs": [
+      {
+        "id": "F-027",
+        "name": "Monitor Instance State",
+        "tags": [
+          "monitoring",
+          "data"
+        ]
+      }
+    ],
+    "server/monitor-instance.test.mjs": [
+      {
+        "id": "F-027",
+        "name": "Monitor Instance State",
+        "tags": [
+          "monitoring",
+          "data"
+        ]
+      }
+    ],
+    "server/monitor-scheduler.mjs": [
+      {
+        "id": "F-028",
+        "name": "Monitor Scheduler & Run Execution",
+        "tags": [
+          "monitoring",
+          "scheduling"
+        ]
+      }
+    ],
+    "dev/e2e/watchdog-e2e.mjs": [
+      {
+        "id": "F-028",
+        "name": "Monitor Scheduler & Run Execution",
+        "tags": [
+          "monitoring",
+          "scheduling"
+        ]
+      },
+      {
+        "id": "F-039",
+        "name": "Watchdog E2E Test",
+        "tags": [
+          "testing",
+          "e2e"
+        ]
+      }
+    ],
+    "ui/src/pages/MonitorWorkspace.tsx": [
+      {
+        "id": "F-029",
+        "name": "Monitor Workspace UI",
+        "tags": [
+          "ui",
+          "monitoring"
+        ]
+      }
+    ],
+    "ui/src/pages/AgentsPage.tsx": [
+      {
+        "id": "F-030",
+        "name": "Agents Page UI",
+        "tags": [
+          "ui"
+        ]
+      }
+    ],
+    "ui/src/pages/ConsolePage.tsx": [
+      {
+        "id": "F-031",
+        "name": "Console Page UI",
         "tags": [
           "ui",
           "ai"
         ]
       }
     ],
-    "ui/SREDashboard.tsx": [
+    "ui/src/pages/HomePage.tsx": [
       {
-        "id": "F-021",
-        "name": "SRE Dashboard (Legacy UI)",
+        "id": "F-032",
+        "name": "Home Dashboard UI",
+        "tags": [
+          "ui"
+        ]
+      }
+    ],
+    "ui/src/pages/HomePage.test.tsx": [
+      {
+        "id": "F-032",
+        "name": "Home Dashboard UI",
+        "tags": [
+          "ui"
+        ]
+      }
+    ],
+    "ui/src/pages/ToolsPage.tsx": [
+      {
+        "id": "F-033",
+        "name": "Tools Directory UI",
         "tags": [
           "ui",
-          "observability"
+          "tools"
         ]
       }
     ],
     "ui/src/App.tsx": [
       {
-        "id": "F-022",
-        "name": "App Shell & 7-View Navigation",
+        "id": "F-034",
+        "name": "App Shell & Navigation",
         "tags": [
           "ui",
           "core"
@@ -356,8 +648,8 @@
     ],
     "ui/src/main.tsx": [
       {
-        "id": "F-022",
-        "name": "App Shell & 7-View Navigation",
+        "id": "F-034",
+        "name": "App Shell & Navigation",
         "tags": [
           "ui",
           "core"
@@ -366,8 +658,38 @@
     ],
     "ui/src/components/Sidebar.tsx": [
       {
-        "id": "F-022",
-        "name": "App Shell & 7-View Navigation",
+        "id": "F-034",
+        "name": "App Shell & Navigation",
+        "tags": [
+          "ui",
+          "core"
+        ]
+      }
+    ],
+    "ui/src/components/StatusBadge.tsx": [
+      {
+        "id": "F-034",
+        "name": "App Shell & Navigation",
+        "tags": [
+          "ui",
+          "core"
+        ]
+      }
+    ],
+    "ui/src/pages/Placeholder.tsx": [
+      {
+        "id": "F-034",
+        "name": "App Shell & Navigation",
+        "tags": [
+          "ui",
+          "core"
+        ]
+      }
+    ],
+    "ui/vite.config.ts": [
+      {
+        "id": "F-034",
+        "name": "App Shell & Navigation",
         "tags": [
           "ui",
           "core"
@@ -376,133 +698,102 @@
     ],
     "ui/src/components/Sidebar.test.tsx": [
       {
-        "id": "F-022",
-        "name": "App Shell & 7-View Navigation",
+        "id": "F-034",
+        "name": "App Shell & Navigation",
         "tags": [
           "ui",
           "core"
         ]
       }
     ],
-    "ui/src/pages/HomePage.tsx": [
-      {
-        "id": "F-023",
-        "name": "Home Page (Platform Dashboard)",
-        "tags": [
-          "ui",
-          "dashboard"
-        ]
-      }
-    ],
-    "ui/src/pages/HomePage.test.tsx": [
-      {
-        "id": "F-023",
-        "name": "Home Page (Platform Dashboard)",
-        "tags": [
-          "ui",
-          "dashboard"
-        ]
-      }
-    ],
-    "ui/src/pages/ConsolePage.tsx": [
-      {
-        "id": "F-024",
-        "name": "Console Page",
-        "tags": [
-          "ui",
-          "ai"
-        ]
-      }
-    ],
-    "ui/src/pages/ToolsPage.tsx": [
-      {
-        "id": "F-025",
-        "name": "Tools Page",
-        "tags": [
-          "ui",
-          "tooling"
-        ]
-      }
-    ],
-    "ui/src/pages/Placeholder.tsx": [
-      {
-        "id": "F-026",
-        "name": "Placeholder Views",
-        "tags": [
-          "ui"
-        ]
-      }
-    ],
-    "ui/src/components/StatusBadge.tsx": [
-      {
-        "id": "F-027",
-        "name": "Status Badge Component",
-        "tags": [
-          "ui",
-          "components"
-        ]
-      }
-    ],
     "ui/src/components/StatusBadge.test.tsx": [
       {
-        "id": "F-027",
-        "name": "Status Badge Component",
+        "id": "F-034",
+        "name": "App Shell & Navigation",
         "tags": [
           "ui",
-          "components"
+          "core"
         ]
       }
     ],
     "ui/src/types.ts": [
       {
-        "id": "F-028",
-        "name": "Shared UI Types & Utilities",
+        "id": "F-035",
+        "name": "UI Shared Types & Helpers",
         "tags": [
           "ui",
-          "utils"
+          "shared"
         ]
       }
     ],
     "ui/src/types.test.ts": [
       {
-        "id": "F-028",
-        "name": "Shared UI Types & Utilities",
+        "id": "F-035",
+        "name": "UI Shared Types & Helpers",
         "tags": [
           "ui",
-          "utils"
+          "shared"
         ]
       }
     ],
     "vitest.config.mjs": [
       {
-        "id": "F-029",
-        "name": "Test & Build Infrastructure",
+        "id": "F-036",
+        "name": "Test Infrastructure",
         "tags": [
-          "devx",
-          "tooling"
-        ]
-      }
-    ],
-    "ui/vite.config.ts": [
-      {
-        "id": "F-029",
-        "name": "Test & Build Infrastructure",
-        "tags": [
-          "devx",
-          "tooling"
+          "testing"
         ]
       }
     ],
     "ui/src/test/setup.ts": [
       {
-        "id": "F-029",
-        "name": "Test & Build Infrastructure",
+        "id": "F-036",
+        "name": "Test Infrastructure",
         "tags": [
-          "devx",
-          "tooling"
+          "testing"
+        ]
+      }
+    ],
+    "dev/mocks/grafana-mock.mjs": [
+      {
+        "id": "F-037",
+        "name": "Grafana Mock Server",
+        "tags": [
+          "dev",
+          "testing"
+        ]
+      }
+    ],
+    "dev/mocks/tchat-mock.mjs": [
+      {
+        "id": "F-038",
+        "name": "TChat Mock Server",
+        "tags": [
+          "dev",
+          "testing"
+        ]
+      }
+    ],
+    "ui/SREConsole.tsx": [
+      {
+        "id": "F-040",
+        "name": "Legacy SRE Console & Dashboard",
+        "tags": [
+          "ui",
+          "legacy"
+        ]
+      }
+    ],
+    "ui/SREDashboard.tsx": [
+      {
+        "id": "F-040",
+        "name": "Legacy SRE Console & Dashboard",
+        "tags": [
+          "ui",
+          "legacy"
         ]
       }
     ]
   },
-  "updatedAt": "2026-08-15T11:19:21.818Z"
+  "updatedAt": "2026-08-22T13:47:00.872Z"
 }

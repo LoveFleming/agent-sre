@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-30T10:15:28.954Z",
+  "initialized": true,
+  "currentState": {
+    "branch": "main",
+    "headSha": "9aad91a",
+    "dirtyCount": 47,
+    "dirtyFiles": [
+      "M .paaw/CHANGELOG.md",
+      " M .paaw/changes/change-intelligence.json",
+      " M .paaw/code-intelligence/api-function-map.json",
+      " M .paaw/code-intelligence/call-graph.json",
+      " M .paaw/code-intelligence/dependency-graph.json",
+      " M .paaw/code-intelligence/file-map.json",
+      " M .paaw/code-intelligence/status-cache.json",
+      " M .paaw/code-intelligence/summary.json",
+      " M .paaw/code-intelligence/symbol-index.json",
+      " M .paaw/code-intelligence/test-code-map.json",
+      " M .paaw/code-intelligence/test-intelligence.json",
+      " M .paaw/coding-memory/actions.jsonl",
+      " M .paaw/coding-memory/conversations/coding.developer/active.json",
+      " M .paaw/coding-memory/conversations/coding.em/active.json",
+      " M .paaw/cu-status.json",
+      " M .paaw/deps-cache.json",
+      " M .paaw/features/FEATURES.json",
+      " M .paaw/features/FILE-FEATURES.json",
+      " M .paaw/features/tree-sitter-analysis.txt",
+      " M .paaw/metrics-cache.json",
+      " M .paaw/project/ARCHITECTURE.md",
+      " M .paaw/project/PROJECT.md",
+      " M .paaw/scan.json",
+      " M .paaw/security/scan-results.json",
+      " M .paaw/specs/api-contract.md",
+      " M .paaw/specs/error-codes.md",
+      " M .paaw/staged-changes.json",
+      " M .paaw/standards/coding-style.md",
+      " M .paaw/tasks/TASKS.json",
+      "?? .paaw/HANDOVER.md"
+    ],
+    "unpushedCount": 0,
+    "unpushedCommits": []
+  },
+  "workingPlan": {
+    "activeTasks": [
+      {
+        "id": "TASK-012",
+        "title": "[P3] DatasourcesPage UI",
+        "status": "open",
+        "priority": "low",
+        "phase": "implement",
+        "phaseStatus": "pending",
+        "next": "run implement"
+      },
+      {
+        "id": "TASK-014",
+        "title": "[P3] RunsPage UI — 執行歷史檢視",
+        "status": "open",
+        "priority": "medium",
+        "phase": "implement",
+        "phaseStatus": "pending",
+        "next": "run implement"
+      }
+    ],
+    "activeCount": 2
+  },
+  "changes": {
+    "recentCommits": [
+      {
+        "hash": "9aad91a",
+        "date": "2026-08-23T22:01:24+08:00",
+        "subject": "refactor(app)!: monitor workspace 是唯一介面 — 拔掉所有舊頁面與死碼"
+      },
+      {
+        "hash": "f6a6d2c",
+        "date": "2026-08-23T21:20:16+08:00",
+        "subject": "fix(monitor): MonitorWorkspace 防護 API 失敗白屏 + data/ 全 ignore + README monitor API"
+      },
+      {
+        "hash": "0cfa675",
+        "date": "2026-08-22T00:14:48+08:00",
+        "subject": "feat(monitor): SRE Agentic Monitoring workspace — MVP per spec"
+      },
+      {
+        "hash": "b5120c3",
+        "date": "2026-08-17T16:22:28+08:00",
+        "subject": "fix(vite): downgrade to 5.4.21 — fixes 'missing field module type' pre-transform error in vite 6"
+      },
+      {
+        "hash": "1d51512",
+        "date": "2026-08-17T09:23:29+08:00",
+        "subject": "fix(deps): patch CVEs — vite 6.4.3 (3 high), esbuild, nanoid 3.3.18; npm audit 0 vulnerabilities"
+      },
+      {
+        "hash": "0cba7d7",
+        "date": "2026-08-17T06:35:29+08:00",
+        "subject": "feat(watchdog): e2e test + grafana handler update + coding sessions/task state sync"
+      },
+      {
+        "hash": "028caab",
+        "date": "2026-08-16T21:47:40+08:00",
+        "subject": "fix(server): repair block-comment parse error in datasource files"
+      },
+      {
+        "hash": "e31af3d",
+        "date": "2026-08-16T20:29:17+08:00",
+        "subject": "save"
+      },
+      {
+        "hash": "1a024e2",
+        "date": "2026-08-16T20:27:19+08:00",
+        "subject": "chore(mocks): make sent log path configurable via TCHAT_SENT_LOG"
+      },
+      {
+        "hash": "25dce80",
+        "date": "2026-08-16T19:36:23+08:00",
+        "subject": "[TASK-009：開發 tchat mock server（port 3002），實作契約 v0 POST /api/messages，訊息落檔 tchat-sent.jsonl 供 TASK-010 watchdog 驗收] - dev"
+      }
+    ]
+  },
+  "issues": [],
+  "decisions": {
+    "file": ".paaw/DECISIONS.md",
+    "count": 2,
+    "recent": [
+      {
+        "id": "ADR-002",
+        "title": "ADR-004: tchat transport 抽層（ports & adapters）與契約 v0",
+        "date": "2026-08-15"
+      },
+      {
+        "id": "ADR-001",
+        "title": "ADR-003: SRE Watchdog Agent Platform 核心架構",
+        "date": "2026-08-15"
+      }
+    ]
+  },
+  "nextAction": {
+    "step": "commit",
+    "reason": "47 個未提交檔案",
+    "detail": [
+      "M .paaw/CHANGELOG.md",
+      " M .paaw/changes/change-intelligence.json",
+      " M .paaw/code-intelligence/api-function-map.json",
+      " M .paaw/code-intelligence/call-graph.json",
+      " M .paaw/code-intelligence/dependency-graph.json"
+    ]
+  }
+}

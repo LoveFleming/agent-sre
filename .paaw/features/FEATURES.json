@@ -1,8 +1,8 @@
 {
   "features": [
     {
-      "name": "HTTP Server Bootstrap",
-      "description": "Node.js http server entry point that loads config, tools, and crews, registers all routes, and serves static files (UI assets)",
+      "name": "Server Bootstrap & HTTP Entry",
+      "description": "Node HTTP server entrypoint (main) that wires config, tool loading, crews, routes, and both agent + monitor schedulers into a single running service",
       "status": "active",
       "codeFiles": [
         "server/index.mjs"
@@ -20,17 +20,23 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "API Route Layer",
-      "description": "Central route registration with JSON body parsing, response helpers, static file serving, and the onToolCall handler that dispatches tool invocations",
+      "name": "API Gateway & Route Registration",
+      "description": "Central route registration (registerRoutes) mounting all API endpoints, request body parsing, JSON replies, and the GET /api/health liveness endpoint",
       "status": "active",
       "codeFiles": [
         "server/routes.mjs"
       ],
-      "apis": [],
+      "apis": [
+        {
+          "method": "GET",
+          "path": "/api/health",
+          "file": "server/routes.mjs"
+        }
+      ],
       "tests": [
         "server/routes.test.mjs"
       ],
@@ -45,28 +51,24 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "Agent Loop",
-      "description": "Core AI agent execution loop with streaming variant, crew tool resolution, system prompt building, and message trimming; exposed via the chat endpoint",
+      "name": "API Token Authentication",
+      "description": "Token-gated API access with constant-time token comparison (safeTokenEqual), per-request checkApiToken, and a test-only token cache reset hook",
       "status": "active",
       "codeFiles": [
-        "server/agent-loop.mjs"
+        "server/routes.mjs"
       ],
-      "apis": [
-        {
-          "method": "POST",
-          "path": "/api/chat",
-          "file": "server/routes.mjs"
-        }
+      "apis": [],
+      "tests": [
+        "server/routes.test.mjs"
       ],
-      "tests": [],
       "runbooks": [],
       "tags": [
-        "ai",
-        "core"
+        "security",
+        "api"
       ],
       "id": "F-003",
       "issues": [],
@@ -74,61 +76,12 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "LLM Client",
-      "description": "callLLM abstraction with retry/backoff (sleep), streaming handler, tool-call merging, and fallback override logic over the configured provider",
-      "status": "active",
-      "codeFiles": [
-        "server/llm.mjs"
-      ],
-      "apis": [],
-      "tests": [
-        "server/llm.test.mjs"
-      ],
-      "runbooks": [],
-      "tags": [
-        "ai",
-        "core"
-      ],
-      "id": "F-004",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "LLM Provider Adapter",
-      "description": "OpenAI-compatible provider adapter (createProviderAdapter / OpenAICompatibleAdapter) with stable JSON serialization and LLM stream logging; depends on shared llm-utils module",
-      "status": "active",
-      "codeFiles": [
-        "server/tool-engine/provider.mjs",
-        "server/llm-utils.mjs"
-      ],
-      "apis": [],
-      "tests": [],
-      "runbooks": [],
-      "tags": [
-        "ai",
-        "integration"
-      ],
-      "id": "F-005",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Configuration Management",
-      "description": "Server configuration loading: ROOT path, port, provider config file loading, and resolveLLM model/provider resolution",
+      "name": "Configuration & LLM Provider Resolution",
+      "description": "Project config loader (ROOT, PORT) with provider config loading and resolveLLM for selecting LLM provider settings",
       "status": "active",
       "codeFiles": [
         "server/config.mjs"
@@ -142,18 +95,89 @@
         "config",
         "core"
       ],
+      "id": "F-004",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "LLM Client",
+      "description": "callLLM client with retries, streaming support (handleStream), tool-call merging, and fallback provider override logic",
+      "status": "active",
+      "codeFiles": [
+        "server/llm.mjs"
+      ],
+      "apis": [],
+      "tests": [
+        "server/llm.test.mjs"
+      ],
+      "runbooks": [],
+      "tags": [
+        "ai",
+        "core"
+      ],
+      "id": "F-005",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Tool Engine LLM Provider Adapter",
+      "description": "OpenAI-compatible provider adapter (createProviderAdapter) with deterministic request serialization and LLM stream logging for tool-side model calls",
+      "status": "active",
+      "codeFiles": [
+        "server/tool-engine/provider.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "ai",
+        "adapter"
+      ],
       "id": "F-006",
       "issues": [],
       "aiUnderstanding": "",
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "Crew Loader",
-      "description": "Multi-agent crew definitions loader: loadAllCrews from disk, getCrew lookup, and listCrews for the crews API (per ADR-002 multi-agent orchestration)",
+      "name": "Agent Loop",
+      "description": "Tool-calling agent runtime: runAgentLoop and runAgentLoopStream with system prompt building, message trimming, and crew tool resolution",
+      "status": "active",
+      "codeFiles": [
+        "server/agent-loop.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "ai",
+        "core"
+      ],
+      "id": "F-007",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Crew System",
+      "description": "Crew definition loader (loadAllCrews, getCrew, listCrews) exposing crew presets to chat and scheduled runs",
       "status": "active",
       "codeFiles": [
         "server/crew-loader.mjs"
@@ -169,38 +193,7 @@
       "runbooks": [],
       "tags": [
         "ai",
-        "orchestration"
-      ],
-      "id": "F-007",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Conversation Persistence & Archive",
-      "description": "Conversation history storage: load/save conversations, archive completed conversations, list and reload archives, with ID sanitization",
-      "status": "active",
-      "codeFiles": [
-        "server/conversation.mjs"
-      ],
-      "apis": [
-        {
-          "method": "GET",
-          "path": "/api/archives",
-          "file": "server/routes.mjs"
-        }
-      ],
-      "tests": [
-        "server/conversation.test.mjs"
-      ],
-      "runbooks": [],
-      "tags": [
-        "data",
-        "persistence"
+        "data"
       ],
       "id": "F-008",
       "issues": [],
@@ -208,43 +201,32 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "Task Management",
-      "description": "Full-stack task management: in-memory TaskStore (crypto IDs), CRUD API endpoints, and React TaskManagementPage with ToolPicker, field editors, and empty state",
+      "name": "Tool Registry & Loader",
+      "description": "Dynamic tool loading from the tools/ tree (safeResolve, loadAllTools, wrappedHandler) plus the ToolRegistry that tools register into; exposed via GET /api/tools",
       "status": "active",
       "codeFiles": [
-        "server/task-store.mjs",
-        "server/routes.mjs"
+        "server/tool-registry.mjs",
+        "server/tool-loader.mjs"
       ],
       "apis": [
         {
           "method": "GET",
-          "path": "/api/tasks"
-        },
-        {
-          "method": "POST",
-          "path": "/api/tasks"
-        },
-        {
-          "method": "PUT",
-          "path": "/api/tasks/:id"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/tasks/:id"
+          "path": "/api/tools",
+          "file": "server/routes.mjs"
         }
       ],
       "tests": [
-        "server/task-store.test.mjs"
+        "server/tool-registry.test.mjs",
+        "server/tool-loader.test.mjs"
       ],
       "runbooks": [],
       "tags": [
-        "data",
-        "api",
-        "ui"
+        "core",
+        "tools"
       ],
       "id": "F-009",
       "issues": [],
@@ -252,212 +234,12 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Tool Registry & Tool API",
-      "description": "ToolRegistry class for registering and looking up tool handlers, exposed via tool listing and tool test/call endpoints (onToolCall)",
-      "status": "active",
-      "codeFiles": [
-        "server/tool-registry.mjs",
-        "server/routes.mjs"
-      ],
-      "apis": [
-        {
-          "method": "GET",
-          "path": "/api/tools",
-          "file": "server/routes.mjs"
-        },
-        {
-          "method": "POST",
-          "path": "/api/tools/test",
-          "file": "server/routes.mjs"
-        }
-      ],
-      "tests": [
-        "server/tool-registry.test.mjs"
-      ],
-      "runbooks": [],
-      "tags": [
-        "tooling",
-        "api"
-      ],
-      "id": "F-010",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Tool Loader (Secure Dynamic Loading)",
-      "description": "Dynamic tool discovery from the tools/ directory with safeResolve path-traversal protection and wrappedHandler for safe invocation of loaded tool handlers",
-      "status": "active",
-      "codeFiles": [
-        "server/tool-loader.mjs"
-      ],
-      "apis": [],
-      "tests": [
-        "server/tool-loader.test.mjs"
-      ],
-      "runbooks": [],
-      "tags": [
-        "tooling",
-        "security"
-      ],
-      "id": "F-011",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Grafana Tool",
-      "description": "Grafana integration tool handler: config/auth header resolution, GraphQL queries (gql), time parsing, and table formatting for dashboards/alerts/metrics",
-      "status": "active",
-      "codeFiles": [
-        "tools/grafana/handler.mjs"
-      ],
-      "apis": [],
-      "tests": [],
-      "runbooks": [],
-      "tags": [
-        "observability",
-        "tool"
-      ],
-      "id": "F-012",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Prometheus Tool",
-      "description": "Prometheus metrics tool handler: instant and range query formatting, alerts listing, header building, and config URL resolution",
-      "status": "active",
-      "codeFiles": [
-        "tools/prometheus/handler.mjs"
-      ],
-      "apis": [],
-      "tests": [],
-      "runbooks": [],
-      "tags": [
-        "observability",
-        "tool"
-      ],
-      "id": "F-013",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Loki Log Query Tool",
-      "description": "Loki log aggregation tool handler: base URL/header setup, log result and stats result formatting for log queries",
-      "status": "active",
-      "codeFiles": [
-        "tools/loki/handler.mjs"
-      ],
-      "apis": [],
-      "tests": [],
-      "runbooks": [],
-      "tags": [
-        "observability",
-        "tool"
-      ],
-      "id": "F-014",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Kubernetes (kubectl) Tool",
-      "description": "Kubernetes tool handler wrapping kubectl: base arg building, destructive command detection, command execution, and output truncation",
-      "status": "active",
-      "codeFiles": [
-        "tools/k8s/handler.mjs"
-      ],
-      "apis": [],
-      "tests": [],
-      "runbooks": [],
-      "tags": [
-        "infra",
-        "tool"
-      ],
-      "id": "F-015",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Shell Execution Tool",
-      "description": "Shell command tool with safety gating: blocked-command checking, safety and destructiveness detection, command execution, and output truncation",
-      "status": "active",
-      "codeFiles": [
-        "tools/shell/handler.mjs"
-      ],
-      "apis": [],
-      "tests": [],
-      "runbooks": [],
-      "tags": [
-        "tool",
-        "security"
-      ],
-      "id": "F-016",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Security Scanning Tool",
-      "description": "Security tool handler: RBAC scanning, SSL certificate checks, dependency scanning, and binary availability detection (hasBin)",
-      "status": "active",
-      "codeFiles": [
-        "tools/security/handler.mjs"
-      ],
-      "apis": [],
-      "tests": [],
-      "runbooks": [],
-      "tags": [
-        "security",
-        "tool"
-      ],
-      "id": "F-017",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
       "name": "Docs & Runbook Search Tool",
-      "description": "Documentation tool handler: frontmatter parsing, runbook directory scanning, and runbook search for agent-accessible operational docs",
+      "description": "Agent tool that parses frontmatter, scans runbooks/docs directories, and serves search queries over them",
       "status": "active",
       "codeFiles": [
         "tools/docs/handler.mjs"
@@ -466,8 +248,197 @@
       "tests": [],
       "runbooks": [],
       "tags": [
-        "docs",
-        "tool"
+        "tools",
+        "docs"
+      ],
+      "id": "F-010",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Grafana Tool",
+      "description": "Grafana integration tool: auth header handling, GraphQL/API base resolution, time parsing, and table formatting for dashboards and queries",
+      "status": "active",
+      "codeFiles": [
+        "tools/grafana/handler.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "tools",
+        "observability"
+      ],
+      "id": "F-011",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Kubernetes Tool",
+      "description": "Kubectl wrapper tool with base arg building, destructive-command detection, and output truncation for safe cluster operations",
+      "status": "active",
+      "codeFiles": [
+        "tools/k8s/handler.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "tools",
+        "k8s"
+      ],
+      "id": "F-012",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Loki Logs Tool",
+      "description": "Loki log querying tool with base URL/header construction, log result formatting, and stats result formatting",
+      "status": "active",
+      "codeFiles": [
+        "tools/loki/handler.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "tools",
+        "observability"
+      ],
+      "id": "F-013",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Prometheus Tool",
+      "description": "Prometheus tool supporting instant and range queries plus alert listing, with response formatting for each query type",
+      "status": "active",
+      "codeFiles": [
+        "tools/prometheus/handler.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "tools",
+        "observability"
+      ],
+      "id": "F-014",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Security Audit Tool",
+      "description": "Security scanning tool running RBAC scans, SSL checks, and dependency scans via subprocess commands with binary availability detection",
+      "status": "active",
+      "codeFiles": [
+        "tools/security/handler.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "tools",
+        "security"
+      ],
+      "id": "F-015",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Shell Tool",
+      "description": "Guarded shell execution tool with blocked-pattern detection, safety/destructive checks, command runner, and output truncation",
+      "status": "active",
+      "codeFiles": [
+        "tools/shell/handler.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "tools",
+        "exec"
+      ],
+      "id": "F-016",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "TChat Messaging Tool",
+      "description": "Outbound messaging transport (tchat contract v0 / Telegram-style): config loading, sendMessage client, auth check, message formatting, and sendTchatMessage used by both schedulers for notifications",
+      "status": "active",
+      "codeFiles": [
+        "tools/tchat/client.mjs",
+        "tools/tchat/handler.mjs"
+      ],
+      "apis": [],
+      "tests": [
+        "tools/tchat/client.test.mjs",
+        "tools/tchat/handler.test.mjs"
+      ],
+      "runbooks": [],
+      "tags": [
+        "tools",
+        "messaging"
+      ],
+      "id": "F-017",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Conversation Persistence",
+      "description": "Conversation store with load/save, archive and list/load of archives, ID sanitization, and directory bootstrapping",
+      "status": "active",
+      "codeFiles": [
+        "server/conversation.mjs"
+      ],
+      "apis": [],
+      "tests": [
+        "server/conversation.test.mjs"
+      ],
+      "runbooks": [],
+      "tags": [
+        "data"
       ],
       "id": "F-018",
       "issues": [],
@@ -475,22 +446,53 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "tchat Messaging Tool",
-      "description": "tchat (ex-Telegram) messaging tool handler: config/API base resolution, auth checking, Telegram API calls, and message formatting with timestamps",
+      "name": "Agent Management (Store & API)",
+      "description": "Agent CRUD store with cron validation, tool selection, and filename-safe IDs; exposed via the agents API including manual run trigger (TASK-006)",
       "status": "active",
       "codeFiles": [
-        "tools/tchat/handler.mjs"
+        "server/agent-store.mjs",
+        "server/routes.mjs"
       ],
-      "apis": [],
-      "tests": [],
+      "apis": [
+        {
+          "method": "GET",
+          "path": "/api/agents",
+          "file": "server/routes.mjs"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents",
+          "file": "server/routes.mjs"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/agents/:id",
+          "file": "server/routes.mjs"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/:id",
+          "file": "server/routes.mjs"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/:id/run",
+          "file": "server/routes.mjs"
+        }
+      ],
+      "tests": [
+        "server/agent-store.test.mjs",
+        "server/routes.test.mjs",
+        "ui/src/pages/AgentsPage.test.tsx"
+      ],
       "runbooks": [],
       "tags": [
-        "messaging",
-        "tool"
+        "core",
+        "api"
       ],
       "id": "F-019",
       "issues": [],
@@ -498,22 +500,24 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "SRE Console (Legacy UI)",
-      "description": "Legacy SRE console component with multi-tab chat, i18n, theming, markdown rendering, and AgentConsole integration; predates the 7-view navigation shell and is not referenced by the current ui/src app",
-      "status": "deprecated",
+      "name": "Agent Cron Scheduler",
+      "description": "node-cron scheduling engine for agents: register/reschedule agents, executeScheduledRun with crew building and trigger messages, run timeout resolution, tchat notification delivery, and active schedule introspection",
+      "status": "active",
       "codeFiles": [
-        "ui/SREConsole.tsx"
+        "server/scheduler.mjs"
       ],
       "apis": [],
-      "tests": [],
+      "tests": [
+        "server/scheduler.test.mjs"
+      ],
       "runbooks": [],
       "tags": [
-        "ui",
-        "ai"
+        "core",
+        "scheduling"
       ],
       "id": "F-020",
       "issues": [],
@@ -521,22 +525,36 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "SRE Dashboard (Legacy UI)",
-      "description": "Legacy dashboard components: ProviderCard, AlertCard, and QuickQueryPanel for observability overview; superseded by the new platform Home page",
-      "status": "deprecated",
+      "name": "Task Store & API",
+      "description": "In-memory TaskStore (id generation via crypto) backing the tasks API for create and list",
+      "status": "active",
       "codeFiles": [
-        "ui/SREDashboard.tsx"
+        "server/task-store.mjs",
+        "server/routes.mjs"
       ],
-      "apis": [],
-      "tests": [],
+      "apis": [
+        {
+          "method": "GET",
+          "path": "/api/tasks",
+          "file": "server/routes.mjs"
+        },
+        {
+          "method": "POST",
+          "path": "/api/tasks",
+          "file": "server/routes.mjs"
+        }
+      ],
+      "tests": [
+        "server/task-store.test.mjs"
+      ],
       "runbooks": [],
       "tags": [
-        "ui",
-        "observability"
+        "data",
+        "api"
       ],
       "id": "F-021",
       "issues": [],
@@ -544,26 +562,36 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "App Shell & 7-View Navigation",
-      "description": "React app entry (main.tsx/App.tsx) implementing the 7-view navigation shell with Sidebar routing to Home, Console, Tools, Task Management, and placeholder views",
+      "name": "Datasource Management",
+      "description": "Datasource CRUD with URL/token/settings validation, token masking, atomic writes, and syncToolConfig that projects datasource settings into tool config files",
       "status": "active",
       "codeFiles": [
-        "ui/src/App.tsx",
-        "ui/src/main.tsx",
-        "ui/src/components/Sidebar.tsx"
+        "server/datasource-store.mjs",
+        "server/routes.mjs"
       ],
-      "apis": [],
+      "apis": [
+        {
+          "method": "GET",
+          "path": "/api/datasources",
+          "file": "server/routes.mjs"
+        },
+        {
+          "method": "POST",
+          "path": "/api/datasources",
+          "file": "server/routes.mjs"
+        }
+      ],
       "tests": [
-        "ui/src/components/Sidebar.test.tsx"
+        "server/datasource-store.test.mjs"
       ],
       "runbooks": [],
       "tags": [
-        "ui",
-        "core"
+        "data",
+        "api"
       ],
       "id": "F-022",
       "issues": [],
@@ -571,24 +599,32 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "Home Page (Platform Dashboard)",
-      "description": "Platform home page fetching platform stats (fetch-based) and rendering StatCard summary metrics with error/loading states",
+      "name": "Run History & Retention",
+      "description": "Run recording store: startRun/finishRun lifecycle, tool-call normalization, deterministic sorted listing (tie-break on run id, TASK-004), getRun lookup, and retention-based pruning of old runs",
       "status": "active",
       "codeFiles": [
-        "ui/src/pages/HomePage.tsx"
+        "server/run-store.mjs",
+        "server/routes.mjs"
       ],
-      "apis": [],
+      "apis": [
+        {
+          "method": "GET",
+          "path": "/api/runs",
+          "file": "server/routes.mjs"
+        }
+      ],
       "tests": [
-        "ui/src/pages/HomePage.test.tsx"
+        "server/run-store.test.mjs",
+        "server/routes.test.mjs"
       ],
       "runbooks": [],
       "tags": [
-        "ui",
-        "dashboard"
+        "data",
+        "api"
       ],
       "id": "F-023",
       "issues": [],
@@ -596,12 +632,206 @@
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "Console Page",
-      "description": "Agent console page with GitHub-flavored markdown rendering (react-markdown + remark-gfm) for chat/agent output display",
+      "name": "Chat API",
+      "description": "POST /api/chat endpoint running the agent loop against a selected crew with tool-call callbacks, conversation persistence, and task interaction",
+      "status": "active",
+      "codeFiles": [
+        "server/routes.mjs"
+      ],
+      "apis": [
+        {
+          "method": "POST",
+          "path": "/api/chat",
+          "file": "server/routes.mjs"
+        }
+      ],
+      "tests": [
+        "server/routes.test.mjs"
+      ],
+      "runbooks": [],
+      "tags": [
+        "ai",
+        "api"
+      ],
+      "id": "F-024",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Monitor Flow Templates",
+      "description": "Library of monitoring flow templates (STANDARD_SRE_FLOW, ALERT_TRIAGE_FLOW, RELEASE_WATCH_FLOW) with default monitor prompts, rules, skills, and template lookup/listing",
+      "status": "active",
+      "codeFiles": [
+        "server/monitor-flows.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "monitoring",
+        "ai"
+      ],
+      "id": "F-025",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Monitor Store & Monitor API",
+      "description": "Monitor CRUD with schedule presets (presetToCron), source/output normalization, and the monitor routes handler dispatching monitor workspace endpoints (meta, list, create) with chat crew building and run summaries",
+      "status": "active",
+      "codeFiles": [
+        "server/monitor-store.mjs",
+        "server/monitor-routes.mjs"
+      ],
+      "apis": [
+        {
+          "method": "GET",
+          "path": "/api/monitor-meta",
+          "file": "server/monitor-routes.mjs"
+        },
+        {
+          "method": "GET",
+          "path": "/api/monitors",
+          "file": "server/monitor-routes.mjs"
+        },
+        {
+          "method": "POST",
+          "path": "/api/monitors",
+          "file": "server/monitor-routes.mjs"
+        }
+      ],
+      "tests": [
+        "server/monitor-store.test.mjs",
+        "server/monitor-routes.test.mjs"
+      ],
+      "runbooks": [],
+      "tags": [
+        "monitoring",
+        "api"
+      ],
+      "id": "F-026",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Monitor Instance State",
+      "description": "Per-monitor persistent instance state: getInstance/peek/update, run recording, incident append, knowledge setting, destroy, and state file listing with disk persistence",
+      "status": "active",
+      "codeFiles": [
+        "server/monitor-instance.mjs"
+      ],
+      "apis": [],
+      "tests": [
+        "server/monitor-instance.test.mjs"
+      ],
+      "runbooks": [],
+      "tags": [
+        "monitoring",
+        "data"
+      ],
+      "id": "F-027",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Monitor Scheduler & Run Execution",
+      "description": "Monitor execution engine: executeMonitorRun with monitor crew building, per-source tool reads, signal detection, conversation + run recording, tchat notification, and cron-based rescheduling with next-run computation",
+      "status": "active",
+      "codeFiles": [
+        "server/monitor-scheduler.mjs"
+      ],
+      "apis": [],
+      "tests": [
+        "dev/e2e/watchdog-e2e.mjs"
+      ],
+      "runbooks": [],
+      "tags": [
+        "monitoring",
+        "scheduling"
+      ],
+      "id": "F-028",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Monitor Workspace UI",
+      "description": "SRE Agentic Monitoring workspace page with monitor list, create-monitor modal, model settings modal, status pills, and live run/last-run display (MVP per spec)",
+      "status": "active",
+      "codeFiles": [
+        "ui/src/pages/MonitorWorkspace.tsx"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "ui",
+        "monitoring"
+      ],
+      "id": "F-029",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Agents Page UI",
+      "description": "Agent management page (upgraded from TaskManagementPage, TASK-003): agent list, create/edit form with cron and tool picker, enabled switch, and status banners",
+      "status": "active",
+      "codeFiles": [
+        "ui/src/pages/AgentsPage.tsx"
+      ],
+      "apis": [],
+      "tests": [
+        "ui/src/pages/AgentsPage.test.tsx"
+      ],
+      "runbooks": [],
+      "tags": [
+        "ui"
+      ],
+      "id": "F-030",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Console Page UI",
+      "description": "Console chat page with markdown (react-markdown + remark-gfm) rendering for agent conversation output",
       "status": "active",
       "codeFiles": [
         "ui/src/pages/ConsolePage.tsx"
@@ -613,18 +843,42 @@
         "ui",
         "ai"
       ],
-      "id": "F-024",
+      "id": "F-031",
       "issues": [],
       "aiUnderstanding": "",
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "Tools Page",
-      "description": "Tools page for browsing and inspecting registered agent tools",
+      "name": "Home Dashboard UI",
+      "description": "Landing dashboard page with stat cards summarizing system state via fetched API data",
+      "status": "active",
+      "codeFiles": [
+        "ui/src/pages/HomePage.tsx"
+      ],
+      "apis": [],
+      "tests": [
+        "ui/src/pages/HomePage.test.tsx"
+      ],
+      "runbooks": [],
+      "tags": [
+        "ui"
+      ],
+      "id": "F-032",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Tools Directory UI",
+      "description": "Tools listing page showing available agent tools and their metadata",
       "status": "active",
       "codeFiles": [
         "ui/src/pages/ToolsPage.tsx"
@@ -634,67 +888,51 @@
       "runbooks": [],
       "tags": [
         "ui",
-        "tooling"
+        "tools"
       ],
-      "id": "F-025",
+      "id": "F-033",
       "issues": [],
       "aiUnderstanding": "",
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "Placeholder Views",
-      "description": "Stub placeholder page rendered by the app shell for views that are planned but not yet implemented among the 7 navigation views",
+      "name": "App Shell & Navigation",
+      "description": "React app entry and shell: App routing across pages, Sidebar navigation with StatusBadge, Placeholder page for unbuilt routes, and Vite build config (pinned 5.4.21)",
       "status": "active",
       "codeFiles": [
-        "ui/src/pages/Placeholder.tsx"
-      ],
-      "apis": [],
-      "tests": [],
-      "runbooks": [],
-      "tags": [
-        "ui"
-      ],
-      "id": "F-026",
-      "issues": [],
-      "aiUnderstanding": "",
-      "aiUnderstandingAt": null,
-      "documentation": "",
-      "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
-    },
-    {
-      "name": "Status Badge Component",
-      "description": "Reusable status badge component used across sidebar and pages for status indication",
-      "status": "active",
-      "codeFiles": [
-        "ui/src/components/StatusBadge.tsx"
+        "ui/src/App.tsx",
+        "ui/src/main.tsx",
+        "ui/src/components/Sidebar.tsx",
+        "ui/src/components/StatusBadge.tsx",
+        "ui/src/pages/Placeholder.tsx",
+        "ui/vite.config.ts"
       ],
       "apis": [],
       "tests": [
+        "ui/src/components/Sidebar.test.tsx",
         "ui/src/components/StatusBadge.test.tsx"
       ],
       "runbooks": [],
       "tags": [
         "ui",
-        "components"
+        "core"
       ],
-      "id": "F-027",
+      "id": "F-034",
       "issues": [],
       "aiUnderstanding": "",
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "Shared UI Types & Utilities",
-      "description": "Shared UI type definitions and helpers: emptyTaskDraft, linesToText/textToLines conversions, getProvider lookup, and formatUptime",
+      "name": "UI Shared Types & Helpers",
+      "description": "Shared frontend types and helpers: empty agent draft, client-side cron validation, lines/text conversion, provider lookup, and uptime formatting",
       "status": "active",
       "codeFiles": [
         "ui/src/types.ts"
@@ -706,42 +944,190 @@
       "runbooks": [],
       "tags": [
         "ui",
-        "utils"
+        "shared"
       ],
-      "id": "F-028",
+      "id": "F-035",
       "issues": [],
       "aiUnderstanding": "",
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     },
     {
-      "name": "Test & Build Infrastructure",
-      "description": "Vitest configuration (root + setup with Testing Library/jest-dom) and Vite build configuration for the React UI",
+      "name": "Test Infrastructure",
+      "description": "Vitest configuration for the monorepo and React Testing Library setup for UI tests",
       "status": "active",
       "codeFiles": [
         "vitest.config.mjs",
-        "ui/vite.config.ts",
         "ui/src/test/setup.ts"
       ],
       "apis": [],
       "tests": [],
       "runbooks": [],
       "tags": [
-        "devx",
-        "tooling"
+        "testing"
       ],
-      "id": "F-029",
+      "id": "F-036",
       "issues": [],
       "aiUnderstanding": "",
       "aiUnderstandingAt": null,
       "documentation": "",
       "docsUpdatedAt": null,
-      "createdAt": "2026-08-15T11:19:21.817Z",
-      "updatedAt": "2026-08-15T11:19:21.817Z"
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Grafana Mock Server",
+      "description": "Development fixture Grafana server (TASK-008) serving health, search, dashboard, ds/query, rules, alerts, and datasources endpoints with generated series/rule data",
+      "status": "active",
+      "codeFiles": [
+        "dev/mocks/grafana-mock.mjs"
+      ],
+      "apis": [
+        {
+          "method": "GET",
+          "path": "/api/health",
+          "file": "dev/mocks/grafana-mock.mjs"
+        },
+        {
+          "method": "GET",
+          "path": "/api/search",
+          "file": "dev/mocks/grafana-mock.mjs"
+        },
+        {
+          "method": "POST",
+          "path": "/api/ds/query",
+          "file": "dev/mocks/grafana-mock.mjs"
+        },
+        {
+          "method": "GET",
+          "path": "/api/prometheus/grafana/api/v1/rules",
+          "file": "dev/mocks/grafana-mock.mjs"
+        },
+        {
+          "method": "GET",
+          "path": "/api/alerts",
+          "file": "dev/mocks/grafana-mock.mjs"
+        },
+        {
+          "method": "GET",
+          "path": "/api/datasources",
+          "file": "dev/mocks/grafana-mock.mjs"
+        }
+      ],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "dev",
+        "testing"
+      ],
+      "id": "F-037",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "TChat Mock Server",
+      "description": "Development tchat mock server (port 3002, TASK-009) implementing contract v0 POST /api/messages with scenario switching, reset, sent-log inspection, and jsonl persistence via TCHAT_SENT_LOG",
+      "status": "active",
+      "codeFiles": [
+        "dev/mocks/tchat-mock.mjs"
+      ],
+      "apis": [
+        {
+          "method": "GET",
+          "path": "/__scenario",
+          "file": "dev/mocks/tchat-mock.mjs"
+        },
+        {
+          "method": "POST",
+          "path": "/__scenario",
+          "file": "dev/mocks/tchat-mock.mjs"
+        },
+        {
+          "method": "POST",
+          "path": "/__reset",
+          "file": "dev/mocks/tchat-mock.mjs"
+        },
+        {
+          "method": "GET",
+          "path": "/__sent",
+          "file": "dev/mocks/tchat-mock.mjs"
+        },
+        {
+          "method": "POST",
+          "path": "/api/messages",
+          "file": "dev/mocks/tchat-mock.mjs"
+        }
+      ],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "dev",
+        "testing"
+      ],
+      "id": "F-038",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Watchdog E2E Test",
+      "description": "End-to-end watchdog test (TASK-010) that boots the stack against the tchat mock with a scripted LLM responder, drives monitoring/alert flow, and asserts sent messages from the jsonl log; also exercises Grafana handler and task-state sync",
+      "status": "active",
+      "codeFiles": [
+        "dev/e2e/watchdog-e2e.mjs"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "testing",
+        "e2e"
+      ],
+      "id": "F-039",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
+    },
+    {
+      "name": "Legacy SRE Console & Dashboard",
+      "description": "Standalone SREConsole and SREDashboard views (provider card, alert card, quick-query panel) composing AgentConsole — not wired into the current ui/src App router; superseded by the page-based shell (AgentsPage upgrade, TASK-003)",
+      "status": "deprecated",
+      "codeFiles": [
+        "ui/SREConsole.tsx",
+        "ui/SREDashboard.tsx"
+      ],
+      "apis": [],
+      "tests": [],
+      "runbooks": [],
+      "tags": [
+        "ui",
+        "legacy"
+      ],
+      "id": "F-040",
+      "issues": [],
+      "aiUnderstanding": "",
+      "aiUnderstandingAt": null,
+      "documentation": "",
+      "docsUpdatedAt": null,
+      "createdAt": "2026-08-22T13:47:00.870Z",
+      "updatedAt": "2026-08-22T13:47:00.870Z"
     }
   ],
-  "updatedAt": "2026-08-15T11:19:21.817Z"
+  "updatedAt": "2026-08-22T13:47:00.870Z"
 }

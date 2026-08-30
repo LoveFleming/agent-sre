@@ -1,6 +1,68 @@
 # Project Source Analysis (Tree-sitter)
-Parsed 45 of 47 source files
-Languages: javascript(29), tsx(14), typescript(4)
+Parsed 69 of 71 source files
+Languages: javascript(51), tsx(16), typescript(4)
+
+## dev/e2e/watchdog-e2e.mjs [javascript]
+  Imports:
+    * ← node:child_process
+    * ← node:fs
+    * ← node:os
+    * ← node:path
+    * ← node:url
+    * ← node:http
+  Functions:
+    function llmRespond(body)
+    function check(name, cond, detail = "")
+    async function post(url, body)
+    function readSent()
+    async function waitFor(url, timeoutMs = 10_000)
+
+## dev/mocks/grafana-mock.mjs [javascript]
+  Imports:
+    * ← node:http
+  Functions:
+    arrow now()
+    function searchResults(query)
+    function dashboardResponse(uid)
+    function rulesResponse()
+    arrow buildRule(name, query, severity, duration, dashboardUid, summary, value)
+    function legacyAlertsResponse()
+    function metricFromExpr(expr)
+    function seriesValues(fromMs, toMs, seed)
+    function dsQueryResponse(body)
+    function queryRangeResponse(searchParams)
+    arrow sleep(ms)
+    function sendJson(res, status, payload)
+    function readBody(req)
+    arrow log(status, extra = "")
+  Routes:
+    GET /api/health
+    GET /api/search
+    POST /api/ds/query
+    GET /api/prometheus/grafana/api/v1/rules
+    GET /api/alerts
+    GET /api/datasources
+
+## dev/mocks/tchat-mock.mjs [javascript]
+  Imports:
+    * ← node:http
+    * ← node:fs
+    * ← node:path
+    * ← node:url
+  Functions:
+    arrow now()
+    function sendJson(res, status, payload)
+    function readSentLog()
+    function readBody(req)
+    async function readJsonBody(req, { maxBytes = 64 * 1024 } = {})
+    function logSent(targetType, targetId, text)
+    async function handleMessages(req, res)
+  Routes:
+    GET /__scenario
+    POST /__scenario
+    POST /__reset
+    GET /__sent
+    POST /api/messages
 
 ## server/agent-loop.mjs [javascript]
   Imports:
@@ -23,6 +85,45 @@ Languages: javascript(29), tsx(14), typescript(4)
     arrow send(event, data)
     function buildSystemPrompt(crew)
 
+## server/agent-store.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← crypto
+    * ← path
+    * ← ./config.mjs
+    * ← ./tool-loader.mjs
+    * ← ./tool-registry.mjs
+  Exports:
+    function: listAgents
+    function: getAgent
+    function: saveAgent
+    function: deleteAgent
+  Functions:
+    function resolveAgentsDir()
+    function ensureDir(dir)
+    function assertFilenameSafeId(id)
+    function agentFilePath(id)
+    function readAgentFile(id)
+    function isValidCronPart(part, [min, max])
+    function isValidCron(expr)
+    function optionalString(value, field)
+    function stringArray(value)
+    function normalizeAgent(raw)
+    function listAgents()
+    function getAgent(id)
+    function saveAgent(input)
+    function deleteAgent(id)
+
+## server/agent-store.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← fs
+    * ← os
+    * ← path
+  Functions:
+    function baseInput(overrides = {})
+    function rawFile(id)
+
 ## server/config.mjs [javascript]
   Imports:
     * ← fs
@@ -40,7 +141,6 @@ Languages: javascript(29), tsx(14), typescript(4)
 ## server/config.test.mjs [javascript]
   Imports:
     * ← vitest
-    * ← ./config.mjs
 
 ## server/conversation.mjs [javascript]
   Imports:
@@ -84,6 +184,52 @@ Languages: javascript(29), tsx(14), typescript(4)
     function getCrew(id)
     function listCrews()
 
+## server/datasource-store.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← path
+    * ← path
+    * ← ./config.mjs
+    * ← ./tool-loader.mjs
+  Exports:
+    variable: TOKEN_MASK
+    function: listDatasources
+    function: getDatasource
+    function: saveDatasource
+    function: deleteDatasource
+  Functions:
+    arrow DEFAULT_TOOL_CONFIG_MAPPER(ds)
+    function resolveDatasourcesDir()
+    function toolRoot()
+    function toolConfigPath(id)
+    function ensureDir(dir)
+    function assertSafeId(id)
+    function datasourceFilePath(id)
+    function readDatasourceFile(id)
+    function assertValidUrl(url)
+    function assertValidToken(token)
+    function assertValidSettings(settings)
+    arrow ok(v)
+    function syncToolConfig(ds)
+    function atomicWrite(filePath, obj)
+    function listDatasources()
+    function getDatasource(id)
+    function saveDatasource(input)
+    function deleteDatasource(id)
+  React Components:
+    arrow: DEFAULT_TOOL_CONFIG_MAPPER
+
+## server/datasource-store.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← fs
+    * ← os
+    * ← path
+  Functions:
+    function baseInput(overrides = {})
+    function dsFile(id)
+    function toolConfig(id)
+
 ## server/index.mjs [javascript]
   Imports:
     * ← http
@@ -91,6 +237,8 @@ Languages: javascript(29), tsx(14), typescript(4)
     * ← ./tool-loader.mjs
     * ← ./crew-loader.mjs
     * ← ./routes.mjs
+    * ← ./scheduler.mjs
+    * ← ./monitor-scheduler.mjs
     * ← fs
     * ← path
     * ← url
@@ -125,6 +273,167 @@ Languages: javascript(29), tsx(14), typescript(4)
     function jsonResponse(body, ok = true, status = 200)
     function streamResponse(chunks)
 
+## server/monitor-flows.mjs [javascript]
+  Exports:
+    variable: STANDARD_SRE_FLOW
+    variable: ALERT_TRIAGE_FLOW
+    variable: RELEASE_WATCH_FLOW
+    variable: FLOW_TEMPLATES
+    function: getFlowTemplate
+    function: listFlowTemplates
+    function: defaultMonitorPrompt
+    function: defaultMonitorRules
+    variable: DEFAULT_SKILLS
+  Functions:
+    function getFlowTemplate(id)
+    function listFlowTemplates()
+    function defaultMonitorPrompt()
+    function defaultMonitorRules()
+
+## server/monitor-instance.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← path
+    * ← ./config.mjs
+    * ← ./tool-loader.mjs
+  Exports:
+    function: getInstance
+    function: peekInstance
+    function: updateInstance
+    function: recordRun
+    function: appendIncident
+    function: setKnowledge
+    function: destroyInstance
+    function: listInstanceStateFiles
+  Functions:
+    function resolveStateDir()
+    function blankInstance(monitor)
+    function loadFromDisk(monitorId)
+    function persist(instance)
+    function getInstance(monitor)
+    function peekInstance(monitorId)
+    function updateInstance(monitorId, patchFn)
+    function recordRun(monitorId, { ok, situation = "", summary = "", working = null, nextRunAt = null })
+    function appendIncident(monitorId, incident)
+    function setKnowledge(monitorId, entries)
+    function destroyInstance(monitorId)
+    function listInstanceStateFiles()
+
+## server/monitor-instance.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← fs
+    * ← os
+    * ← path
+
+## server/monitor-routes.mjs [javascript]
+  Imports:
+    * ← ./monitor-store.mjs
+    * ← ./monitor-flows.mjs
+    * ← ./monitor-instance.mjs
+    * ← ./monitor-scheduler.mjs
+    * ← ./conversation.mjs
+    * ← ./agent-loop.mjs
+    * ← ./run-store.mjs
+    * ← ./monitor-flows.mjs
+  Exports:
+    function: handleMonitorRoutes
+  Functions:
+    function summarize(monitor)
+    function buildChatCrew(monitor)
+    function readBody(req)
+    async function handleMonitorRoutes(req, res, json)
+    arrow reply(res, code, body)
+  Routes:
+    GET /api/monitor-meta
+    GET /api/monitors
+    POST /api/monitors
+
+## server/monitor-routes.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← http
+    * ← fs
+    * ← os
+    * ← path
+  Functions:
+    async function api(method, path, body, token = TOKEN)
+
+## server/monitor-scheduler.mjs [javascript]
+  Imports:
+    * ← node-cron
+    * ← ./monitor-store.mjs
+    * ← ./monitor-flows.mjs
+    * ← ./monitor-instance.mjs
+    * ← ./conversation.mjs
+    * ← ./run-store.mjs
+    * ← ./agent-loop.mjs
+    * ← ./tool-registry.mjs
+    * ← ../tools/tchat/handler.mjs
+  Exports:
+    function: monitorKey
+    function: executeMonitorRun
+    function: computeNextRunAt
+    function: rescheduleMonitor
+    function: startMonitorScheduler
+  Functions:
+    function monitorKey(monitorId)
+    async function callTool(name, args = {})
+    function readToolForSource(type)
+    function hasSignal(evidenceLines)
+    function buildMonitorCrew(monitor)
+    async function executeMonitorRun(monitor, opts = {})
+    arrow grab(label)
+    function computeNextRunAt(monitor)
+    function scheduleMonitor(monitor)
+    function unscheduleMonitor(id)
+    function rescheduleMonitor(type, monitor)
+    function startMonitorScheduler()
+
+## server/monitor-store.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← crypto
+    * ← path
+    * ← ./config.mjs
+    * ← ./tool-loader.mjs
+    * ← ./monitor-flows.mjs
+  Exports:
+    function: presetToCron
+    function: listSchedulePresets
+    function: listMonitors
+    function: getMonitor
+    function: createMonitor
+    function: updateMonitor
+    function: deleteMonitor
+    function: listSourceTypes
+    function: listOutputTypes
+  Functions:
+    function resolveMonitorsDir()
+    function presetToCron(presetId)
+    function listSchedulePresets()
+    function isNonEmptyString(v, max = 5_000)
+    function isStringArray(v, max = 100, itemMax = 1_000)
+    function normalizeSource(src, idx)
+    function normalizeOutput(out, idx)
+    function normalizeMonitor(input)
+    function listMonitors()
+    function getMonitor(id)
+    function createMonitor(input)
+    function updateMonitor(id, input)
+    function deleteMonitor(id)
+    function listSourceTypes()
+    function listOutputTypes()
+
+## server/monitor-store.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← fs
+    * ← os
+    * ← path
+  Functions:
+    function baseInput(overrides = {})
+
 ## server/routes.mjs [javascript]
   Imports:
     * ← ./crew-loader.mjs
@@ -133,16 +442,41 @@ Languages: javascript(29), tsx(14), typescript(4)
     * ← ./tool-loader.mjs
     * ← ./conversation.mjs
     * ← ./task-store.mjs
+    * ← ./agent-store.mjs
+    * ← ./run-store.mjs
+    * ← ./datasource-store.mjs
+    * ← ./scheduler.mjs
+    * ← ./monitor-routes.mjs
     * ← fs
     * ← path
     * ← url
+    * ← crypto
   Exports:
+    function: setSchedulerNotifier
+    function: resetApiTokenCacheForTests
     function: registerRoutes
   Functions:
+    function setSchedulerNotifier(fn)
+    function notifyScheduler(type, agent)
     function readBody(req)
     function json(res, code, data)
+    function safeTokenEqual(a, b)
+    function resetApiTokenCacheForTests()
+    function checkApiToken(req, res)
     function registerRoutes(server)
     arrow onToolCall({ name, result })
+  Routes:
+    GET /api/health
+    GET /api/crews
+    GET /api/tools
+    GET /api/tasks
+    POST /api/tasks
+    GET /api/agents
+    POST /api/agents
+    GET /api/datasources
+    POST /api/datasources
+    GET /api/runs
+    POST /api/chat
 
 ## server/routes.test.mjs [javascript]
   Imports:
@@ -150,10 +484,107 @@ Languages: javascript(29), tsx(14), typescript(4)
     * ← http
     * ← path
     * ← url
-    * ← ./routes.mjs
-    * ← ./tool-loader.mjs
+    * ← fs
+    * ← os
   Functions:
+    function httpJson(method, pathname, body, opts = {})
     function httpGet(pathname)
+    function validAgent(overrides = {})
+    async function seedRun(agentId, result = {})
+    function validAgent(overrides = {})
+    async function createAgent(overrides = {})
+    async function waitFor(predicate, { timeoutMs = 3000, stepMs = 10 } = {})
+    function getRunRaw(runId)
+
+## server/run-store.mjs [javascript]
+  Imports:
+    * ← fs
+    * ← crypto
+    * ← path
+    * ← ./config.mjs
+    * ← ./tool-loader.mjs
+  Exports:
+    function: startRun
+    function: finishRun
+    function: listRuns
+    function: getRun
+  Functions:
+    function resolveRunsDir()
+    function resolveRetentionLimit()
+    function ensureDir(dir)
+    function assertFilenameSafeId(id, label)
+    function runFilePath(agentId, runId)
+    function newRunId()
+    arrow pad(n, w)
+    function normalizeToolCalls(value)
+    function readRunFile(filePath)
+    function atomicWriteJson(filePath, data)
+    function agentDirs()
+    function findRunFile(runId)
+    function startRun(agentId)
+    function finishRun(runId, result = {})
+    function pruneOldRuns(agentId)
+    function listRuns(filter = {})
+    function getRun(runId)
+
+## server/run-store.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← fs
+    * ← os
+    * ← path
+  Functions:
+    function rawFile(agentId, runId)
+    function resetRunsDir()
+
+## server/scheduler.mjs [javascript]
+  Imports:
+    * ← node-cron
+    * ← ./agent-store.mjs
+    * ← ./agent-loop.mjs
+    * ← ./conversation.mjs
+    * ← ./run-store.mjs
+    * ← ../tools/tchat/handler.mjs
+  Exports:
+    function: buildCrew
+    function: executeScheduledRun
+    function: rescheduleAgent
+    function: rescheduleAll
+    function: startScheduler
+    function: stopScheduler
+    function: activeSchedule
+    function: activeCount
+    function: isRunning
+    function: beginRun
+  Functions:
+    function resolveRunTimeoutMs()
+    function buildCrew(agent)
+    function buildTriggerMessage(agent, trigger = "scheduled")
+    async function deliverNotification(agent, summary, { agentNotified = false, isFailure = false } = {})
+    async function executeScheduledRun(agentId, { timeoutMs = resolveRunTimeoutMs(), run = null, trigger = "scheduled" } = {})
+    arrow finish(result)
+    arrow onToolCall({ name, result })
+    function registerAgent(agent)
+    function unregisterAgent(agentId)
+    function rescheduleAgent(type, agent)
+    function rescheduleAll()
+    function startScheduler()
+    function stopScheduler()
+    function activeSchedule(agentId)
+    function activeCount()
+    function isRunning(agentId)
+    function beginRun(agentId)
+
+## server/scheduler.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← fs
+    * ← os
+    * ← path
+  Functions:
+    function resetDir(dir)
+    function seedAgent(overrides = {})
+    function allRuns()
 
 ## server/task-store.mjs [javascript]
   Imports:
@@ -307,21 +738,50 @@ Languages: javascript(29), tsx(14), typescript(4)
     function truncateOutput(text, maxLines = 80)
     async function handler(args, ctx)
 
-## tools/tchat/handler.mjs [javascript]
+## tools/tchat/client.mjs [javascript]
   Imports:
     * ← fs
     * ← path
     * ← url
   Exports:
+    function: loadTchatConfig
+    function: resetTchatConfig
+    function: sendMessage
+  Functions:
+    function loadTchatConfig({ reload = false } = {})
+    function resetTchatConfig()
+    async function sendMessage({ targetType, targetId, text } = {}, { config } = {})
+
+## tools/tchat/client.test.mjs [javascript]
+  Imports:
+    * ← vitest
+    * ← fs
+    * ← os
+    * ← path
+  Functions:
+    function stubFetch(impl)
+
+## tools/tchat/handler.mjs [javascript]
+  Imports:
+    * ← ./client.mjs
+  Exports:
+    function: sendTchatMessage
     default function: handler
   Functions:
-    function getConfig()
     function apiBase()
     function checkAuth(chatId)
     async function tgApi(method, params = {})
+    async function sendTchatMessage(args = {})
     function fmtTime(unix)
     function fmtMessage(msg)
     async function handler(args, ctx)
+
+## tools/tchat/handler.test.mjs [javascript]
+  Imports:
+    * ← vitest
+  Functions:
+    function ctx(toolName)
+    function stubTelegram(result)
 
 ## ui/SREConsole.tsx [tsx]
   Imports:
@@ -367,7 +827,8 @@ Languages: javascript(29), tsx(14), typescript(4)
     * ← ./pages/HomePage
     * ← ./pages/ConsolePage
     * ← ./pages/ToolsPage
-    * ← ./pages/TaskManagementPage
+    * ← ./pages/AgentsPage
+    * ← ./pages/MonitorWorkspace
     * ← ./pages/Placeholder
     * ← ./types
   Exports:
@@ -425,6 +886,84 @@ Languages: javascript(29), tsx(14), typescript(4)
     * ← ./App
     * ← ./index.css
 
+## ui/src/pages/AgentsPage.test.tsx [tsx]
+  Imports:
+    * ← vitest
+    * ← @testing-library/react
+    * ← @testing-library/user-event
+    * ← ./AgentsPage
+    * ← ../types
+  Functions:
+    function mockFetchSuccess()
+    async function loaded()
+    async function openNewAgentForm()
+    async function statusBanner()
+  Routes:
+    POST /api/agents
+    POST /api/agents
+    PUT /api/agents/agent-001/*
+
+## ui/src/pages/AgentsPage.tsx [tsx]
+  Imports:
+    * ← react
+    * ← ../types
+    * ← ../types
+  Exports:
+    default function: AgentsPage
+  Functions:
+    function apiErrorMessage(status: number, body: unknown)
+    function AgentsPage()
+    function EmptyState({ onNewAgent }: { onNewAgent: () => void })
+    function Field({
+  label,
+  required,
+  hint,
+  htmlFor,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  hint?: string;
+  htmlFor?: string;
+  children: React.ReactNode;
+})
+    function LinesField({
+  label,
+  description,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  description?: string;
+  value: string;
+  onChange: (text: string) => void;
+  placeholder?: string;
+})
+    function EnabledSwitch({
+  checked,
+  onChange,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+})
+    function ToolPicker({
+  tools,
+  selected,
+  onToggle,
+}: {
+  tools: ToolEntry[];
+  selected: string[];
+  onToggle: (toolName: string) => void;
+})
+  React Components:
+    function: AgentsPage
+    function: EmptyState
+    function: Field
+    function: LinesField
+    function: EnabledSwitch
+    function: ToolPicker
+
 ## ui/src/pages/ConsolePage.tsx [tsx]
   Imports:
     * ← react
@@ -474,6 +1013,33 @@ Languages: javascript(29), tsx(14), typescript(4)
     function: HomePage
     function: StatCard
 
+## ui/src/pages/MonitorWorkspace.tsx [tsx]
+  Imports:
+    * ← react
+    * ← ./MonitorWorkspace.css
+  Exports:
+    default function: MonitorWorkspace
+  Functions:
+    function dotClass(status: string)
+    function pillClass(status: string)
+    function fmtTime(iso: string | null)
+    function useComposing()
+    function MonitorWorkspace()
+    function CreateMonitorModal({ meta, onClose, onCreated }: {
+  meta: MonitorMeta; onClose: () => void; onCreated: (id: string) => void;
+})
+    async arrow create()
+    function ModelSettingsModal({ meta, monitor, instance, onClose, onSaved, showToast }: {
+  meta: MonitorMeta; monitor: MonitorDef; instance: InstanceState;
+  onClose: () => void; onSaved: () => void; showToast: (m: string) => void;
+})
+    arrow patch(fn: (d: MonitorDef) => void)
+    async arrow save()
+  React Components:
+    function: MonitorWorkspace
+    function: CreateMonitorModal
+    function: ModelSettingsModal
+
 ## ui/src/pages/Placeholder.tsx [tsx]
   Exports:
     default function: Placeholder
@@ -481,56 +1047,6 @@ Languages: javascript(29), tsx(14), typescript(4)
     function Placeholder({ title, phase, icon = "🚧" }: PlaceholderProps)
   React Components:
     function: Placeholder
-
-## ui/src/pages/TaskManagementPage.tsx [tsx]
-  Imports:
-    * ← react
-    * ← ../types
-    * ← ../types
-  Exports:
-    default function: TaskManagementPage
-  Functions:
-    function TaskManagementPage()
-    function EmptyState({ onNewTask }: { onNewTask: () => void })
-    function Field({
-  label,
-  required,
-  hint,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  hint?: string;
-  children: React.ReactNode;
-})
-    function LinesField({
-  label,
-  description,
-  value,
-  onChange,
-  placeholder,
-}: {
-  label: string;
-  description?: string;
-  value: string;
-  onChange: (text: string) => void;
-  placeholder?: string;
-})
-    function ToolPicker({
-  tools,
-  selected,
-  onToggle,
-}: {
-  tools: ToolEntry[];
-  selected: string[];
-  onToggle: (toolName: string) => void;
-})
-  React Components:
-    function: TaskManagementPage
-    function: EmptyState
-    function: Field
-    function: LinesField
-    function: ToolPicker
 
 ## ui/src/pages/ToolsPage.tsx [tsx]
   Imports:
@@ -557,13 +1073,16 @@ Languages: javascript(29), tsx(14), typescript(4)
 
 ## ui/src/types.ts [typescript]
   Exports:
-    function: emptyTaskDraft
+    function: emptyAgentDraft
+    function: isValidCron
     function: linesToText
     function: textToLines
     function: getProvider
     function: formatUptime
   Functions:
-    function emptyTaskDraft()
+    function emptyAgentDraft()
+    function isValidCronPart(part: string, [min, max]: [number, number])
+    function isValidCron(expr: string)
     function linesToText(lines: string[])
     function textToLines(text: string)
     function getProvider(source?: string)

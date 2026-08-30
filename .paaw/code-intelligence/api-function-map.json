@@ -1,8 +1,205 @@
 {
-  "routes": [],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/search",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/ds/query",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/prometheus/grafana/api/v1/rules",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/alerts",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/datasources",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/__scenario",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/__scenario",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/__reset",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/__sent",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/messages",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/monitor-meta",
+      "file": "server/monitor-routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/monitors",
+      "file": "server/monitor-routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/monitors",
+      "file": "server/monitor-routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/crews",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/tools",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/tasks",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/tasks",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/agents",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/datasources",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/datasources",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/runs",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/chat",
+      "file": "server/routes.mjs",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents",
+      "file": "ui/src/pages/AgentsPage.test.tsx",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents",
+      "file": "ui/src/pages/AgentsPage.test.tsx",
+      "handler": "",
+      "callChain": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/agents/agent-001/*",
+      "file": "ui/src/pages/AgentsPage.test.tsx",
+      "handler": "",
+      "callChain": []
+    }
+  ],
   "stats": {
-    "totalRoutes": 0,
+    "totalRoutes": 28,
     "withHandler": 0,
-    "withoutHandler": 0
+    "withoutHandler": 28
   }
 }

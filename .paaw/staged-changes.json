@@ -1,27 +1,23 @@
 {
-  "createdAt": "2026-08-16T12:40:15.464Z",
-  "agent": "developer",
-  "task": "TASK-010：Watchdog 範本 agent（seed + 驗收）— 完成 e2e 驗收腳本、api-samples、seed 文件並結案",
+  "createdAt": "2026-08-30T10:13:55.842Z",
+  "agent": "tester",
+  "task": "TASK-002：為 tpaaw-gateway 的 Backup Manager 補 unit tests（node:test，ADR-001）",
   "taskId": "",
-  "summary": "TASK-010 watchdog 範本 agent 收尾完成。\n\n本輪交付（前次 session 已交付 scheduler/agent-store notifyPolicy 邏輯、watchdog seed、20 條單元測試，均已在 25dce80/e31af3d commit）：\n1. dev/e2e/watchdog-e2e.mjs（新）— 可重現驗收腳本（舊版放 .paaw/tmp/ 已被自動清空）。全 mock：grafana-mock(3311) + tchat-mock(3312) + 內建 OpenAI-compatible LLM stub(3313)。LLM stub 行為完全照 watchdog prompt（healthy→不通知；firing→呼 tchat_send_message），經 config.providers runtime 注入指向 stub，不打真 API。驗證的是真接線：scheduler → agent-loop → toolRegistry（loadAllTools bootstrap）→ 真工具層 → 真 transport client.mjs → mocks → jsonl。三個腳本 bug 迭代修掉：工具未註冊（補 loadAllTools）、LLM stub 收到 tool result 後重複下 call 跑滿 maxRounds=8（偵測 assistant 已叫過 tchat_send_message 即給 final answer）、/ping wait 殘留。\n2. npm run e2e:watchdog script\n3. .paaw/api-samples.json — GET/POST /api/agents sample 補 notifyPolicy 欄位（always/on-fail/on-signal + 語意說明）\n4. agents/README.md — watchdog-patrol seed 使用說明（行為、enabled:false 出貨、啟用方式、驗收指令）\n\n驗收結果 8/8 ALL PASS：healthy run success + jsonl 無新訊息 + scheduler 不推；firing run success + jsonl +1 則告警（HighCPUUsage critical）+ run.notified=true（on-signal 去重）。全套 vitest 335/335 綠，e2e 重跑 idempotent。",
+  "summary": "TASK-002 完成：為 Backup Manager 補 13 個 node:test 單元測試（全綠），含最重要的 regression invariant（createBackup 產生的檔名必須通過 BACKUP_REGEX，防止 ISS-001 重演）。最小 refactor 只加 export + env 覆寫 + main guard，不搬檔案、不改產品行為。npm test 一鍵通過（已驗證 3 次穩定）。過程中實證發現新 bug ISS-002（same-hour collision：同小時備份→還原時 safety backup 覆蓋原備份，還原無效且原備份永久損毀，回報 ok:true），已開 issue 建議 Developer Priya 修復。",
   "files": [
     {
-      "path": "dev/e2e/watchdog-e2e.mjs",
-      "reason": "TASK-010 驗收腳本（新檔，可重現）：全 mock 端到端驗證 healthy 安靜 / firing 通知"
+      "path": "/Users/steward/App/tpaaw-gateway/tests/unit/backup.test.mjs",
+      "reason": "TASK-002 主產出：13 個 node:test 單元測試，覆蓋 BACKUP_REGEX 白名單、regression invariant、listBackups/createBackup/restoreBackup"
     },
     {
-      "path": "package.json",
-      "reason": "加 e2e:watchdog script"
+      "path": "/Users/steward/App/tpaaw-gateway/src/server.mjs",
+      "reason": "最小侵入 refactor：5 個 export、4 個 env 覆寫（PAAW_ROOT/PAAW_BACKUP_DIR/PAAW_EVENT_LOG/PAAW_MAX_BACKUPS）、main guard 讓 import 不 listen；行為不變"
     },
     {
-      "path": ".paaw/api-samples.json",
-      "reason": "GET/POST /api/agents sample 補 notifyPolicy 欄位（TASK-010 新 API 欄位）"
-    },
-    {
-      "path": "agents/README.md",
-      "reason": "watchdog-patrol seed 使用說明：notifyPolicy 行為、啟用方式、驗收指令"
+      "path": "/Users/steward/App/tpaaw-gateway/package.json",
+      "reason": "加 test script：node --test tests/**/*.test.mjs"
     }
   ],
-  "howToTest": "1. npx vitest run → 335/335 綠（12 檔，含 scheduler notifyPolicy 4 條 + agent-store 3 條新測試）\n2. npm run e2e:watchdog → ✅ ALL PASS (8 passed)：healthy 情境 jsonl 無新訊息 + firing 情境 +1 則含 HighCPUUsage 的告警、run.notified=true（去重生效）\n3. 驗收後自動清理：workdir temp、data/conversations/watchdog-patrol 皆刪",
-  "risk": "① LLM stub 是腳本內建 OpenAI-compatible 假 server（注入 config.providers），驗證的是接線與 scheduler 行為，非真 LLM 判斷力 — 換真 LLM 後 firing 判斷需人工複驗一次。② watchdog seed enabled:false 出貨，啟用需手動改 true 或 PATCH。③ notifyPolicy 是 agent schema 新欄位，UI 尚未顯示此欄位（後續 task 範圍）"
+  "howToTest": "在 /Users/steward/App/tpaaw-gateway 下執行 `npm test` → 應顯示 tests 13 / pass 13 / fail 0（已連跑 3 次驗證穩定，無 flaky）。另可驗證 production 啟動不受影響：`node src/server.mjs` 仍會 listen :4199（Ctrl+C 停止）；`git diff src/server.mjs` 檢視最小變更。",
+  "risk": "src/server.mjs 的 main guard 是必要行為變更：模組被 import 時不再自動 listen（直接執行 node src/server.mjs 不受影響，已實測）。若未來有其他檔案 import server.mjs 期待副作用啟動，需自行呼叫 listen — 目前 codebase 無此使用。TASKS.json/ISSUES.json 在 gitignore 的 .paaw/ 內，已更新但未 stage（依專案慣例）。"
 }

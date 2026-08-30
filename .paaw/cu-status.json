@@ -2,58 +2,58 @@
   "steps": {
     "scan": {
       "status": "done",
-      "size": 13294,
-      "updatedAt": "2026-08-15T11:16:28.565Z"
+      "size": 7013,
+      "updatedAt": "2026-08-22T13:44:00.686Z"
     },
     "architecture": {
       "status": "done",
-      "size": 7225,
-      "updatedAt": "2026-08-15T11:17:13.238Z"
+      "size": 4443,
+      "updatedAt": "2026-08-19T14:14:29.564Z"
     },
     "feature-map": {
       "status": "done",
-      "size": 11619,
-      "updatedAt": "2026-08-15T11:19:21.820Z"
+      "size": 18291,
+      "updatedAt": "2026-08-22T13:47:00.874Z"
     },
     "api-spec": {
       "status": "done",
-      "size": 17301,
-      "updatedAt": "2026-08-15T11:20:39.440Z"
+      "size": 4728,
+      "updatedAt": "2026-08-19T14:17:44.331Z"
     },
     "code-intelligence": {
       "status": "done",
-      "summary": "117 functions",
-      "updatedAt": "2026-08-15T11:20:39.541Z"
+      "summary": "1140 functions",
+      "updatedAt": "2026-08-22T15:25:06.427Z"
     },
     "test-intelligence": {
       "status": "done",
-      "summary": "12 tests",
-      "updatedAt": "2026-08-15T11:20:39.608Z"
+      "summary": "22 tests",
+      "updatedAt": "2026-08-22T15:25:06.760Z"
     },
     "error-mapping": {
       "status": "done",
-      "size": 104,
-      "updatedAt": "2026-08-15T11:20:42.098Z"
+      "size": 9418,
+      "updatedAt": "2026-08-19T14:19:30.423Z"
     },
     "security-scan": {
       "status": "done",
-      "summary": "88 findings",
-      "updatedAt": "2026-08-15T11:20:51.700Z"
+      "summary": "149 findings",
+      "updatedAt": "2026-08-19T14:19:38.277Z"
     },
     "standards": {
       "status": "done",
-      "size": 9385,
-      "updatedAt": "2026-08-15T11:21:32.277Z"
+      "size": 6670,
+      "updatedAt": "2026-08-19T14:20:14.034Z"
     },
     "overview": {
       "status": "done",
-      "size": 11268,
-      "updatedAt": "2026-08-15T11:22:28.189Z"
+      "size": 8012,
+      "updatedAt": "2026-08-19T14:20:58.588Z"
     },
     "change-intelligence": {
       "status": "done",
-      "summary": "19 commits",
-      "updatedAt": "2026-08-15T11:22:28.278Z"
+      "summary": "50 commits",
+      "updatedAt": "2026-08-22T15:25:06.891Z"
     }
   }
 }

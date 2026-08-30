@@ -1,364 +1,161 @@
-I'll scan this codebase systematically. The file tree command failed, so let me explore the structure directly. Bash commands are available — let me use them. # Code Understanding — Scan Project
-
-You are a senior code analyst. Scan this codebase and produce a structured inventory.
-
-## What You Receive
-- Project file tree (up to 200 files, excluding node_modules/.git)
-- package.json (if exists)
-- Recent git log (20 commits)
-- Existing .paaw/ knowledge base (if any)
-
-## What to Produce
-
-Output a JSON object with this exact structure:
+**Scan caveat:** The file-tree command failed (unquoted parentheses in `find`), so this inventory is derived from git history, package metadata, and commit-level evidence. Paths under `dev/mocks/` are confirmed; all others are inferred from commits and are flagged for verification in `techDebt[0]`. Re-run the file scan to confirm.
 
 ```json
 {
-  "projectName": "string",
-  "projectType": "web-app | api-server | cli-tool | library | monorepo | other",
-  "language": "primary language",
-  "framework": "main framework(s)",
-  "runtime": "Node.js / Bun / Deno / browser / etc",
-  "summary": "One sentence: what does this project do, who is it for",
-  "entryPoints": ["list of main entry files with paths"],
+  "projectName": "agent-sre",
+  "projectType": "web-app",
+  "language": "JavaScript (ESM)",
+  "framework": "Vite 5.4.21 (frontend build), custom Node.js HTTP server + node-cron (backend scheduler)",
+  "runtime": "Node.js",
+  "summary": "An agentic SRE monitoring workspace that runs scheduled and manually-triggered monitoring agents against Grafana-style data sources, records run history, and reports alerts through a tchat messaging transport (contract v0) — built for SRE/platform operations teams.",
+  "entryPoints": [
+    "dev/mocks/tchat-mock.mjs",
+    "package.json (scripts: mock:tchat — main server/UI entry path unverified, see techDebt[0])"
+  ],
   "keyDirectories": {
-    "source": "path to source code root",
-    "tests": "path to tests or null",
-    "config": "path to config files",
-    "docs": "path to docs or null"
+    "source": "server + frontend source root (unverified — likely src/ or server/)",
+    "tests": "e2e tests exist for watchdog/scheduler (TASK-005, TASK-010; exact path unverified)",
+    "config": "package.json, vite config (pinned to 5.4.21)",
+    "docs": ".paaw/ (knowledge base: tasks, ADRs, api-samples, changelog)"
   },
   "modules": [
     {
-      "name": "module/feature name",
-      "path": "directory or file",
-      "responsibility": "what this module does",
-      "dependsOn": ["other module names"],
-      "exports": ["key functions/classes exported"]
+      "name": "scheduler",
+      "path": "server-side scheduler module (unverified)",
+      "responsibility": "node-cron based scheduling engine that triggers agent runs on cron schedules and records each run",
+      "dependsOn": ["runs", "agents"],
+      "exports": ["cron schedule registration", "run recording"]
+    },
+    {
+      "name": "runs",
+      "path": "server-side runs module (unverified)",
+      "responsibility": "Run history store with deterministic ordering (sort tie-break on run id, TASK-004)",
+      "dependsOn": [],
+      "exports": ["run records", "sorted run queries"]
+    },
+    {
+      "name": "agents-api",
+      "path": "server routes module (unverified)",
+      "responsibility": "HTTP API surface, including manual agent trigger POST /api/agents/:id/run (TASK-006)",
+      "dependsOn": ["scheduler", "runs", "agents"],
+      "exports": ["POST /api/agents/:id/run"]
+    },
+    {
+      "name": "agents-ui",
+      "path": "frontend page module (unverified)",
+      "responsibility": "AgentsPage — agent management UI, upgraded from TaskManagementPage (TASK-003)",
+      "dependsOn": ["agents-api"],
+      "exports": ["AgentsPage"]
+    },
+    {
+      "name": "tchat-transport",
+      "path": "server-side transport layer (unverified)",
+      "responsibility": "Extracted messaging transport implementing tchat contract v0 for outbound notifications (TASK-007, ADR-004)",
+      "dependsOn": [],
+      "exports": ["tchat contract v0 message sender"]
+    },
+    {
+      "name": "watchdog",
+      "path": "server-side watchdog module (unverified)",
+      "responsibility": "Monitors agent health and coding sessions; syncs task state; has e2e test against tchat mock (TASK-010)",
+      "dependsOn": ["tchat-transport", "grafana-datasource"],
+      "exports": ["watchdog loop", "task state sync"]
+    },
+    {
+      "name": "grafana-datasource",
+      "path": "server datasource files (unverified)",
+      "responsibility": "Grafana datasource integration/handler for fetching monitoring data",
+      "dependsOn": [],
+      "exports": ["grafana handler"]
+    },
+    {
+      "name": "dev-mocks",
+      "path": "dev/mocks/",
+      "responsibility": "Development fixtures: tchat mock server (port 3002, POST /api/messages, scenario switching, jsonl logging via TCHAT_SENT_LOG) and Grafana mock server (TASK-008/009)",
+      "dependsOn": ["tchat-transport (contract parity)"],
+      "exports": ["tchat-mock.mjs", "grafana mock fixture"]
     }
   ],
   "apis": [
     {
-      "method": "GET|POST|PUT|DELETE|PATCH",
-      "path": "/api/...",
-      "file": "source file that defines it",
-      "hasRequestSchema": true|false,
-      "hasResponseSchema": true|false,
-      "hasErrorMapping": true|false,
-      "hasTestPayload": true|false
-    }
-  ],
-  "errorCodes": [
+      "method": "POST",
+      "path": "/api/agents/:id/run",
+      "file": "server routes module (path unverified — TASK-006)",
+      "hasRequestSchema": false,
+      "hasResponseSchema": false,
+      "hasErrorMapping": false,
+      "hasTestPayload": false
+    },
     {
-      "code": "string",
-      "type": "error type/enum",
-      "file": "where it's defined",
-      "hasRunbook": true|false
+      "method": "POST",
+      "path": "/api/messages",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "hasRequestSchema": true,
+      "hasResponseSchema": true,
+      "hasErrorMapping": false,
+      "hasTestPayload": true
     }
   ],
+  "errorCodes": [],
   "dataModels": [
     {
-      "name": "model name",
-      "file": "where defined",
-      "fields": ["key fields"],
-      "persistence": "database/file/memory/none"
+      "name": "Agent",
+      "file": "server agents store (unverified)",
+      "fields": ["id", "schedule (cron expression)", "expertise"],
+      "persistence": "file (likely JSON store — unverified)"
+    },
+    {
+      "name": "Run",
+      "file": "server runs module (unverified)",
+      "fields": ["id", "agentId", "execution record/timestamp"],
+      "persistence": "file (run recording via scheduler)"
+    },
+    {
+      "name": "Message (tchat contract v0)",
+      "file": "dev/mocks/tchat-mock.mjs (mock implementation)",
+      "fields": ["contract v0 payload fields", "scenario"],
+      "persistence": "file (tchat-sent.jsonl, gitignored)"
     }
   ],
   "techDebt": [
     {
-      "area": "what needs attention",
-      "severity": "low|medium|high",
-      "suggestion": "brief fix recommendation"
+      "area": "Codebase scan tooling / path verification",
+      "severity": "high",
+      "suggestion": "File-tree find command failed on unquoted parens — fix and re-run scan. All paths outside dev/mocks/ are inferred from git history and must be verified before navigation."
+    },
+    {
+      "area": "API schema/error coverage on /api/agents/:id/run",
+      "severity": "medium",
+      "suggestion": "No evidence of request/response schemas, error mapping, or test payloads for the manual trigger route; add contract definitions (tchat contract v0 is a good pattern to follow)."
+    },
+    {
+      "area": "Mock/real contract drift risk",
+      "severity": "medium",
+      "suggestion": "tchat mock (dev/mocks/tchat-mock.mjs) and extracted real transport (ADR-004) implement contract v0 separately; add a shared contract definition or drift test."
+    },
+    {
+      "area": "Vite pinned to 5.4.21",
+      "severity": "low",
+      "suggestion": "Downgraded to dodge a vite 6 pre-transform bug; retest on vite 6.x periodically and unpin when fixed."
+    },
+    {
+      "area": "Legacy naming from TaskManagementPage → AgentsPage rename",
+      "severity": "low",
+      "suggestion": "TASK-003 was an in-place upgrade; sweep for leftover TaskManagement references, dead routes, and stale imports."
     }
   ],
   "healthGaps": {
-    "missingApiSpec": true|false,
-    "missingErrorMap": true|false,
-    "missingTests": true|false,
-    "missingStandards": true|false,
-    "missingArchitecture": true|false,
-    "missingDecisions": true|false
+    "missingApiSpec": true,
+    "missingErrorMap": true,
+    "missingTests": false,
+    "missingStandards": true,
+    "missingArchitecture": true,
+    "missingDecisions": false
   }
 }
 ```
 
-## Rules
-- Read ACTUAL source code, don't guess from file names
-- `modules` must capture the real dependency graph — what imports what
-- `techDebt` is for things that make the code harder to maintain, not stylistic preferences
-- `healthGaps` tells the system what Knowledge Base artifacts are missing
-- Be precise with file paths — they will be used to navigate the codebase
-
-
---- PROJECT CONTEXT ---
-Project root: /Users/steward/App/agent-sre
-Package: agent-sre
-Dependencies: 
-
-File tree:
-/bin/sh: -c: line 0: syntax error near unexpected token `('
-/bin/sh: line 0: `find . -type f ( -name '*.ts' -o -name '*.tsx' -o -name '*.mjs' -o -name '*.js' -o -name '*.cjs' -o -name '*.jsx' -o -name '*.py' -o -name '*.java' -o -name '*.go' -o -name '*.rb' -o -name '*.php' ) -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/.paaw/*' -not -path '*/dist/*' -not -path '*/build/*' -not -path '*/coverage/*' -not -path '*/data/semgrep-rules/*'`
-
-Recent git log:
-b655bc1 feat(ui): add Task management page with CRUD UI
-80b15a1 feat(server): add Task management CRUD API endpoints
-c895498 fix(security): resolve json-stable-stringify warnings in llm.mjs and provider.mjs
-f072911 fix(security): block path traversal in tool-loader fs operations
-dd893ba staged changes json
-6c5dec0 docs(paaw): add ADR-002 for multi-agent orchestration architecture
-edf2daa fix(console): chat send no response + error not displayed
-aa12aa1 add paaw files and package-lock.json
-e7f7dc4 feat(ui): add 7-view navigation shell + platform home page
-6f00301 feat: multi-tab chat + model selector
-c6a0c48 feat: React + Vite + Tailwind UI (matching PAAW stack)
-1ca8dfa feat: add web UI + tool test endpoint
-27db224 rename: tg_* → tchat_* tool names
-017f00a rename: telegram → tchat
-795e8f0 feat: add Telegram MCP tool provider (3 tools)
-55cc035 feat: add Grafana MCP tool provider (6 tools)
-c936d78 feat: add MCP server + client support
-70820ee feat: rewrite as fully standalone — zero PAAW dependency
-e95687c feat: extract SRE agent crew into independent repo
-
-I'll scan this codebase systematically. The file tree command failed, so let me explore the structure directly. # Code Understanding — Scan Project
-
-You are a senior code analyst. Scan this codebase and produce a structured inventory.
-
-## What You Receive
-- Project file tree (up to 200 files, excluding node_modules/.git)
-- package.json (if exists)
-- Recent git log (20 commits)
-- Existing .paaw/ knowledge base (if any)
-
-## What to Produce
-
-Output a JSON object with this exact structure:
-
-```json
-{
-  "projectName": "string",
-  "projectType": "web-app | api-server | cli-tool | library | monorepo | other",
-  "language": "primary language",
-  "framework": "main framework(s)",
-  "runtime": "Node.js / Bun / Deno / browser / etc",
-  "summary": "One sentence: what does this project do, who is it for",
-  "entryPoints": ["list of main entry files with paths"],
-  "keyDirectories": {
-    "source": "path to source code root",
-    "tests": "path to tests or null",
-    "config": "path to config files",
-    "docs": "path to docs or null"
-  },
-  "modules": [
-    {
-      "name": "module/feature name",
-      "path": "directory or file",
-      "responsibility": "what this module does",
-      "dependsOn": ["other module names"],
-      "exports": ["key functions/classes exported"]
-    }
-  ],
-  "apis": [
-    {
-      "method": "GET|POST|PUT|DELETE|PATCH",
-      "path": "/api/...",
-      "file": "source file that defines it",
-      "hasRequestSchema": true|false,
-      "hasResponseSchema": true|false,
-      "hasErrorMapping": true|false,
-      "hasTestPayload": true|false
-    }
-  ],
-  "errorCodes": [
-    {
-      "code": "string",
-      "type": "error type/enum",
-      "file": "where it's defined",
-      "hasRunbook": true|false
-    }
-  ],
-  "dataModels": [
-    {
-      "name": "model name",
-      "file": "where defined",
-      "fields": ["key fields"],
-      "persistence": "database/file/memory/none"
-    }
-  ],
-  "techDebt": [
-    {
-      "area": "what needs attention",
-      "severity": "low|medium|high",
-      "suggestion": "brief fix recommendation"
-    }
-  ],
-  "healthGaps": {
-    "missingApiSpec": true|false,
-    "missingErrorMap": true|false,
-    "missingTests": true|false,
-    "missingStandards": true|false,
-    "missingArchitecture": true|false,
-    "missingDecisions": true|false
-  }
-}
-```
-
-## Rules
-- Read ACTUAL source code, don't guess from file names
-- `modules` must capture the real dependency graph — what imports what
-- `techDebt` is for things that make the code harder to maintain, not stylistic preferences
-- `healthGaps` tells the system what Knowledge Base artifacts are missing
-- Be precise with file paths — they will be used to navigate the codebase
-
-
---- PROJECT CONTEXT ---
-Project root: /Users/steward/App/agent-sre
-Package: agent-sre
-Dependencies: 
-
-File tree:
-/bin/sh: -c: line 0: syntax error near unexpected token `('
-/bin/sh: line 0: `find . -type f ( -name '*.ts' -o -name '*.tsx' -o -name '*.mjs' -o -name '*.js' -o -name '*.cjs' -o -name '*.jsx' -o -name '*.py' -o -name '*.java' -o -name '*.go' -o -name '*.rb' -o -name '*.php' ) -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/.paaw/*' -not -path '*/dist/*' -not -path '*/build/*' -not -path '*/coverage/*' -not -path '*/data/semgrep-rules/*'`
-
-Recent git log:
-b655bc1 feat(ui): add Task management page with CRUD UI
-80b15a1 feat(server): add Task management CRUD API endpoints
-c895498 fix(security): resolve json-stable-stringify warnings in llm.mjs and provider.mjs
-f072911 fix(security): block path traversal in tool-loader fs operations
-dd893ba staged changes json
-6c5dec0 docs(paaw): add ADR-002 for multi-agent orchestration architecture
-edf2daa fix(console): chat send no error not displayed
-aa12aa1 add paaw files and package-lock.json
-e7f7dc4 feat(ui): add 7-view navigation shell + platform home page
-6f00301 feat: multi-tab chat + model selector
-c6a0c48 feat: React + Vite + Tailwind UI (matching PAAW stack)
-1ca8dfa feat: add web UI + tool test endpoint
-27db224 rename: tg_* → tchat_* tool names
-017f00a rename: telegram → tchat
-795e8f0 feat: add Telegram MCP tool provider (3 tools)
-55cc035 feat: add Grafana MCP tool provider (6 tools)
-c936d78 feat: add MCP server + client support
-70820ee feat: rewrite as fully standalone — zero PAAW dependency
-e95687c feat: extract SRE agent crew into independent repo
-
-I'll scan this codebase systematically. The file tree command failed, so let me explore the structure directly. Bash commands are available — let me use them. # Code Understanding — Scan Project
-
-You are a senior code analyst. Scan this codebase and produce a structured inventory.
-
-## What You Receive
-- Project file tree (up to 200 files, excluding node_modules/.git)
-- package.json (if exists)
-- Recent git log (20 commits)
-- Existing .paaw/ knowledge base (if any)
-
-## What to Produce
-
-Output a JSON object with this exact structure:
-
-```json
-{
-  "projectName": "string",
-  "projectType": "web-app | api-server | cli-tool | library | monorepo | other",
-  "language": "primary language",
-  "framework": "main framework(s)",
-  "runtime": "Node.js / Bun / Deno / browser / etc",
-  "summary": "One sentence: what does this project do, who is it for",
-  "entryPoints": ["list of main entry files with paths"],
-  "keyDirectories": {
-    "source": "path to source code root",
-    "tests": "path to tests or null",
-    "config": "path to config files",
-    "docs": "path to docs or null"
-  },
-  "modules": [
-    {
-      "name": "module/feature name",
-      "path": "directory or file",
-      "responsibility": "what this module does",
-      "dependsOn": ["other module names"],
-      "exports": ["key functions/classes exported"]
-    }
-  ],
-  "apis": [
-    {
-      "method": "GET|POST|PUT|DELETE|PATCH",
-      "path": "/api/...",
-      "file": "source file that defines it",
-      "hasRequestSchema": true|false,
-      "hasResponseSchema": true|false,
-      "hasErrorMapping": true|false,
-      "hasTestPayload": true|false
-    }
-  ],
-  "errorCodes": [
-    {
-      "code": "string",
-      "type": "error type/enum",
-      "file": "where it's defined",
-      "hasRunbook": true|false
-    }
-  ],
-  "dataModels": [
-    {
-      "name": "model name",
-      "file": "where defined",
-      "fields": ["key fields"],
-      "persistence": "database/file/memory/none"
-    }
-  ],
-  "techDebt": [
-    {
-      "area": "what needs attention",
-      "severity": "low|medium|high",
-      "suggestion": "brief fix recommendation"
-    }
-  ],
-  "healthGaps": {
-    "missingApiSpec": true|false,
-    "missingErrorMap": true|false,
-    "missingTests": true|false,
-    "missingStandards": true|false,
-    "missingArchitecture": true|false,
-    "missingDecisions": true|false
-  }
-}
-```
-
-## Rules
-- Read ACTUAL source code, don't guess from file names
-- `modules` must capture the real dependency graph — what imports what
-- `techDebt` is for things that make the code harder to maintain, not stylistic preferences
-- `healthGaps` tells the system what Knowledge Base artifacts are missing
-- Be precise with file paths — they will be used to navigate the codebase
-
-
---- PROJECT CONTEXT ---
-Project root: /Users/steward/App/agent-sre
-Package: agent-sre
-Dependencies: 
-
-File tree:
-/bin/sh: -c: line 0: syntax error near unexpected token `('
-/bin/sh: line 0: `find . -type f ( -name '*.ts' -o -name '*.tsx' -o -name '*.mjs' -o -name '*.js' -o -name '*.cjs' -o -name '*.jsx' -o -name '*.py' -o -name '*.java' -o -name '*.go' -o -name '*.rb' -o -name '*.php' ) -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/.paaw/*' -not -path '*/dist/*' -not -path '*/build/*' -not -path '*/coverage/*' -not -path '*/data/semgrep-rules/*'`
-
-Recent git log:
-b655bc1 feat(ui): add Task management page with CRUD UI
-80b15a1 feat(server): add Task management CRUD API endpoints
-c895498 fix(security): resolve json-stable-stringify warnings in llm.mjs and provider.mjs
-f072911 fix(security): block path traversal in tool-loader fs operations
-dd893ba staged changes json
-6c5dec0 docs(paaw): add ADR-002 for multi-agent orchestration architecture
-edf2daa fix(console): chat send no response + error not displayed
-aa12aa1 add paaw files and package-lock.json
-e7f7dc4 feat(ui): add 7-view navigation shell + platform home page
-6f00301 feat: multi-tab chat + model selector
-c6a0c48 feat: React + Vite + Tailwind UI (matching PAAW stack)
-1ca8dfa feat: add web UI + tool test endpoint
-27db224 rename: tg_* → tchat_* tool names
-017f00a rename: telegram → tchat
-795e8f0 feat: add Telegram MCP tool provider (3 tools)
-55cc035 feat: add Grafana MCP tool provider (6 tools)
-c936d78 feat: add MCP server + client support
-70820ee feat: rewrite as fully standalone — zero PAAW dependency
-e95687c feat: extract SRE agent crew into independent repo
-
-I'll scan this codebase systematically. The file tree command failed, so let me explore the structure directly. Bash commands are available — let me use them.
+**Notes for the orchestrator:**
+- `missingDecisions: false` because an ADR system is active (ADR-004 referenced in commit 81fbe64).
+- `missingTests: false` because scheduler tests (TASK-005) and watchdog e2e (TASK-010) exist — though coverage breadth is unknown.
+- The highest-priority action is re-running the file scan; everything downstream (module paths, entry points) should be reconciled against real files.

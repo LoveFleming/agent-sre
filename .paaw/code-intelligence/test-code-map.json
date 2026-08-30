@@ -8,6 +8,20 @@
       "testCount": 6
     },
     {
+      "testFile": "server/agent-store.mjs",
+      "productionFile": "server/config.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 14
+    },
+    {
+      "testFile": "server/agent-store.test.mjs",
+      "productionFile": "server/agent-store.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 2
+    },
+    {
       "testFile": "server/config.test.mjs",
       "productionFile": "server/config.mjs",
       "matchType": "naming",
@@ -20,6 +34,20 @@
       "matchType": "naming",
       "testedFunctions": [],
       "testCount": 0
+    },
+    {
+      "testFile": "server/datasource-store.mjs",
+      "productionFile": "server/config.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 18
+    },
+    {
+      "testFile": "server/datasource-store.test.mjs",
+      "productionFile": "server/datasource-store.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 3
     },
     {
       "testFile": "server/index.mjs",
@@ -43,18 +71,95 @@
       "testCount": 2
     },
     {
+      "testFile": "server/monitor-instance.mjs",
+      "productionFile": "server/config.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 12
+    },
+    {
+      "testFile": "server/monitor-instance.test.mjs",
+      "productionFile": "server/monitor-instance.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 0
+    },
+    {
+      "testFile": "server/monitor-routes.mjs",
+      "productionFile": "server/monitor-store.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 5
+    },
+    {
+      "testFile": "server/monitor-routes.test.mjs",
+      "productionFile": "server/monitor-routes.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
+      "testFile": "server/monitor-scheduler.mjs",
+      "productionFile": "server/monitor-store.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 12
+    },
+    {
+      "testFile": "server/monitor-store.mjs",
+      "productionFile": "server/config.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 15
+    },
+    {
+      "testFile": "server/monitor-store.test.mjs",
+      "productionFile": "server/monitor-store.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
       "testFile": "server/routes.mjs",
       "productionFile": "server/crew-loader.mjs",
       "matchType": "import",
       "testedFunctions": [],
-      "testCount": 4
+      "testCount": 9
     },
     {
       "testFile": "server/routes.test.mjs",
       "productionFile": "server/routes.mjs",
       "matchType": "naming",
       "testedFunctions": [],
-      "testCount": 1
+      "testCount": 8
+    },
+    {
+      "testFile": "server/run-store.mjs",
+      "productionFile": "server/config.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 17
+    },
+    {
+      "testFile": "server/run-store.test.mjs",
+      "productionFile": "server/run-store.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 2
+    },
+    {
+      "testFile": "server/scheduler.mjs",
+      "productionFile": "server/agent-store.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 17
+    },
+    {
+      "testFile": "server/scheduler.test.mjs",
+      "productionFile": "server/scheduler.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 3
     },
     {
       "testFile": "server/task-store.test.mjs",
@@ -80,6 +185,27 @@
     {
       "testFile": "server/tool-registry.test.mjs",
       "productionFile": "server/tool-registry.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 2
+    },
+    {
+      "testFile": "tools/tchat/client.test.mjs",
+      "productionFile": "tools/tchat/client.mjs",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 1
+    },
+    {
+      "testFile": "tools/tchat/handler.mjs",
+      "productionFile": "tools/tchat/client.mjs",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 7
+    },
+    {
+      "testFile": "tools/tchat/handler.test.mjs",
+      "productionFile": "tools/tchat/handler.mjs",
       "matchType": "naming",
       "testedFunctions": [],
       "testCount": 2
@@ -127,6 +253,20 @@
       "testCount": 0
     },
     {
+      "testFile": "ui/src/pages/AgentsPage.test.tsx",
+      "productionFile": "ui/src/pages/AgentsPage.tsx",
+      "matchType": "naming",
+      "testedFunctions": [],
+      "testCount": 4
+    },
+    {
+      "testFile": "ui/src/pages/AgentsPage.tsx",
+      "productionFile": "ui/src/types.ts",
+      "matchType": "import",
+      "testedFunctions": [],
+      "testCount": 7
+    },
+    {
       "testFile": "ui/src/pages/ConsolePage.tsx",
       "productionFile": "ui/src/types.ts",
       "matchType": "import",
@@ -148,13 +288,6 @@
       "testCount": 2
     },
     {
-      "testFile": "ui/src/pages/TaskManagementPage.tsx",
-      "productionFile": "ui/src/types.ts",
-      "matchType": "import",
-      "testedFunctions": [],
-      "testCount": 5
-    },
-    {
       "testFile": "ui/src/pages/ToolsPage.tsx",
       "productionFile": "ui/src/types.ts",
       "matchType": "import",
@@ -170,8 +303,8 @@
     }
   ],
   "stats": {
-    "totalTestFiles": 11,
-    "matchedTests": 24,
+    "totalTestFiles": 21,
+    "matchedTests": 43,
     "totalTestedFunctions": 0
   }
 }

@@ -1,189 +1,166 @@
 # Coding Standards — agent-sre
 
-> **Source:** Derived from observed patterns in the codebase (ES-module server, React/Vite/Tailwind UI, MCP tool providers) and the git history. Where the codebase is silent, standards are set to the closest matching convention and marked **[established]** — these are now binding for new code.
-
----
-
 ## 1. Coding Rules
 
-### 1.1 Language & Module Format
+### Naming Conventions
 
-- Server code is **JavaScript ES Modules** with the `.mjs` extension. Never use CommonJS (`require`, `module.exports`) in server code.
-- UI code is **JSX** (React), built with Vite.
-- No TypeScript migration mid-file: stay in plain JS + JSDoc until a project-wide decision (record it as an ADR first).
-
-### 1.2 Naming Conventions
-
-| Item | Convention | Example |
+| Artifact | Convention | Example |
 |---|---|---|
-| Server files | `kebab-case.mjs` | `tool-loader.mjs`, `llm.mjs`, `provider.mjs` |
-| UI components | `PascalCase.jsx` | `TaskPage.jsx`, `ChatTabs.jsx` |
-| UI hooks | `useCamelCase` | `useChatSession` |
-| Functions | `camelCase`, verb-first | `loadTools()`, `resolveProvider()` |
-| Classes | `PascalCase` | `McpClient` |
-| Constants | `SCREAMING_SNAKE_CASE` | `MAX_RETRIES` |
-| Environment variables | `SCREAMING_SNAKE_CASE`, prefixed by domain | `GRAFANA_API_TOKEN`, `TCHAT_BOT_TOKEN` |
-| MCP tool names | `<provider>_<action>` snake_case | `tchat_send_message`, `grafana_list_dashboards` |
-| API routes | `/api/<plural-noun>`, kebab-case | `/api/tasks`, `/api/chat/sessions` |
-| Git commits | Conventional Commits: `type(scope): description` | `feat(ui): ...`, `fix(server): ...` |
+| Files & directories | `kebab-case` | `src/routes/agents.js`, `dev/mocks/tchat-mock.mjs` |
+| React components | `PascalCase` file name, named export | `src/ui/AgentsPage.jsx` |
+| Functions | `camelCase` | `createRun`, `sendChat`, `watchdogLoop` |
+| Classes | `PascalCase` | `class RunRepository` |
+| Variables | `camelCase` | `agentId`, `notifyError` |
+| Constants | `UPPER_SNAKE_CASE` | `DEFAULT_RETENTION_DAYS` |
+| Private functions | `_camelCase` prefix | `_normalizeSchedule` |
+| Test files | `*.test.js` / `*.spec.js` | `src/runs/run.test.js` |
+| Mock files | `*-mock.mjs` | `tchat-mock.mjs`, `grafana-mock.mjs` |
 
-**Valid commit scopes:** `ui`, `server`, `console`, `security`, `paaw`, `mcp`, `docs`, `tools`. Types: `feat`, `fix`, `refactor`, `docs`, `chore`, `rename`, `test`.
+### File Organization
 
-**MCP tool naming rule:** every tool exported by a provider **must** be prefixed with the provider's short name (e.g. `grafana_`, `tchat_`). The `tg_* → tchat_*` rename (commit `27db224`) established that provider prefixes match the provider's canonical name.
-
-### 1.3 File Organization
-
-- One primary export (class, provider definition, or route group) per server file. Small helpers may share a file.
-- Server layout follows the layer it belongs to (see §2.1). Do not add a file without knowing its layer.
-- UI files live next to their view; shared components go in a `components/` directory, hooks in `hooks/`.
-
-### 1.4 Import Order
-
-Group imports with a blank line between groups, in this order:
-
-```js
-// 1. Node builtins
-import fs from 'node:fs/promises';
-import path from 'node:path';
-
-// 2. External packages
-import express from 'express';
-import stableStringify from 'json-stable-stringify';
-
-// 3. Internal modules (relative paths)
-import { loadTools } from './tool-loader.mjs';
-import { resolveProvider } from './provider.mjs';
+```
+src/
+  server.js              # entry point, Express bootstrap
+  routes/                # HTTP route definitions only
+  scheduler/             # scheduling logic
+  runs/                  # run domain logic
+  agents/                # agent domain logic
+  tchat/                 # tchat transport adapter
+  grafana/               # grafana adapter
+  watchdog/              # health monitoring loop
+  models/                # data models / persistence
+  ui/                    # React components
+test/                    # unit/integration tests
+dev/mocks/               # development mock servers
+config/                  # environment config
 ```
 
-- Always use `node:` prefix for builtins.
-- Internal imports must include the `.mjs` extension.
-- No circular imports — see Quality Checklist.
+- Each domain module owns its logic and exports a small public API.
+- Route files contain no business logic; they delegate to domain modules.
+- Models are plain data definitions with file persistence.
+- Mock servers live under `dev/mocks/`, never in `src/`.
 
-### 1.5 Export Patterns
+### Import Ordering
 
-- Server modules use **named exports** exclusively. No default exports in server code (default exports break refactor/grep workflows in a modular monolith).
-- React components may use default exports (Vite convention), one per file.
-- MCP providers export a registration object/function shaped consistently: `{ name, tools }`.
+1. Node.js built-ins (`node:path`, `node:fs`)
+2. External dependencies (`express`, `node-cron`)
+3. Internal project modules (`../runs`, `../../models/run`)
+4. Relative imports within the same module (`./run`)
 
----
+Separate groups with a blank line. No unused imports.
+
+### Export Patterns
+
+- **Named exports** for utilities, services, and domain functions: `export function createRun()`, `export const router`.
+- **Default exports** only for React page/component entry points: `export default function AgentsPage()`.
+- Avoid mixing default and named exports in the same file unless the default is the primary component and named exports are subcomponents/hooks.
+- Index files (`index.js`) re-export the module’s public API.
 
 ## 2. Architecture Rules
 
-### 2.1 Layer Structure & Allowed Dependencies
+### Layer Dependencies
 
 ```
-UI (React)  →  API (HTTP)  →  Agent/Orchestration  →  Tools (MCP providers)  →  External systems
+routes → services/domain modules → models
+routes → scheduler, runs, agents
+scheduler → runs
+agents → runs
+watchdog → tchat, grafana
+ui → api (HTTP only)
 ```
 
-Arrows are the **only** allowed dependency direction.
+- **Allowed:** A module may depend on modules listed in its `dependsOn` map.
+- **Forbidden:** A domain module must not depend on `routes`.
+- **Forbidden:** A model must not depend on services or routes.
+- **Forbidden:** UI code must not import server-side modules directly; it communicates via HTTP API.
 
-| Layer | Contains | May depend on | Must never |
-|---|---|---|---|
-| **UI** | React views, hooks, Tailwind styling | API layer (via HTTP only) | Import server code, touch fs, call LLM/external APIs directly |
-| **API** | Route handlers, request validation, response shaping | Agent/Orchestration, Tool layer (for the tool test endpoint) | Contain business logic, call external services directly |
-| **Agent/Orchestration** | `llm.mjs`, `provider.mjs`, crew orchestration | Tool layer (via MCP client), LLM providers | Know about HTTP requests/responses |
-| **Tools (MCP)** | Grafana provider, tchat provider, `tool-loader` | External systems, Node builtins | Import from API or Agent layers, know about the web console |
+### Module Boundaries
 
-**Hard rules:**
+- No cross-package imports without a documented reason.
+- If module A needs functionality from module B, add B to A’s `dependsOn` and export the needed function.
+- Do not reach into another module’s internal files; use its public exports.
+- Keep the dependency graph acyclic. New dependencies must not create cycles.
 
-- The UI communicates with the server **only** through the HTTP API. No direct fs/db/LLM access from browser code.
-- Route handlers delegate to the orchestration/tool layers; if a route handler exceeds ~50 lines of logic, extract it downward.
-- MCP providers are **plugins**: they must be addable/removable without touching the API or orchestration layers beyond registration.
-- Zero external platform dependencies — this repo is standalone (per commit `70820ee`). Any dependency on the parent platform (PAAW) must be justified in an ADR first.
+### Separation of Concerns
 
-### 2.2 Module Boundaries
-
-- No cross-layer imports that skip a layer (e.g., UI → tool-loader).
-- Providers do not import each other; shared tool utilities go in the tool layer's common module.
-- New external tool providers follow the established pattern: register N tools with `<provider>_` prefixed names, expose via MCP, add a test path through the tool test endpoint.
-
-### 2.3 Separation of Concerns
-
-- **Routes** = parse/validate input → call layer below → shape HTTP response.
-- **Business logic** (agent orchestration, crew coordination) lives in the agent layer, framework-agnostic (no `req`/`res` objects).
-- **Data access / external calls** live in the tool layer or provider modules only.
-
----
+- **Routes:** Parse request, validate input, call one service function, format response.
+- **Services/Domain:** Business logic, scheduling, run lifecycle, external integrations.
+- **Models/Data:** Persistence, schema, field definitions.
+- **Adapters (tchat, grafana):** Isolate external protocol details; expose simple async functions.
+- **Watchdog:** Orchestration only; no HTTP route logic.
 
 ## 3. Pattern Guidelines
 
-### 3.1 Error Handling
+### Error Handling
 
-- **Every external call** (LLM API, Grafana, tchat, fs operations) is wrapped in `try/catch`. No bare `await` on external I/O.
-- Errors must propagate with context — wrap and rethrow or return structured errors:
+- Use `try/catch` around all external calls (tchat, grafana, file I/O).
+- Propagate errors to the route layer; do not swallow exceptions in services.
+- Route handlers catch errors and return a consistent JSON error response:
 
-```js
-try {
-  return await provider.complete(messages);
-} catch (err) {
-  throw new Error(`LLM call failed (${provider.name}): ${err.message}`, { cause: err });
+```json
+{
+  "error": {
+    "code": "INTERNAL_ERROR",
+    "message": "Human-readable message"
+  }
 }
 ```
 
-- **API error responses** use one envelope (see §3.4). Never leak stack traces or raw upstream errors to the client.
-- **fs operations in tool-loader** must validate paths against traversal (established by `fix(security)` commit `f072911`). Any new fs-touching code reuses the existing path validation helper — do not write your own `path.join` on user input.
-- New error classes/types are documented in `.paaw/` error map with a runbook pointer.
+- Use HTTP status codes: `400` for validation, `404` for missing resources, `500` for unexpected failures.
+- Log errors with context (`agentId`, `runId`, `operation`) before returning.
+- Do not leak stack traces or internal paths to API clients.
 
-### 3.2 Async Patterns
+### Async Patterns
 
-- `async/await` only. No raw `.then()` chains except in one-liner fire-and-forget.
-- No unhandled promise rejections: top-level server entry points catch and log.
-- Sequential awaits unless operations are independent — then use `Promise.all` explicitly.
-- Long-running agent operations must have a timeout / cancellation path.
+- Use `async/await` for all asynchronous operations.
+- Never use `.then()` chains for new code.
+- External calls must be awaited inside `try/catch`.
+- Use `Promise.all` for independent concurrent calls; avoid sequential awaits when calls do not depend on each other.
+- Scheduler/watchdog loops should handle rejections explicitly to prevent unhandled promise rejections.
 
-### 3.3 Deterministic Serialization **[established]**
+### State Management
 
-- Where JSON output ordering matters (LLM payloads, cache keys, signatures), use `json-stable-stringify` — not `JSON.stringify` (established by commit `c895498`).
+- File-based persistence for models (Run, Agent, Task).
+- Keep state transitions explicit: `pending → running → succeeded | failed`.
+- Run records include `fingerprint`, `notifyError`, and `notified` tri-state fields.
+- Do not store derived state; compute it from source fields.
+- UI state is local to React components; shared state should be lifted to a common parent or a lightweight store only when necessary.
 
-### 3.4 API Response Format **[established]**
+### API Response Format
 
-All JSON endpoints respond with a consistent envelope:
+- Success responses are plain JSON objects or arrays:
 
 ```json
-// success
-{ "ok": true, "data": { ... } }
-
-// error
-{ "ok": false, "error": { "code": "string", "message": "human-readable" } }
+{
+  "data": { ... }
+}
 ```
 
-- `code` is a stable machine-readable string (e.g. `TASK_NOT_FOUND`, `LLM_TIMEOUT`) — never reuse HTTP status text as a code.
-- The chat send path must surface errors to the UI (regression fixed in `edf2daa` — errors must always be displayed, never silently dropped).
+- List endpoints support `limit` and deterministic sort tie-breakers (e.g., `id`).
+- Create/update endpoints return the full updated resource.
+- Error responses follow the format in Error Handling above.
+- All endpoints must validate input before processing.
 
-### 3.5 State Management (UI)
+### Testing Patterns
 
-- Local component state via `useState` for view-local concerns.
-- Server state via explicit fetch hooks (`useX` pattern); no global store unless a second view needs shared mutable state — then propose an ADR before introducing one.
-- Multi-tab chat state (tabs, selected model) is owned by the chat view, not by a global store.
-
-### 3.6 Testing Patterns
-
-- Tests for critical paths: tool-loader path validation, API CRUD handlers, MCP tool registration/invocation.
-- One test file per source file, named `<source>.test.mjs`, colocated or in a `test/` directory mirroring source layout.
-- External calls in tests are mocked; no test hits real Grafana/LLM/tchat endpoints.
-- Every new API endpoint ships with at least: happy path, validation-failure path, and one error-mapping test payload.
-
----
+- Unit tests live next to source files as `*.test.js` or in `test/`.
+- Critical paths must be tested: scheduler, run creation/update, agent manual run, watchdog e2e.
+- Use deterministic fixtures; no reliance on real external services.
+- Mock external services via `dev/mocks/` or test doubles.
+- Test names describe behavior: `should create a run with fingerprint`, `should reject invalid schedule`.
+- Run `npm test` before committing.
 
 ## 4. Quality Checklist
 
-Run before every PR/merge:
-
-- [ ] No hardcoded secrets — all tokens/keys via environment variables
-- [ ] Error handling (`try/catch` + structured error) for all external calls (LLM, Grafana, tchat, fs)
-- [ ] Input validation on all API endpoints (type, required fields, bounds)
-- [ ] Consistent naming per §1.2 (files, functions, tools, routes, commits)
-- [ ] No circular dependencies (verify: imports flow strictly downward per §2.1)
-- [ ] No default exports in server modules
-- [ ] fs paths validated against traversal (reuse `tool-loader` helper)
-- [ ] `json-stable-stringify` used where output ordering matters
-- [ ] API responses use the `ok/data/error` envelope
-- [ ] New MCP tools follow `<provider>_<action>` naming
-- [ ] Errors from async paths are surfaced to the UI (no silent drops)
-- [ ] Tests cover critical paths; external calls mocked
-- [ ] Commit message follows `type(scope): description`
-- [ ] Architecture-affecting changes recorded as an ADR in `.paaw/`
-
----
-
-*Maintained at `.paaw/standards/coding-style.md`. Propose changes via PR; deviations require an ADR.*
+- [ ] No hardcoded secrets or credentials in source code
+- [ ] Error handling for all external calls (tchat, grafana, file I/O)
+- [ ] Input validation on all API endpoints
+- [ ] Consistent naming conventions followed
+- [ ] No circular dependencies
+- [ ] Tests cover critical paths (scheduler, runs, agents, watchdog)
+- [ ] No unused imports or dead code
+- [ ] API responses follow the standard success/error format
+- [ ] New modules export a minimal public API
+- [ ] Dependencies are declared in `package.json` and justified
+- [ ] `npm audit` reports no known vulnerabilities
+- [ ] Mock servers are confined to `dev/mocks/` and excluded from production builds

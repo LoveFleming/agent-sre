@@ -1,5 +1,95 @@
 {
   "files": {
+    "dev/e2e/watchdog-e2e.mjs": {
+      "path": "dev/e2e/watchdog-e2e.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "node:child_process",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "node:fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "node:os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "node:path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "node:url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "node:http",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "dev/mocks/grafana-mock.mjs": {
+      "path": "dev/mocks/grafana-mock.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "node:http",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "dev/mocks/tchat-mock.mjs": {
+      "path": "dev/mocks/tchat-mock.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "node:http",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "node:fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "node:path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "node:url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
     "server/agent-loop.mjs": {
       "path": "server/agent-loop.mjs",
       "language": "javascript",
@@ -19,7 +109,19 @@
       ],
       "importedBy": [
         {
+          "source": "server/monitor-routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-scheduler.mjs",
+          "names": []
+        },
+        {
           "source": "server/routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/scheduler.mjs",
           "names": []
         }
       ],
@@ -63,6 +165,14 @@
           "names": []
         },
         {
+          "source": "server/agent-store.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-scheduler.mjs",
+          "names": []
+        },
+        {
           "source": "server/routes.mjs",
           "names": []
         },
@@ -78,6 +188,64 @@
       "exports": [
         "toolRegistry",
         "toolRegistry"
+      ]
+    },
+    "server/agent-store.mjs": {
+      "path": "server/agent-store.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "crypto",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./config.mjs",
+          "resolved": true,
+          "targetFile": "server/config.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/scheduler.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "listAgents",
+        "getAgent",
+        "saveAgent",
+        "deleteAgent"
       ]
     },
     "server/config.mjs": {
@@ -105,7 +273,11 @@
       ],
       "importedBy": [
         {
-          "source": "server/config.test.mjs",
+          "source": "server/agent-store.mjs",
+          "names": []
+        },
+        {
+          "source": "server/datasource-store.mjs",
           "names": []
         },
         {
@@ -114,6 +286,18 @@
         },
         {
           "source": "server/llm.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-instance.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-store.mjs",
+          "names": []
+        },
+        {
+          "source": "server/run-store.mjs",
           "names": []
         }
       ],
@@ -124,8 +308,76 @@
         "PORT"
       ]
     },
-    "server/config.test.mjs": {
-      "path": "server/config.test.mjs",
+    "server/tool-loader.mjs": {
+      "path": "server/tool-loader.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "url",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-registry.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/agent-store.mjs",
+          "names": []
+        },
+        {
+          "source": "server/datasource-store.mjs",
+          "names": []
+        },
+        {
+          "source": "server/index.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-instance.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-store.mjs",
+          "names": []
+        },
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/run-store.mjs",
+          "names": []
+        },
+        {
+          "source": "server/tool-loader.test.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "safeResolve",
+        "loadAllTools"
+      ]
+    },
+    "server/agent-store.test.mjs": {
+      "path": "server/agent-store.test.mjs",
       "language": "javascript",
       "imports": [
         {
@@ -135,9 +387,35 @@
           "names": []
         },
         {
-          "source": "./config.mjs",
-          "resolved": true,
-          "targetFile": "server/config.mjs",
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/config.test.mjs": {
+      "path": "server/config.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
           "names": []
         }
       ],
@@ -173,7 +451,19 @@
           "names": []
         },
         {
+          "source": "server/monitor-routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-scheduler.mjs",
+          "names": []
+        },
+        {
           "source": "server/routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/scheduler.mjs",
           "names": []
         }
       ],
@@ -262,6 +552,87 @@
         "listCrews"
       ]
     },
+    "server/datasource-store.mjs": {
+      "path": "server/datasource-store.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./config.mjs",
+          "resolved": true,
+          "targetFile": "server/config.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-loader.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "TOKEN_MASK",
+        "listDatasources",
+        "getDatasource",
+        "saveDatasource",
+        "deleteDatasource"
+      ]
+    },
+    "server/datasource-store.test.mjs": {
+      "path": "server/datasource-store.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
     "server/index.mjs": {
       "path": "server/index.mjs",
       "language": "javascript",
@@ -297,6 +668,18 @@
           "names": []
         },
         {
+          "source": "./scheduler.mjs",
+          "resolved": true,
+          "targetFile": "server/scheduler.mjs",
+          "names": []
+        },
+        {
+          "source": "./monitor-scheduler.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-scheduler.mjs",
+          "names": []
+        },
+        {
           "source": "fs",
           "resolved": false,
           "targetFile": null,
@@ -317,58 +700,6 @@
       ],
       "importedBy": [],
       "exports": []
-    },
-    "server/tool-loader.mjs": {
-      "path": "server/tool-loader.mjs",
-      "language": "javascript",
-      "imports": [
-        {
-          "source": "fs",
-          "resolved": false,
-          "targetFile": null,
-          "names": []
-        },
-        {
-          "source": "path",
-          "resolved": false,
-          "targetFile": null,
-          "names": []
-        },
-        {
-          "source": "url",
-          "resolved": false,
-          "targetFile": null,
-          "names": []
-        },
-        {
-          "source": "./tool-registry.mjs",
-          "resolved": true,
-          "targetFile": "server/tool-registry.mjs",
-          "names": []
-        }
-      ],
-      "importedBy": [
-        {
-          "source": "server/index.mjs",
-          "names": []
-        },
-        {
-          "source": "server/routes.mjs",
-          "names": []
-        },
-        {
-          "source": "server/routes.test.mjs",
-          "names": []
-        },
-        {
-          "source": "server/tool-loader.test.mjs",
-          "names": []
-        }
-      ],
-      "exports": [
-        "safeResolve",
-        "loadAllTools"
-      ]
     },
     "server/routes.mjs": {
       "path": "server/routes.mjs",
@@ -411,6 +742,36 @@
           "names": []
         },
         {
+          "source": "./agent-store.mjs",
+          "resolved": true,
+          "targetFile": "server/agent-store.mjs",
+          "names": []
+        },
+        {
+          "source": "./run-store.mjs",
+          "resolved": true,
+          "targetFile": "server/run-store.mjs",
+          "names": []
+        },
+        {
+          "source": "./datasource-store.mjs",
+          "resolved": true,
+          "targetFile": "server/datasource-store.mjs",
+          "names": []
+        },
+        {
+          "source": "./scheduler.mjs",
+          "resolved": true,
+          "targetFile": "server/scheduler.mjs",
+          "names": []
+        },
+        {
+          "source": "./monitor-routes.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-routes.mjs",
+          "names": []
+        },
+        {
           "source": "fs",
           "resolved": false,
           "targetFile": null,
@@ -427,6 +788,65 @@
           "resolved": false,
           "targetFile": null,
           "names": []
+        },
+        {
+          "source": "crypto",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/index.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "setSchedulerNotifier",
+        "resetApiTokenCacheForTests",
+        "registerRoutes"
+      ]
+    },
+    "server/scheduler.mjs": {
+      "path": "server/scheduler.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "node-cron",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./agent-store.mjs",
+          "resolved": true,
+          "targetFile": "server/agent-store.mjs",
+          "names": []
+        },
+        {
+          "source": "./agent-loop.mjs",
+          "resolved": true,
+          "targetFile": "server/agent-loop.mjs",
+          "names": []
+        },
+        {
+          "source": "./conversation.mjs",
+          "resolved": true,
+          "targetFile": "server/conversation.mjs",
+          "names": []
+        },
+        {
+          "source": "./run-store.mjs",
+          "resolved": true,
+          "targetFile": "server/run-store.mjs",
+          "names": []
+        },
+        {
+          "source": "../tools/tchat/handler.mjs",
+          "resolved": true,
+          "targetFile": "tools/tchat/handler.mjs",
+          "names": []
         }
       ],
       "importedBy": [
@@ -435,12 +855,98 @@
           "names": []
         },
         {
-          "source": "server/routes.test.mjs",
+          "source": "server/routes.mjs",
           "names": []
         }
       ],
       "exports": [
-        "registerRoutes"
+        "buildCrew",
+        "executeScheduledRun",
+        "rescheduleAgent",
+        "rescheduleAll",
+        "startScheduler",
+        "stopScheduler",
+        "activeSchedule",
+        "activeCount",
+        "isRunning",
+        "beginRun"
+      ]
+    },
+    "server/monitor-scheduler.mjs": {
+      "path": "server/monitor-scheduler.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "node-cron",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./monitor-store.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-store.mjs",
+          "names": []
+        },
+        {
+          "source": "./monitor-flows.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-flows.mjs",
+          "names": []
+        },
+        {
+          "source": "./monitor-instance.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-instance.mjs",
+          "names": []
+        },
+        {
+          "source": "./conversation.mjs",
+          "resolved": true,
+          "targetFile": "server/conversation.mjs",
+          "names": []
+        },
+        {
+          "source": "./run-store.mjs",
+          "resolved": true,
+          "targetFile": "server/run-store.mjs",
+          "names": []
+        },
+        {
+          "source": "./agent-loop.mjs",
+          "resolved": true,
+          "targetFile": "server/agent-loop.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-registry.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-registry.mjs",
+          "names": []
+        },
+        {
+          "source": "../tools/tchat/handler.mjs",
+          "resolved": true,
+          "targetFile": "tools/tchat/handler.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/index.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-routes.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "monitorKey",
+        "executeMonitorRun",
+        "computeNextRunAt",
+        "rescheduleMonitor",
+        "startMonitorScheduler"
       ]
     },
     "server/llm.test.mjs": {
@@ -457,6 +963,404 @@
           "source": "./llm.mjs",
           "resolved": true,
           "targetFile": "server/llm.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/monitor-flows.mjs": {
+      "path": "server/monitor-flows.mjs",
+      "language": "javascript",
+      "imports": [],
+      "importedBy": [
+        {
+          "source": "server/monitor-routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-scheduler.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-store.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "STANDARD_SRE_FLOW",
+        "ALERT_TRIAGE_FLOW",
+        "RELEASE_WATCH_FLOW",
+        "FLOW_TEMPLATES",
+        "getFlowTemplate",
+        "listFlowTemplates",
+        "defaultMonitorPrompt",
+        "defaultMonitorRules",
+        "DEFAULT_SKILLS"
+      ]
+    },
+    "server/monitor-instance.mjs": {
+      "path": "server/monitor-instance.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./config.mjs",
+          "resolved": true,
+          "targetFile": "server/config.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-loader.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/monitor-routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-scheduler.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "getInstance",
+        "peekInstance",
+        "updateInstance",
+        "recordRun",
+        "appendIncident",
+        "setKnowledge",
+        "destroyInstance",
+        "listInstanceStateFiles"
+      ]
+    },
+    "server/monitor-instance.test.mjs": {
+      "path": "server/monitor-instance.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/monitor-routes.mjs": {
+      "path": "server/monitor-routes.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "./monitor-store.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-store.mjs",
+          "names": []
+        },
+        {
+          "source": "./monitor-flows.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-flows.mjs",
+          "names": []
+        },
+        {
+          "source": "./monitor-instance.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-instance.mjs",
+          "names": []
+        },
+        {
+          "source": "./monitor-scheduler.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-scheduler.mjs",
+          "names": []
+        },
+        {
+          "source": "./conversation.mjs",
+          "resolved": true,
+          "targetFile": "server/conversation.mjs",
+          "names": []
+        },
+        {
+          "source": "./agent-loop.mjs",
+          "resolved": true,
+          "targetFile": "server/agent-loop.mjs",
+          "names": []
+        },
+        {
+          "source": "./run-store.mjs",
+          "resolved": true,
+          "targetFile": "server/run-store.mjs",
+          "names": []
+        },
+        {
+          "source": "./monitor-flows.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-flows.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "handleMonitorRoutes"
+      ]
+    },
+    "server/monitor-store.mjs": {
+      "path": "server/monitor-store.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "crypto",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./config.mjs",
+          "resolved": true,
+          "targetFile": "server/config.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-loader.mjs",
+          "names": []
+        },
+        {
+          "source": "./monitor-flows.mjs",
+          "resolved": true,
+          "targetFile": "server/monitor-flows.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/monitor-routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-scheduler.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "presetToCron",
+        "listSchedulePresets",
+        "listMonitors",
+        "getMonitor",
+        "createMonitor",
+        "updateMonitor",
+        "deleteMonitor",
+        "listSourceTypes",
+        "listOutputTypes"
+      ]
+    },
+    "server/run-store.mjs": {
+      "path": "server/run-store.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "crypto",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./config.mjs",
+          "resolved": true,
+          "targetFile": "server/config.mjs",
+          "names": []
+        },
+        {
+          "source": "./tool-loader.mjs",
+          "resolved": true,
+          "targetFile": "server/tool-loader.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/monitor-routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/monitor-scheduler.mjs",
+          "names": []
+        },
+        {
+          "source": "server/routes.mjs",
+          "names": []
+        },
+        {
+          "source": "server/scheduler.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "startRun",
+        "finishRun",
+        "listRuns",
+        "getRun"
+      ]
+    },
+    "server/monitor-routes.test.mjs": {
+      "path": "server/monitor-routes.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "http",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "tools/tchat/handler.mjs": {
+      "path": "tools/tchat/handler.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "./client.mjs",
+          "resolved": true,
+          "targetFile": "tools/tchat/client.mjs",
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "server/monitor-scheduler.mjs",
+          "names": []
+        },
+        {
+          "source": "server/scheduler.mjs",
+          "names": []
+        }
+      ],
+      "exports": [
+        "sendTchatMessage",
+        "handler"
+      ]
+    },
+    "server/monitor-store.test.mjs": {
+      "path": "server/monitor-store.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
           "names": []
         }
       ],
@@ -518,15 +1422,79 @@
           "names": []
         },
         {
-          "source": "./routes.mjs",
-          "resolved": true,
-          "targetFile": "server/routes.mjs",
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
           "names": []
         },
         {
-          "source": "./tool-loader.mjs",
-          "resolved": true,
-          "targetFile": "server/tool-loader.mjs",
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/run-store.test.mjs": {
+      "path": "server/run-store.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "server/scheduler.test.mjs": {
+      "path": "server/scheduler.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
           "names": []
         }
       ],
@@ -734,8 +1702,8 @@
         "handler"
       ]
     },
-    "tools/tchat/handler.mjs": {
-      "path": "tools/tchat/handler.mjs",
+    "tools/tchat/client.mjs": {
+      "path": "tools/tchat/client.mjs",
       "language": "javascript",
       "imports": [
         {
@@ -757,10 +1725,63 @@
           "names": []
         }
       ],
-      "importedBy": [],
+      "importedBy": [
+        {
+          "source": "tools/tchat/handler.mjs",
+          "names": []
+        }
+      ],
       "exports": [
-        "handler"
+        "loadTchatConfig",
+        "resetTchatConfig",
+        "sendMessage"
       ]
+    },
+    "tools/tchat/client.test.mjs": {
+      "path": "tools/tchat/client.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "fs",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "os",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "path",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "tools/tchat/handler.test.mjs": {
+      "path": "tools/tchat/handler.test.mjs",
+      "language": "javascript",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
     },
     "ui/SREConsole.tsx": {
       "path": "ui/SREConsole.tsx",
@@ -900,9 +1921,15 @@
           "names": []
         },
         {
-          "source": "./pages/TaskManagementPage",
+          "source": "./pages/AgentsPage",
           "resolved": true,
-          "targetFile": "ui/src/pages/TaskManagementPage.tsx",
+          "targetFile": "ui/src/pages/AgentsPage.tsx",
+          "names": []
+        },
+        {
+          "source": "./pages/MonitorWorkspace",
+          "resolved": true,
+          "targetFile": "ui/src/pages/MonitorWorkspace.tsx",
           "names": []
         },
         {
@@ -1068,8 +2095,8 @@
         "ToolsPage"
       ]
     },
-    "ui/src/pages/TaskManagementPage.tsx": {
-      "path": "ui/src/pages/TaskManagementPage.tsx",
+    "ui/src/pages/AgentsPage.tsx": {
+      "path": "ui/src/pages/AgentsPage.tsx",
       "language": "tsx",
       "imports": [
         {
@@ -1095,10 +2122,41 @@
         {
           "source": "ui/src/App.tsx",
           "names": []
+        },
+        {
+          "source": "ui/src/pages/AgentsPage.test.tsx",
+          "names": []
         }
       ],
       "exports": [
-        "TaskManagementPage"
+        "AgentsPage"
+      ]
+    },
+    "ui/src/pages/MonitorWorkspace.tsx": {
+      "path": "ui/src/pages/MonitorWorkspace.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./MonitorWorkspace.css",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [
+        {
+          "source": "ui/src/App.tsx",
+          "names": []
+        }
+      ],
+      "exports": [
+        "MonitorWorkspace"
       ]
     },
     "ui/src/pages/Placeholder.tsx": {
@@ -1133,6 +2191,18 @@
           "names": []
         },
         {
+          "source": "ui/src/pages/AgentsPage.test.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/AgentsPage.tsx",
+          "names": []
+        },
+        {
+          "source": "ui/src/pages/AgentsPage.tsx",
+          "names": []
+        },
+        {
           "source": "ui/src/pages/ConsolePage.tsx",
           "names": []
         },
@@ -1149,14 +2219,6 @@
           "names": []
         },
         {
-          "source": "ui/src/pages/TaskManagementPage.tsx",
-          "names": []
-        },
-        {
-          "source": "ui/src/pages/TaskManagementPage.tsx",
-          "names": []
-        },
-        {
           "source": "ui/src/pages/ToolsPage.tsx",
           "names": []
         },
@@ -1170,7 +2232,8 @@
         }
       ],
       "exports": [
-        "emptyTaskDraft",
+        "emptyAgentDraft",
+        "isValidCron",
         "linesToText",
         "textToLines",
         "getProvider",
@@ -1285,6 +2348,44 @@
           "source": "./index.css",
           "resolved": false,
           "targetFile": null,
+          "names": []
+        }
+      ],
+      "importedBy": [],
+      "exports": []
+    },
+    "ui/src/pages/AgentsPage.test.tsx": {
+      "path": "ui/src/pages/AgentsPage.test.tsx",
+      "language": "tsx",
+      "imports": [
+        {
+          "source": "vitest",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "@testing-library/react",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "@testing-library/user-event",
+          "resolved": false,
+          "targetFile": null,
+          "names": []
+        },
+        {
+          "source": "./AgentsPage",
+          "resolved": true,
+          "targetFile": "ui/src/pages/AgentsPage.tsx",
+          "names": []
+        },
+        {
+          "source": "../types",
+          "resolved": true,
+          "targetFile": "ui/src/types.ts",
           "names": []
         }
       ],
@@ -1407,6 +2508,13 @@
       "importedBy": [],
       "exports": []
     },
+    "ui-dist/assets/index-C0r-UbdT.js": {
+      "path": "ui-dist/assets/index-C0r-UbdT.js",
+      "language": "javascript",
+      "imports": [],
+      "importedBy": [],
+      "exports": []
+    },
     "vitest.config.mjs": {
       "path": "vitest.config.mjs",
       "language": "javascript",
@@ -1434,13 +2542,33 @@
       "names": []
     },
     {
-      "from": "server/config.test.mjs",
+      "from": "server/agent-store.mjs",
       "to": "server/config.mjs",
+      "names": []
+    },
+    {
+      "from": "server/agent-store.mjs",
+      "to": "server/tool-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/agent-store.mjs",
+      "to": "server/tool-registry.mjs",
       "names": []
     },
     {
       "from": "server/conversation.test.mjs",
       "to": "server/conversation.mjs",
+      "names": []
+    },
+    {
+      "from": "server/datasource-store.mjs",
+      "to": "server/config.mjs",
+      "names": []
+    },
+    {
+      "from": "server/datasource-store.mjs",
+      "to": "server/tool-loader.mjs",
       "names": []
     },
     {
@@ -1464,6 +2592,16 @@
       "names": []
     },
     {
+      "from": "server/index.mjs",
+      "to": "server/scheduler.mjs",
+      "names": []
+    },
+    {
+      "from": "server/index.mjs",
+      "to": "server/monitor-scheduler.mjs",
+      "names": []
+    },
+    {
       "from": "server/llm.mjs",
       "to": "server/config.mjs",
       "names": []
@@ -1471,6 +2609,111 @@
     {
       "from": "server/llm.test.mjs",
       "to": "server/llm.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-instance.mjs",
+      "to": "server/config.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-instance.mjs",
+      "to": "server/tool-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-routes.mjs",
+      "to": "server/monitor-store.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-routes.mjs",
+      "to": "server/monitor-flows.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-routes.mjs",
+      "to": "server/monitor-instance.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-routes.mjs",
+      "to": "server/monitor-scheduler.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-routes.mjs",
+      "to": "server/conversation.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-routes.mjs",
+      "to": "server/agent-loop.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-routes.mjs",
+      "to": "server/run-store.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-routes.mjs",
+      "to": "server/monitor-flows.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-scheduler.mjs",
+      "to": "server/monitor-store.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-scheduler.mjs",
+      "to": "server/monitor-flows.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-scheduler.mjs",
+      "to": "server/monitor-instance.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-scheduler.mjs",
+      "to": "server/conversation.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-scheduler.mjs",
+      "to": "server/run-store.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-scheduler.mjs",
+      "to": "server/agent-loop.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-scheduler.mjs",
+      "to": "server/tool-registry.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-scheduler.mjs",
+      "to": "tools/tchat/handler.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-store.mjs",
+      "to": "server/config.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-store.mjs",
+      "to": "server/tool-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/monitor-store.mjs",
+      "to": "server/monitor-flows.mjs",
       "names": []
     },
     {
@@ -1504,13 +2747,63 @@
       "names": []
     },
     {
-      "from": "server/routes.test.mjs",
-      "to": "server/routes.mjs",
+      "from": "server/routes.mjs",
+      "to": "server/agent-store.mjs",
       "names": []
     },
     {
-      "from": "server/routes.test.mjs",
+      "from": "server/routes.mjs",
+      "to": "server/run-store.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/datasource-store.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/scheduler.mjs",
+      "names": []
+    },
+    {
+      "from": "server/routes.mjs",
+      "to": "server/monitor-routes.mjs",
+      "names": []
+    },
+    {
+      "from": "server/run-store.mjs",
+      "to": "server/config.mjs",
+      "names": []
+    },
+    {
+      "from": "server/run-store.mjs",
       "to": "server/tool-loader.mjs",
+      "names": []
+    },
+    {
+      "from": "server/scheduler.mjs",
+      "to": "server/agent-store.mjs",
+      "names": []
+    },
+    {
+      "from": "server/scheduler.mjs",
+      "to": "server/agent-loop.mjs",
+      "names": []
+    },
+    {
+      "from": "server/scheduler.mjs",
+      "to": "server/conversation.mjs",
+      "names": []
+    },
+    {
+      "from": "server/scheduler.mjs",
+      "to": "server/run-store.mjs",
+      "names": []
+    },
+    {
+      "from": "server/scheduler.mjs",
+      "to": "tools/tchat/handler.mjs",
       "names": []
     },
     {
@@ -1531,6 +2824,11 @@
     {
       "from": "server/tool-registry.test.mjs",
       "to": "server/tool-registry.mjs",
+      "names": []
+    },
+    {
+      "from": "tools/tchat/handler.mjs",
+      "to": "tools/tchat/client.mjs",
       "names": []
     },
     {
@@ -1560,7 +2858,12 @@
     },
     {
       "from": "ui/src/App.tsx",
-      "to": "ui/src/pages/TaskManagementPage.tsx",
+      "to": "ui/src/pages/AgentsPage.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/App.tsx",
+      "to": "ui/src/pages/MonitorWorkspace.tsx",
       "names": []
     },
     {
@@ -1604,6 +2907,26 @@
       "names": []
     },
     {
+      "from": "ui/src/pages/AgentsPage.test.tsx",
+      "to": "ui/src/pages/AgentsPage.tsx",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/AgentsPage.test.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/AgentsPage.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
+      "from": "ui/src/pages/AgentsPage.tsx",
+      "to": "ui/src/types.ts",
+      "names": []
+    },
+    {
       "from": "ui/src/pages/ConsolePage.tsx",
       "to": "ui/src/types.ts",
       "names": []
@@ -1629,16 +2952,6 @@
       "names": []
     },
     {
-      "from": "ui/src/pages/TaskManagementPage.tsx",
-      "to": "ui/src/types.ts",
-      "names": []
-    },
-    {
-      "from": "ui/src/pages/TaskManagementPage.tsx",
-      "to": "ui/src/types.ts",
-      "names": []
-    },
-    {
       "from": "ui/src/pages/ToolsPage.tsx",
       "to": "ui/src/types.ts",
       "names": []
@@ -1655,9 +2968,9 @@
     }
   ],
   "stats": {
-    "totalFiles": 45,
-    "totalEdges": 46,
-    "resolvedImports": 46,
-    "unresolvedImports": 86
+    "totalFiles": 70,
+    "totalEdges": 87,
+    "resolvedImports": 87,
+    "unresolvedImports": 155
   }
 }

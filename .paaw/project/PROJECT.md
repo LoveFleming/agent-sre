@@ -1,169 +1,181 @@
 # agent-sre
 
-> A standalone multi-agent SRE assistant platform that orchestrates LLM-powered agents — equipped with Grafana and chat (tchat) tools via MCP — behind a React web console with multi-tab chat, task management, and tool testing.
-
-> **⚠️ Provenance note:** The automated file-tree scan failed (`find` shell syntax error), and several analysis outputs (Feature Map, Code Intelligence, Test Intelligence, Error Mapping, Security scan, Coding Standards) were not delivered. This document is reconstructed primarily from git history and the Architecture Map / API Contract that were produced. Items marked *(inferred)* are unverified against source. **First task for any reader: re-run the scan with a quoted `find` expression and verify inferred paths.**
+> An SRE agent management web application that schedules, executes, records, and monitors recurring agent runs, with a React UI and integrations for tchat and Grafana.
 
 ## Quick Links
-- [Architecture Map](ARCHITECTURE.md) — generated; contains inferred paths requiring verification
-- [Feature Map](features/FEATURES.json) — ⚠️ not yet generated
-- [API Contract](specs/api-contract.md) — generated; endpoint paths carry confidence ratings (🟢/🟡/🔴)
-- [Error Codes](specs/error-codes.md) — ⚠️ not yet generated (Error Mapping run incomplete)
-- [Coding Standards](standards/coding-style.md) — ⚠️ not yet generated
-- [Code Intelligence](code-intelligence/summary.json) — ⚠️ not yet generated
-- [Security Scan](security/scan-results.json) — ⚠️ not yet generated (two security fixes exist in history — see Recent Changes)
-- [Knowledge Base](.paaw/) — includes ADR-002 (multi-agent orchestration architecture)
+
+- [Architecture Map](ARCHITECTURE.md)
+- [Feature Map](features/FEATURES.json)
+- [API Contract](specs/api-contract.md)
+- [Error Codes](specs/error-codes.md)
+- [Coding Standards](standards/coding-style.md)
+- [Code Intelligence](code-intelligence/summary.json)
+- [Security Scan](security/scan-results.json)
 
 ## Tech Stack
-- Language: JavaScript (ES Modules, `.mjs`) for server; JSX for UI
-- Framework: React + Vite + Tailwind CSS (UI, matched to the parent PAAW stack); custom Node.js HTTP server (no web framework confirmed)
-- Protocol: MCP (Model Context Protocol) — both server and client roles
-- Database: None confirmed — Task persistence mechanism unverified (likely file or in-memory)
-- Runtime: Node.js (server), browser (UI)
-- External services: LLM provider APIs (multi-provider, model selector), Grafana API, tchat chat API
+
+- **Project Type:** Web application
+- **Backend Language:** JavaScript (Node.js)
+- **Frontend Language:** TypeScript / JSX (`src/main.tsx`)
+- **Backend Framework:** Express
+- **Frontend Build Tool:** Vite (pinned to 5.4.21)
+- **Scheduler:** node-cron
+- **Storage:** File-based JSON models (`Run`, `Agent`, `Task`)
+- **External Integrations:** tchat (contract v0), Grafana
+- **Development Mocks:** tchat mock server, Grafana mock server
+- **Testing:** Unit/e2e tests under `test/`
+- **Security:** `npm audit` currently reports 0 vulnerabilities
 
 ## Architecture Overview
 
-**agent-sre** was extracted from the PAAW platform (commit `e95687c`) and rewritten as fully standalone with zero PAAW dependency (`70820ee`). It is a modular monolith: a Node.js ES-module API server plus a React SPA in one repository, with a plugin-style MCP tool-provider layer. The server exposes JSON APIs for chat, task CRUD, and tool testing; behind them sits an agent orchestration layer (multi-agent crew design recorded in `.paaw/` ADR-002) that uses an LLM abstraction (`llm.mjs`) and provider abstraction (`provider.mjs`) to call model APIs.
+agent-sre is a modular monolith. The Express server exposes an HTTP API for agent and run management, while domain modules — `routes`, `agents`, `runs`, `scheduler`, `tchat`, `grafana`, and `watchdog` — maintain clear boundaries and avoid circular dependencies. Data models are persisted as file-backed JSON records.
 
-Tools are provided via MCP: the system includes both MCP server and client support (`c936d78`), with two shipped providers — **grafana** (6 tools: dashboards, alerts, metrics queries) and **tchat** (3 tools, renamed from Telegram) — discovered and loaded by a hardened tool-loader that blocks path traversal in its fs operations (`f072911`). Users interact through a React console: a 7-view navigation shell with a platform home page, multi-tab chat with a model selector, and a Task management page backed by dedicated CRUD endpoints.
-
-**Layer diagram (inferred paths):**
-```
-React Console (web/ or ui/)  — 7-view shell · multi-tab chat · Tasks · tool testing
-        ↓ HTTP (JSON)
-API Server (server.mjs)      — /api/chat · /api/tasks · /api/tools/test · /api/models
-        ↓
-Agent Orchestration (.paaw ADR-002) → llm.mjs → provider.mjs → LLM APIs
-        ↓ MCP client
-Tool Loader (tool-loader)    — grafana (6 tools) · tchat (3 tools)
-        ↓
-Grafana API · tchat API
-```
+The frontend is a Vite/React application that communicates with the Express API and provides an agent management/oversight UI. The scheduler uses `node-cron` to run agents according to configured schedules, while the watchdog module monitors system health, synchronizes task state, and coordinates tchat/Grafana notifications. Local mock servers for tchat and Grafana allow development and e2e tests without external service dependencies.
 
 ## Features
-- **Multi-agent SRE crew** — orchestrated agent team for SRE tasks (design in ADR-002)
-- **Multi-tab chat console** — several concurrent chat sessions with per-session model selection
-- **Model selector** — choose among available LLM models/providers per chat
-- **7-view navigation shell** — platform home page plus six other views
-- **Task management** — full CRUD for SRE tasks: API endpoints (`80b15a1`) + dedicated UI page (`b655bc1`)
-- **Tool testing** — endpoint and UI to execute registered tools with test arguments (`1ca8dfa`)
-- **Grafana MCP tool provider** — 6 tools (dashboards, alerts, metrics) (`55cc035`)
-- **tchat MCP tool provider** — 3 chat/messaging tools (`795e8f0`, renamed `tg_*` → `tchat_*`)
-- **MCP server + client support** — the platform both exposes and consumes MCP tools (`c936d78`)
-- **Standalone operation** — zero dependency on the parent PAAW platform (`70820ee`)
-- **Embedded knowledge base** — `.paaw/` directory holding ADRs and architecture docs
+
+- **Agent Management** — Define agents with `id`, `name`, `expertise`, and `schedule`.
+- **Manual Run Triggering** — Manually start an agent run via `POST /api/agents/:id/run`.
+- **Scheduled Execution** — Schedule recurring agent runs using `node-cron`.
+- **Run Tracking** — Record, list, filter, and retain run records with status, fingerprint, and notification state.
+- **Retention Controls** — Apply limits and retention behavior to the run store.
+- **tchat Integration** — Contract v0 transport layer for sending chat messages.
+- **Grafana Integration** — Send metrics and fetch alerts from Grafana.
+- **Watchdog** — Health monitoring, task-state synchronization, and Grafana-coupled alerting.
+- **Development Mocks** — Standalone mock servers for tchat (`:3002`) and Grafana.
+- **Admin UI** — React-based `AgentsPage` for agent/task oversight and manual triggers.
 
 ## Getting Started
 
-> Scripts below are the standard Vite/Node conventions — **actual `package.json` scripts were not captured** (scan failure). Verify before relying on them.
-
 ### Prerequisites
-- Node.js (version unverified — check `package.json` `engines` field)
-- npm (a `package-lock.json` exists in the repo)
-- Network access to your LLM provider, Grafana instance, and tchat service; corresponding credentials configured via env vars *(mechanism unverified — look for `.env` handling or config module)*
+
+- Node.js 18+ (or the version required by the Vite/Express setup)
+- npm
 
 ### Installation
+
 ```bash
-git clone <repo-url> agent-sre
-cd agent-sre
 npm install
 ```
 
 ### Running
-```bash
-# API server (entry file unverified — server.mjs or index.mjs)
-npm start          # (inferred)
 
-# Web console (Vite dev server)
-npm run dev        # (inferred)
+The mock tchat server can be started with:
+
+```bash
+npm run mock:tchat
 ```
 
+The mock tchat server listens on port `3002` and logs sent messages to `dev/mocks/tchat-sent.jsonl` by default. The path can be configured via the `TCHAT_SENT_LOG` environment variable.
+
+Additional dev/start scripts are defined in `package.json`. The Express API entry point is `src/server.js`; the Vite frontend entry point is `src/main.tsx`.
+
 ### Testing
-⚠️ No test directory or test runner was detected. See [Development → How to Run Tests](#how-to-run-tests).
+
+```bash
+npm test
+```
+
+E2E and watchdog-related tests are also included and can be run from the test scripts defined in `package.json`.
 
 ## Project Structure
 
-> **Paths marked (inferred)** — the automated file tree failed; verify with:
-> `find . -type f \( -name '*.mjs' -o -name '*.js' -o -name '*.jsx' \) -not -path '*/node_modules/*' -not -path '*/.git/*'`
-
-```
-agent-sre/
-├── server.mjs (or index.mjs)   # API server entry + route definitions (inferred)
-├── llm.mjs                     # LLM abstraction layer (confirmed by name in commits)
-├── provider.mjs                # LLM provider abstraction (confirmed by name in commits)
-├── tool-loader(.mjs / dir)     # MCP tool discovery & loading, path-traversal hardened
-├── web/ (or ui/)               # React + Vite + Tailwind console (inferred)
-│   └── src/                    # 7-view shell, chat, tasks, tool test pages (inferred)
-├── .paaw/                      # Knowledge base: ADRs, architecture docs
-│   └── ADR-002                 # Multi-agent orchestration architecture
-├── package.json / package-lock.json
-└── PROJECT.md                  # This file
-```
+| Path | Purpose |
+|------|---------|
+| `src/server.js` | Express server entry point and global error middleware |
+| `src/main.tsx` | Vite/React frontend entry point |
+| `src/routes/` | HTTP API route definitions (`agents`, `runs`) |
+| `src/agents/` | Agent definitions, validation, and execution logic |
+| `src/scheduler/` | `node-cron` scheduling engine and run recording |
+| `src/runs/` | Run record store, filtering, fingerprinting, retention |
+| `src/tchat/` | tchat transport layer (contract v0) |
+| `src/grafana/` | Grafana metrics/alert handler |
+| `src/watchdog/` | Health monitoring, task-state sync, external integration loop |
+| `src/models/` | File-persisted data models: `Run`, `Agent`, `Task` |
+| `src/ui/` | React UI components, including `AgentsPage` |
+| `dev/mocks/` | Mock servers for tchat and Grafana |
+| `test/` | Unit and e2e tests |
+| `.paaw/` | Project documentation, task tracking, ADRs, runbooks |
 
 ## Development
 
 ### Coding Standards
-No standards document exists yet. Conventions observable from history:
-- ES Modules (`.mjs`) on the server; no TypeScript detected
-- Conventional Commits: `feat(scope):`, `fix(scope):`, `docs(scope):`, `rename:`
-- Tool naming: `<provider>_<action>` (e.g., `grafana_list_dashboards`, `tchat_send_message`)
-- Security-aware: deterministic JSON serialization (`json-stable-stringify`) in LLM/provider paths; fs operations must guard against path traversal
+
+- Follow the existing JavaScript/React style used in the repository.
+- Keep modules small and focused; expose explicit functions via `index.js` files.
+- Use conventional commit messages with task references (e.g., `[TASK-009: ...]`).
+- Avoid committing runtime artifacts such as `dev/mocks/tchat-sent.jsonl`.
+- Run `npm audit` before release; keep dependency CVEs patched.
 
 ### How to Add a New Feature
-1. **Server side:** add handler/route near existing chat/tasks/tools routes; keep JSON request/response with structured `{ "error": "..." }` bodies.
-2. **UI side:** add a view component and register it in the 7-view navigation shell; use Tailwind for styling (match PAAW conventions).
-3. **Task-like CRUD:** follow the Task pattern — API endpoints first, then the management page.
-4. Update the [API Contract](specs/api-contract.md) and this document.
 
-### How to Add a New Tool Provider
-1. Create an MCP provider module following the **grafana** (6 tools) or **tchat** (3 tools) examples.
-2. Name tools `<provider>_<action>`; register via the tool-loader (its fs operations block path traversal — keep loads within the sanctioned directory).
-3. Verify the tool appears via the tool list and exercise it through the tool-test endpoint/UI.
-4. Add external-service credentials via the same env/config mechanism as existing providers.
+1. Create or extend the relevant domain model in `src/models/`.
+2. Add the business logic as a module under `src/` (e.g., `src/agents/`, `src/runs/`).
+3. Expose the module via a public `index.js` API.
+4. Add an HTTP route in `src/routes/` if needed.
+5. Add a UI page/component in `src/ui/`.
+6. Add tests under `test/`.
+7. Update the API contract and feature documentation.
 
 ### How to Add a New API Endpoint
-1. Define the route in the server entry (or routes module if one exists — unverified).
-2. Return JSON; use 400 (bad input), 404 (missing resource), 500 (server error) consistent with the Task CRUD endpoints.
-3. No auth layer exists — do **not** assume `Authorization` headers; flag if the endpoint needs protection before exposing it.
-4. Document in [API Contract](specs/api-contract.md) with request/response schemas and a JSON example.
+
+1. Define the route in the appropriate `src/routes/` file.
+2. Implement or reuse a service function in the relevant module.
+3. Return standardized responses and map errors to error codes when possible.
+4. Add request/response examples to `specs/api-contract.md`.
+5. Add tests for success and error paths.
 
 ### How to Run Tests
-⚠️ **No tests or test runner detected.** Until one is added:
-- Manual smoke: start server + UI, exercise Task CRUD, chat send (including error display — regression fixed in `edf2daa`), and tool test endpoint.
-- Recommended first step: add a minimal runner (`node --test` or `vitest`, which pairs with the existing Vite setup) and cover the Task CRUD endpoints and tool-loader path-traversal guard.
+
+Run the full test suite:
+
+```bash
+npm test
+```
+
+Run specific tests by target file, e.g.:
+
+```bash
+npx jest test/runs.test.js
+```
 
 ## Operations
 
 ### Error Codes
-No error catalogue exists yet (Error Mapping run incomplete). Known behavior:
-| Signal | Behavior | Source |
-|---|---|---|
-| HTTP 400 / 404 / 500 | Standard codes on Task CRUD and tool-test endpoints | API Contract (partially inferred) |
-| `{ "error": "<message>" }` | Structured error body surfaced in the chat console | commit `edf2daa` |
-| Path traversal attempt | Blocked in tool-loader fs operations | commit `f072911` |
 
-**Action:** generate the Error Map to fill [specs/error-codes.md](specs/error-codes.md).
+Error codes are documented in `specs/error-codes.md` with runbooks:
+
+- `API-001` / `API-002` — Invalid request/query parameters
+- `AGT-001/002/003` — Agent not found, invalid definition, execution failure
+- `RUN-001/002` — Run not found, run store failure
+- `SCH-001/002` — Invalid cron expression, scheduled run failure
+- `TCH-001/002` — Failed tchat send, rejected tchat payload
+- `GRA-001/002` — Grafana send/fetch failure
+- `WDG-001/002` — Watchdog loop failure, task-state sync failure
+- `MOCK-001/002` — Mock server/client validation or persistence failure
+- `SYS-500` — Unexpected internal error
 
 ### Runbooks
-None exist. SRE runbook authoring is a natural extension of this platform's purpose (the agent crew could consume them), but nothing is shipped yet.
+
+Detailed runbooks are maintained under `ops/runbooks/`. They describe symptoms, debugging steps, fixes, and related code/tests for each error code.
 
 ### Monitoring
-No application monitoring/telemetry detected. Note: **Grafana is integrated as a data source the agent queries — it is not monitoring of this application.** No health-check endpoint confirmed (a `GET /health` is a reasonable first addition).
 
-### Security Posture (from history)
-- ✅ Path traversal blocked in tool-loader fs operations (`f072911`)
-- ✅ `json-stable-stringify` warnings resolved in `llm.mjs` and `provider.mjs` (`c895498`)
-- ⚠️ No authentication on any API endpoint — fine for local use; must be addressed before any network exposure
-- ⚠️ Formal security scan pending
+- The **watchdog** module performs continuous health checks and state synchronization.
+- External monitoring data can be sent to Grafana through the Grafana handler.
+- Mock tchat messages are appended to `dev/mocks/tchat-sent.jsonl` for e2e verification.
+- Keep `npm audit` clean to avoid known dependency vulnerabilities.
+- Vite is currently pinned to `5.4.21`; before upgrading to Vite 6, resolve the “missing field module type” pre-transform error.
 
 ## Recent Changes
-Summary of the last 20 commits (newest first):
 
-- **Task management (current focus):** Task CRUD API endpoints (`80b15a1`) followed by the Task management UI page (`b655bc1`).
-- **Security hardening:** blocked path traversal in tool-loader fs operations (`f072911`); fixed `json-stable-stringify` warnings in `llm.mjs`/`provider.mjs` (`c895498`).
-- **Architecture decisions:** ADR-002 added for multi-agent orchestration in `.paaw/` (`6c5dec0`).
-- **Console fixes:** chat send returning no response + errors not displayed (`edf2daa`).
-- **UI buildout:** 7-view navigation shell + platform home (`e7f7dc4`); multi-tab chat + model selector (`6f00301`); React + Vite + Tailwind stack matching PAAW (`c6a0c48`); initial web UI + tool test endpoint (`1ca8dfa`).
-- **Tool providers:** `tg_*` → `tchat_*` tool rename (`27db224`), telegram → tchat rename (`017f00a`), tchat provider with 3 tools (`795e8f0`), Grafana provider with 6 tools (`55cc035`), MCP server + client support (`c936d78`).
-- **Project origin:** rewritten fully standalone with zero PAAW dependency (`70820ee`); extracted from PAAW as an independent repo (`e95687c`).
+- **Fix Vite downgrade** — Pin Vite to `5.4.21` to fix the “missing field module type” error in Vite 6.
+- **Dependency security patches** — Patch CVEs in `vite`, `esbuild`, `nanoid`; `npm audit` now reports 0 vulnerabilities.
+- **Watchdog e2e coverage** — Add e2e test for watchdog, Grafana handler update, coding sessions/task state sync.
+- **Datasource parse fix** — Repair block-comment parse errors in datasource files.
+- **tchat mock server** — Add contract-v0 mock server on port `3002` (`POST /api/messages`), with JSONL sent-log output.
+- **tchat transport layer** — Extract tchat transport into a dedicated module with contract v0 (ADR-004).
+- **Grafana mock** — Add Grafana mock server dev fixture.
+- **Manual agent run API** — Add `POST /api/agents/:id/run`.
+- **Scheduling engine** — Add `node-cron` scheduling with run recording and invalid-cron tests.
+- **Run store enhancements** — Add fingerprinting, `notifyError`, `notified` tri-state, `limit`, deterministic sorting, and retention.

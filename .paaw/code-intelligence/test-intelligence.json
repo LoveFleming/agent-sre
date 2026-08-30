@@ -13,6 +13,16 @@
       "functionNames": []
     },
     {
+      "file": "server/datasource-store.test.mjs",
+      "type": "unit",
+      "functionCount": 3,
+      "functionNames": [
+        "baseInput",
+        "dsFile",
+        "toolConfig"
+      ]
+    },
+    {
       "file": "server/llm.test.mjs",
       "type": "unit",
       "functionCount": 2,
@@ -22,19 +32,43 @@
       ]
     },
     {
-      "file": "server/routes.test.mjs",
+      "file": "server/monitor-instance.test.mjs",
+      "type": "unit",
+      "functionCount": 0,
+      "functionNames": []
+    },
+    {
+      "file": "server/monitor-routes.test.mjs",
       "type": "unit",
       "functionCount": 1,
       "functionNames": [
+        "api"
+      ]
+    },
+    {
+      "file": "server/monitor-store.test.mjs",
+      "type": "unit",
+      "functionCount": 1,
+      "functionNames": [
+        "baseInput"
+      ]
+    },
+    {
+      "file": "server/routes.test.mjs",
+      "type": "unit",
+      "functionCount": 2,
+      "functionNames": [
+        "httpJson",
         "httpGet"
       ]
     },
     {
-      "file": "server/task-store.test.mjs",
+      "file": "server/run-store.test.mjs",
       "type": "unit",
-      "functionCount": 1,
+      "functionCount": 2,
       "functionNames": [
-        "makeStore"
+        "rawFile",
+        "resetRunsDir"
       ]
     },
     {
@@ -53,36 +87,24 @@
       ]
     },
     {
-      "file": "ui/src/components/Sidebar.test.tsx",
+      "file": "tools/tchat/client.test.mjs",
       "type": "unit",
       "functionCount": 1,
       "functionNames": [
-        "defaultProps"
+        "stubFetch"
       ]
     },
     {
-      "file": "ui/src/components/StatusBadge.test.tsx",
-      "type": "unit",
-      "functionCount": 0,
-      "functionNames": []
-    },
-    {
-      "file": "ui/src/pages/HomePage.test.tsx",
+      "file": "tools/tchat/handler.test.mjs",
       "type": "unit",
       "functionCount": 2,
       "functionNames": [
-        "mockFetchSuccess",
-        "mockFetchFailure"
+        "ctx",
+        "stubTelegram"
       ]
     },
     {
       "file": "ui/src/test/setup.ts",
-      "type": "unit",
-      "functionCount": 0,
-      "functionNames": []
-    },
-    {
-      "file": "ui/src/types.test.ts",
       "type": "unit",
       "functionCount": 0,
       "functionNames": []
@@ -116,6 +138,19 @@
       ]
     },
     {
+      "testFile": "server/datasource-store.test.mjs",
+      "testType": "unit",
+      "functionCount": 3,
+      "matches": [
+        {
+          "productionFile": "server/datasource-store.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
       "testFile": "server/llm.test.mjs",
       "testType": "unit",
       "functionCount": 2,
@@ -129,9 +164,48 @@
       ]
     },
     {
-      "testFile": "server/routes.test.mjs",
+      "testFile": "server/monitor-instance.test.mjs",
+      "testType": "unit",
+      "functionCount": 0,
+      "matches": [
+        {
+          "productionFile": "server/monitor-instance.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "server/monitor-routes.test.mjs",
       "testType": "unit",
       "functionCount": 1,
+      "matches": [
+        {
+          "productionFile": "server/monitor-routes.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "server/monitor-store.test.mjs",
+      "testType": "unit",
+      "functionCount": 1,
+      "matches": [
+        {
+          "productionFile": "server/monitor-store.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "testFile": "server/routes.test.mjs",
+      "testType": "unit",
+      "functionCount": 2,
       "matches": [
         {
           "productionFile": "server/routes.mjs",
@@ -142,12 +216,12 @@
       ]
     },
     {
-      "testFile": "server/task-store.test.mjs",
+      "testFile": "server/run-store.test.mjs",
       "testType": "unit",
-      "functionCount": 1,
+      "functionCount": 2,
       "matches": [
         {
-          "productionFile": "server/task-store.mjs",
+          "productionFile": "server/run-store.mjs",
           "matchType": "naming",
           "testedFunctions": [],
           "confidence": "high"
@@ -181,12 +255,12 @@
       ]
     },
     {
-      "testFile": "ui/src/components/Sidebar.test.tsx",
+      "testFile": "tools/tchat/client.test.mjs",
       "testType": "unit",
       "functionCount": 1,
       "matches": [
         {
-          "productionFile": "ui/src/components/Sidebar.tsx",
+          "productionFile": "tools/tchat/client.mjs",
           "matchType": "naming",
           "testedFunctions": [],
           "confidence": "high"
@@ -194,25 +268,54 @@
       ]
     },
     {
-      "testFile": "ui/src/components/StatusBadge.test.tsx",
-      "testType": "unit",
-      "functionCount": 0,
-      "matches": [
-        {
-          "productionFile": "ui/src/components/StatusBadge.tsx",
-          "matchType": "naming",
-          "testedFunctions": [],
-          "confidence": "high"
-        }
-      ]
-    },
-    {
-      "testFile": "ui/src/pages/HomePage.test.tsx",
+      "testFile": "tools/tchat/handler.test.mjs",
       "testType": "unit",
       "functionCount": 2,
       "matches": [
         {
-          "productionFile": "ui/src/pages/HomePage.tsx",
+          "productionFile": "tools/docs/handler.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        },
+        {
+          "productionFile": "tools/grafana/handler.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        },
+        {
+          "productionFile": "tools/k8s/handler.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        },
+        {
+          "productionFile": "tools/loki/handler.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        },
+        {
+          "productionFile": "tools/prometheus/handler.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        },
+        {
+          "productionFile": "tools/security/handler.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        },
+        {
+          "productionFile": "tools/shell/handler.mjs",
+          "matchType": "naming",
+          "testedFunctions": [],
+          "confidence": "high"
+        },
+        {
+          "productionFile": "tools/tchat/handler.mjs",
           "matchType": "naming",
           "testedFunctions": [],
           "confidence": "high"
@@ -224,19 +327,6 @@
       "testType": "unit",
       "functionCount": 0,
       "matches": []
-    },
-    {
-      "testFile": "ui/src/types.test.ts",
-      "testType": "unit",
-      "functionCount": 0,
-      "matches": [
-        {
-          "productionFile": "ui/src/types.ts",
-          "matchType": "naming",
-          "testedFunctions": [],
-          "confidence": "high"
-        }
-      ]
     }
   ],
   "codeToTest": {
@@ -254,9 +344,37 @@
         "testedFunctions": []
       }
     ],
+    "server/datasource-store.mjs": [
+      {
+        "testFile": "server/datasource-store.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
     "server/llm.mjs": [
       {
         "testFile": "server/llm.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "server/monitor-instance.mjs": [
+      {
+        "testFile": "server/monitor-instance.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "server/monitor-routes.mjs": [
+      {
+        "testFile": "server/monitor-routes.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "server/monitor-store.mjs": [
+      {
+        "testFile": "server/monitor-store.test.mjs",
         "testType": "unit",
         "testedFunctions": []
       }
@@ -268,9 +386,9 @@
         "testedFunctions": []
       }
     ],
-    "server/task-store.mjs": [
+    "server/run-store.mjs": [
       {
-        "testFile": "server/task-store.test.mjs",
+        "testFile": "server/run-store.test.mjs",
         "testType": "unit",
         "testedFunctions": []
       }
@@ -289,30 +407,65 @@
         "testedFunctions": []
       }
     ],
-    "ui/src/components/Sidebar.tsx": [
+    "tools/tchat/client.mjs": [
       {
-        "testFile": "ui/src/components/Sidebar.test.tsx",
+        "testFile": "tools/tchat/client.test.mjs",
         "testType": "unit",
         "testedFunctions": []
       }
     ],
-    "ui/src/components/StatusBadge.tsx": [
+    "tools/docs/handler.mjs": [
       {
-        "testFile": "ui/src/components/StatusBadge.test.tsx",
+        "testFile": "tools/tchat/handler.test.mjs",
         "testType": "unit",
         "testedFunctions": []
       }
     ],
-    "ui/src/pages/HomePage.tsx": [
+    "tools/grafana/handler.mjs": [
       {
-        "testFile": "ui/src/pages/HomePage.test.tsx",
+        "testFile": "tools/tchat/handler.test.mjs",
         "testType": "unit",
         "testedFunctions": []
       }
     ],
-    "ui/src/types.ts": [
+    "tools/k8s/handler.mjs": [
       {
-        "testFile": "ui/src/types.test.ts",
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "tools/loki/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "tools/prometheus/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "tools/security/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "tools/shell/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "testedFunctions": []
+      }
+    ],
+    "tools/tchat/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
         "testType": "unit",
         "testedFunctions": []
       }
@@ -333,9 +486,37 @@
         "reason": "Tests this file"
       }
     ],
+    "server/datasource-store.mjs": [
+      {
+        "testFile": "server/datasource-store.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
     "server/llm.mjs": [
       {
         "testFile": "server/llm.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "server/monitor-instance.mjs": [
+      {
+        "testFile": "server/monitor-instance.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "server/monitor-routes.mjs": [
+      {
+        "testFile": "server/monitor-routes.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "server/monitor-store.mjs": [
+      {
+        "testFile": "server/monitor-store.test.mjs",
         "testType": "unit",
         "reason": "Tests this file"
       }
@@ -347,9 +528,9 @@
         "reason": "Tests this file"
       }
     ],
-    "server/task-store.mjs": [
+    "server/run-store.mjs": [
       {
-        "testFile": "server/task-store.test.mjs",
+        "testFile": "server/run-store.test.mjs",
         "testType": "unit",
         "reason": "Tests this file"
       }
@@ -368,30 +549,65 @@
         "reason": "Tests this file"
       }
     ],
-    "ui/src/components/Sidebar.tsx": [
+    "tools/tchat/client.mjs": [
       {
-        "testFile": "ui/src/components/Sidebar.test.tsx",
+        "testFile": "tools/tchat/client.test.mjs",
         "testType": "unit",
         "reason": "Tests this file"
       }
     ],
-    "ui/src/components/StatusBadge.tsx": [
+    "tools/docs/handler.mjs": [
       {
-        "testFile": "ui/src/components/StatusBadge.test.tsx",
+        "testFile": "tools/tchat/handler.test.mjs",
         "testType": "unit",
         "reason": "Tests this file"
       }
     ],
-    "ui/src/pages/HomePage.tsx": [
+    "tools/grafana/handler.mjs": [
       {
-        "testFile": "ui/src/pages/HomePage.test.tsx",
+        "testFile": "tools/tchat/handler.test.mjs",
         "testType": "unit",
         "reason": "Tests this file"
       }
     ],
-    "ui/src/types.ts": [
+    "tools/k8s/handler.mjs": [
       {
-        "testFile": "ui/src/types.test.ts",
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "tools/loki/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "tools/prometheus/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "tools/security/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "tools/shell/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
+        "testType": "unit",
+        "reason": "Tests this file"
+      }
+    ],
+    "tools/tchat/handler.mjs": [
+      {
+        "testFile": "tools/tchat/handler.test.mjs",
         "testType": "unit",
         "reason": "Tests this file"
       }
@@ -399,19 +615,29 @@
   },
   "coverageGaps": [
     {
-      "file": "tools/grafana/handler.mjs",
-      "functionCount": 7,
+      "file": "ui-dist/assets/index-BvL_GFyx.js",
+      "functionCount": 410,
+      "exportCount": 0
+    },
+    {
+      "file": "dev/mocks/grafana-mock.mjs",
+      "functionCount": 14,
+      "exportCount": 0
+    },
+    {
+      "file": "server/monitor-scheduler.mjs",
+      "functionCount": 12,
+      "exportCount": 5
+    },
+    {
+      "file": "ui/src/pages/MonitorWorkspace.tsx",
+      "functionCount": 10,
       "exportCount": 1
     },
     {
-      "file": "tools/prometheus/handler.mjs",
+      "file": "dev/mocks/tchat-mock.mjs",
       "functionCount": 7,
-      "exportCount": 1
-    },
-    {
-      "file": "tools/tchat/handler.mjs",
-      "functionCount": 7,
-      "exportCount": 1
+      "exportCount": 0
     },
     {
       "file": "server/agent-loop.mjs",
@@ -419,53 +645,18 @@
       "exportCount": 2
     },
     {
-      "file": "tools/security/handler.mjs",
-      "functionCount": 6,
-      "exportCount": 1
-    },
-    {
-      "file": "tools/shell/handler.mjs",
-      "functionCount": 6,
-      "exportCount": 1
-    },
-    {
       "file": "server/tool-engine/provider.mjs",
       "functionCount": 5,
       "exportCount": 2
     },
     {
-      "file": "tools/docs/handler.mjs",
-      "functionCount": 5,
-      "exportCount": 1
-    },
-    {
-      "file": "tools/k8s/handler.mjs",
-      "functionCount": 5,
-      "exportCount": 1
-    },
-    {
-      "file": "tools/loki/handler.mjs",
-      "functionCount": 5,
-      "exportCount": 1
-    },
-    {
-      "file": "ui/src/pages/TaskManagementPage.tsx",
-      "functionCount": 5,
-      "exportCount": 1
+      "file": "server/monitor-flows.mjs",
+      "functionCount": 4,
+      "exportCount": 9
     },
     {
       "file": "ui/SREDashboard.tsx",
       "functionCount": 4,
-      "exportCount": 1
-    },
-    {
-      "file": "server/crew-loader.mjs",
-      "functionCount": 3,
-      "exportCount": 3
-    },
-    {
-      "file": "ui/src/App.tsx",
-      "functionCount": 2,
       "exportCount": 1
     },
     {
@@ -479,17 +670,7 @@
       "exportCount": 1
     },
     {
-      "file": "ui/src/pages/ConsolePage.tsx",
-      "functionCount": 1,
-      "exportCount": 1
-    },
-    {
-      "file": "ui/src/pages/Placeholder.tsx",
-      "functionCount": 1,
-      "exportCount": 1
-    },
-    {
-      "file": "ui/src/pages/ToolsPage.tsx",
+      "file": "ui/src/App.tsx",
       "functionCount": 1,
       "exportCount": 1
     },
@@ -512,94 +693,213 @@
   "featureToTests": [
     {
       "featureId": "F-002",
-      "featureName": "API Route Layer",
+      "featureName": "API Gateway & Route Registration",
+      "tests": [
+        "server/routes.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-003",
+      "featureName": "API Token Authentication",
       "tests": [
         "server/routes.test.mjs"
       ]
     },
     {
       "featureId": "F-004",
+      "featureName": "Configuration & LLM Provider Resolution",
+      "tests": [
+        "server/config.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-005",
       "featureName": "LLM Client",
       "tests": [
         "server/llm.test.mjs"
       ]
     },
     {
-      "featureId": "F-006",
-      "featureName": "Configuration Management",
+      "featureId": "F-009",
+      "featureName": "Tool Registry & Loader",
       "tests": [
-        "server/config.test.mjs"
+        "server/tool-registry.test.mjs",
+        "server/tool-loader.test.mjs"
       ]
     },
     {
-      "featureId": "F-008",
-      "featureName": "Conversation Persistence & Archive",
+      "featureId": "F-010",
+      "featureName": "Docs & Runbook Search Tool",
+      "tests": [
+        "tools/tchat/handler.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-011",
+      "featureName": "Grafana Tool",
+      "tests": [
+        "tools/tchat/handler.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-012",
+      "featureName": "Kubernetes Tool",
+      "tests": [
+        "tools/tchat/handler.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-013",
+      "featureName": "Loki Logs Tool",
+      "tests": [
+        "tools/tchat/handler.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-014",
+      "featureName": "Prometheus Tool",
+      "tests": [
+        "tools/tchat/handler.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-015",
+      "featureName": "Security Audit Tool",
+      "tests": [
+        "tools/tchat/handler.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-016",
+      "featureName": "Shell Tool",
+      "tests": [
+        "tools/tchat/handler.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-017",
+      "featureName": "TChat Messaging Tool",
+      "tests": [
+        "tools/tchat/client.test.mjs",
+        "tools/tchat/handler.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-018",
+      "featureName": "Conversation Persistence",
       "tests": [
         "server/conversation.test.mjs"
       ]
     },
     {
-      "featureId": "F-009",
-      "featureName": "Task Management",
+      "featureId": "F-019",
+      "featureName": "Agent Management (Store & API)",
       "tests": [
-        "server/task-store.test.mjs",
-        "server/routes.test.mjs"
+        "server/routes.test.mjs",
+        "server/agent-store.test.mjs",
+        "ui/src/pages/AgentsPage.test.tsx"
       ]
     },
     {
-      "featureId": "F-010",
-      "featureName": "Tool Registry & Tool API",
+      "featureId": "F-020",
+      "featureName": "Agent Cron Scheduler",
       "tests": [
-        "server/tool-registry.test.mjs",
-        "server/routes.test.mjs"
+        "server/scheduler.test.mjs"
       ]
     },
     {
-      "featureId": "F-011",
-      "featureName": "Tool Loader (Secure Dynamic Loading)",
+      "featureId": "F-021",
+      "featureName": "Task Store & API",
       "tests": [
-        "server/tool-loader.test.mjs"
+        "server/routes.test.mjs",
+        "server/task-store.test.mjs"
       ]
     },
     {
       "featureId": "F-022",
-      "featureName": "App Shell & 7-View Navigation",
+      "featureName": "Datasource Management",
       "tests": [
-        "ui/src/components/Sidebar.test.tsx"
+        "server/datasource-store.test.mjs",
+        "server/routes.test.mjs"
       ]
     },
     {
       "featureId": "F-023",
-      "featureName": "Home Page (Platform Dashboard)",
+      "featureName": "Run History & Retention",
+      "tests": [
+        "server/run-store.test.mjs",
+        "server/routes.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-024",
+      "featureName": "Chat API",
+      "tests": [
+        "server/routes.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-026",
+      "featureName": "Monitor Store & Monitor API",
+      "tests": [
+        "server/monitor-store.test.mjs",
+        "server/monitor-routes.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-027",
+      "featureName": "Monitor Instance State",
+      "tests": [
+        "server/monitor-instance.test.mjs"
+      ]
+    },
+    {
+      "featureId": "F-028",
+      "featureName": "Monitor Scheduler & Run Execution",
+      "tests": [
+        "dev/e2e/watchdog-e2e.mjs"
+      ]
+    },
+    {
+      "featureId": "F-030",
+      "featureName": "Agents Page UI",
+      "tests": [
+        "ui/src/pages/AgentsPage.test.tsx"
+      ]
+    },
+    {
+      "featureId": "F-032",
+      "featureName": "Home Dashboard UI",
       "tests": [
         "ui/src/pages/HomePage.test.tsx"
       ]
     },
     {
-      "featureId": "F-027",
-      "featureName": "Status Badge Component",
+      "featureId": "F-034",
+      "featureName": "App Shell & Navigation",
       "tests": [
+        "ui/src/components/Sidebar.test.tsx",
         "ui/src/components/StatusBadge.test.tsx"
       ]
     },
     {
-      "featureId": "F-028",
-      "featureName": "Shared UI Types & Utilities",
+      "featureId": "F-035",
+      "featureName": "UI Shared Types & Helpers",
       "tests": [
         "ui/src/types.test.ts"
       ]
     }
   ],
   "stats": {
-    "totalTestFiles": 12,
+    "totalTestFiles": 14,
     "byType": {
-      "unit": 12,
+      "unit": 14,
       "integration": 0,
       "e2e": 0
     },
-    "totalMappings": 11,
-    "coverageGapFiles": 22,
-    "coverageRate": "33.3%",
-    "featureTestCoverage": 11
+    "totalMappings": 20,
+    "coverageGapFiles": 15,
+    "coverageRate": "57.1%",
+    "featureTestCoverage": 27
   }
 }

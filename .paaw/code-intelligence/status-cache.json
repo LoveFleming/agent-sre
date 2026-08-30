@@ -1,5 +1,5 @@
 {
-  "timestamp": 1786889159819,
+  "timestamp": 1787456167581,
   "data": {
     "architecture": {
       "score": 75,
@@ -12,7 +12,7 @@
         {
           "name": "Architecture Map",
           "status": "ok",
-          "detail": "7225 chars"
+          "detail": "4443 chars"
         },
         {
           "name": "Decision Records",
@@ -32,7 +32,7 @@
         {
           "name": "API Contract",
           "status": "ok",
-          "detail": "17301 chars"
+          "detail": "4728 chars"
         },
         {
           "name": "Error Mapping",
@@ -62,12 +62,12 @@
         {
           "name": "Unit Tests",
           "status": "ok",
-          "detail": "Coverage: 33.3% (12 files)"
+          "detail": "Coverage: 58.3% (22 files)"
         },
         {
           "name": "Coverage Gaps",
           "status": "warn",
-          "detail": "22 untested file(s)"
+          "detail": "20 untested file(s)"
         },
         {
           "name": "E2E Tests",
@@ -82,7 +82,7 @@
         {
           "name": "README",
           "status": "ok",
-          "detail": "13d ago"
+          "detail": "20d ago"
         },
         {
           "name": "FAQ",
@@ -97,7 +97,7 @@
         {
           "name": "Tracked Files",
           "status": "info",
-          "detail": "112 files"
+          "detail": "334 files"
         }
       ]
     },
@@ -112,7 +112,7 @@
         {
           "name": "Git Status",
           "status": "warn",
-          "detail": "18 uncommitted"
+          "detail": "35 uncommitted"
         },
         {
           "name": "Error Handling",

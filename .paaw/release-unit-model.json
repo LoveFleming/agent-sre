@@ -1,0 +1,2924 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-25T13:03:27.887Z",
+  "headSha": "9aad91a",
+  "tableHashes": {
+    "features": "814fb60e41d11694",
+    "apis": "e5245ab129897f0a",
+    "tests": "3e06bb071f93e5ce",
+    "changes": "c21b475f28919314",
+    "knowledgeGaps": "f44f2fe1badc130c"
+  },
+  "root": null,
+  "summary": {
+    "features": 40,
+    "apis": 28,
+    "apisWithFeature": 28,
+    "files": 70,
+    "filesMapped": 69,
+    "tests": 43,
+    "commits": 54,
+    "commitLimit": 200
+  },
+  "sources": {
+    "apiMapGeneratedAt": null,
+    "testMapGeneratedAt": null,
+    "depGraphGeneratedAt": null,
+    "featuresUpdatedAt": "2026-08-22T13:47:00.870Z"
+  },
+  "features": [
+    {
+      "id": "F-001",
+      "name": "Server Bootstrap & HTTP Entry",
+      "status": "active",
+      "description": "Node HTTP server entrypoint (main) that wires config, tool loading, crews, routes, and both agent + monitor schedulers into a single running service",
+      "fileCount": 1,
+      "files": [
+        "server/index.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 8,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "d20caae13227299f"
+    },
+    {
+      "id": "F-002",
+      "name": "API Gateway & Route Registration",
+      "status": "active",
+      "description": "Central route registration (registerRoutes) mounting all API endpoints, request body parsing, JSON replies, and the GET /api/health liveness endpoint",
+      "fileCount": 1,
+      "files": [
+        "server/routes.mjs"
+      ],
+      "apis": [
+        "GET /api/agents",
+        "POST /api/agents",
+        "POST /api/chat",
+        "GET /api/crews",
+        "GET /api/datasources",
+        "POST /api/datasources",
+        "GET /api/health",
+        "GET /api/runs",
+        "GET /api/tasks",
+        "POST /api/tasks",
+        "GET /api/tools"
+      ],
+      "apiCount": 11,
+      "tests": [
+        {
+          "file": "server/routes.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 8,
+      "changeCount": 13,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "637f826b86539471"
+    },
+    {
+      "id": "F-003",
+      "name": "API Token Authentication",
+      "status": "active",
+      "description": "Token-gated API access with constant-time token comparison (safeTokenEqual), per-request checkApiToken, and a test-only token cache reset hook",
+      "fileCount": 1,
+      "files": [
+        "server/routes.mjs"
+      ],
+      "apis": [
+        "GET /api/agents",
+        "POST /api/agents",
+        "POST /api/chat",
+        "GET /api/crews",
+        "GET /api/datasources",
+        "POST /api/datasources",
+        "GET /api/health",
+        "GET /api/runs",
+        "GET /api/tasks",
+        "POST /api/tasks",
+        "GET /api/tools"
+      ],
+      "apiCount": 11,
+      "tests": [
+        {
+          "file": "server/routes.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 8,
+      "changeCount": 13,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "646961e98da4ba36"
+    },
+    {
+      "id": "F-004",
+      "name": "Configuration & LLM Provider Resolution",
+      "status": "active",
+      "description": "Project config loader (ROOT, PORT) with provider config loading and resolveLLM for selecting LLM provider settings",
+      "fileCount": 1,
+      "files": [
+        "server/config.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "server/agent-store.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/config.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "server/datasource-store.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/index.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/llm.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/monitor-instance.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/monitor-store.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/run-store.mjs",
+          "kind": null
+        }
+      ],
+      "testCount": 82,
+      "changeCount": 3,
+      "lastChangeAt": "2026-08-22T00:14:48+08:00",
+      "knowledgeGaps": [
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "c2acf3a8a61a8421"
+    },
+    {
+      "id": "F-005",
+      "name": "LLM Client",
+      "status": "active",
+      "description": "callLLM client with retries, streaming support (handleStream), tool-call merging, and fallback provider override logic",
+      "fileCount": 1,
+      "files": [
+        "server/llm.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "server/agent-loop.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/llm.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 8,
+      "changeCount": 3,
+      "lastChangeAt": "2026-08-16T11:30:15+08:00",
+      "knowledgeGaps": [
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "1450777b31adc27b"
+    },
+    {
+      "id": "F-006",
+      "name": "Tool Engine LLM Provider Adapter",
+      "status": "active",
+      "description": "OpenAI-compatible provider adapter (createProviderAdapter) with deterministic request serialization and LLM stream logging for tool-side model calls",
+      "fileCount": 1,
+      "files": [
+        "server/tool-engine/provider.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 2,
+      "lastChangeAt": "2026-08-02T18:16:15+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "fc274683638c177c"
+    },
+    {
+      "id": "F-007",
+      "name": "Agent Loop",
+      "status": "active",
+      "description": "Tool-calling agent runtime: runAgentLoop and runAgentLoopStream with system prompt building, message trimming, and crew tool resolution",
+      "fileCount": 1,
+      "files": [
+        "server/agent-loop.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 2,
+      "lastChangeAt": "2026-08-01T22:11:51+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "eb6ae1b2fa3d2f28"
+    },
+    {
+      "id": "F-008",
+      "name": "Crew System",
+      "status": "active",
+      "description": "Crew definition loader (loadAllCrews, getCrew, listCrews) exposing crew presets to chat and scheduled runs",
+      "fileCount": 1,
+      "files": [
+        "server/crew-loader.mjs"
+      ],
+      "apis": [
+        "GET /api/agents",
+        "POST /api/agents",
+        "POST /api/chat",
+        "GET /api/crews",
+        "GET /api/datasources",
+        "POST /api/datasources",
+        "GET /api/health",
+        "GET /api/runs",
+        "GET /api/tasks",
+        "POST /api/tasks",
+        "GET /api/tools"
+      ],
+      "apiCount": 11,
+      "tests": [
+        {
+          "file": "server/routes.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/routes.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 17,
+      "changeCount": 13,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "e1ca8f2e36de3c49"
+    },
+    {
+      "id": "F-009",
+      "name": "Tool Registry & Loader",
+      "status": "active",
+      "description": "Dynamic tool loading from the tools/ tree (safeResolve, loadAllTools, wrappedHandler) plus the ToolRegistry that tools register into; exposed via GET /api/tools",
+      "fileCount": 2,
+      "files": [
+        "server/tool-registry.mjs",
+        "server/tool-loader.mjs"
+      ],
+      "apis": [
+        "GET /api/agents",
+        "POST /api/agents",
+        "POST /api/chat",
+        "GET /api/crews",
+        "GET /api/datasources",
+        "POST /api/datasources",
+        "GET /api/health",
+        "GET /api/runs",
+        "GET /api/tasks",
+        "POST /api/tasks",
+        "GET /api/tools"
+      ],
+      "apiCount": 11,
+      "tests": [
+        {
+          "file": "server/routes.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "server/tool-loader.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/tool-loader.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "server/tool-registry.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 13,
+      "changeCount": 15,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "38bf17e9f58ce4be"
+    },
+    {
+      "id": "F-010",
+      "name": "Docs & Runbook Search Tool",
+      "status": "active",
+      "description": "Agent tool that parses frontmatter, scans runbooks/docs directories, and serves search queries over them",
+      "fileCount": 1,
+      "files": [
+        "tools/docs/handler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 1,
+      "lastChangeAt": "2026-07-31T21:32:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "0df84b7f5dc549b6"
+    },
+    {
+      "id": "F-011",
+      "name": "Grafana Tool",
+      "status": "active",
+      "description": "Grafana integration tool: auth header handling, GraphQL/API base resolution, time parsing, and table formatting for dashboards and queries",
+      "fileCount": 1,
+      "files": [
+        "tools/grafana/handler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 2,
+      "lastChangeAt": "2026-08-17T06:35:29+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "639b939b0e06a161"
+    },
+    {
+      "id": "F-012",
+      "name": "Kubernetes Tool",
+      "status": "active",
+      "description": "Kubectl wrapper tool with base arg building, destructive-command detection, and output truncation for safe cluster operations",
+      "fileCount": 1,
+      "files": [
+        "tools/k8s/handler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 1,
+      "lastChangeAt": "2026-07-31T21:32:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "1bd5f920f92073be"
+    },
+    {
+      "id": "F-013",
+      "name": "Loki Logs Tool",
+      "status": "active",
+      "description": "Loki log querying tool with base URL/header construction, log result formatting, and stats result formatting",
+      "fileCount": 1,
+      "files": [
+        "tools/loki/handler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 1,
+      "lastChangeAt": "2026-07-31T21:32:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "7c9a5f78b4bd68ff"
+    },
+    {
+      "id": "F-014",
+      "name": "Prometheus Tool",
+      "status": "active",
+      "description": "Prometheus tool supporting instant and range queries plus alert listing, with response formatting for each query type",
+      "fileCount": 1,
+      "files": [
+        "tools/prometheus/handler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 1,
+      "lastChangeAt": "2026-07-31T21:32:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "579449762b3a4988"
+    },
+    {
+      "id": "F-015",
+      "name": "Security Audit Tool",
+      "status": "active",
+      "description": "Security scanning tool running RBAC scans, SSL checks, and dependency scans via subprocess commands with binary availability detection",
+      "fileCount": 1,
+      "files": [
+        "tools/security/handler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 1,
+      "lastChangeAt": "2026-07-31T21:32:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "ca718047e5e5d725"
+    },
+    {
+      "id": "F-016",
+      "name": "Shell Tool",
+      "status": "active",
+      "description": "Guarded shell execution tool with blocked-pattern detection, safety/destructive checks, command runner, and output truncation",
+      "fileCount": 1,
+      "files": [
+        "tools/shell/handler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 1,
+      "lastChangeAt": "2026-07-31T21:32:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "40a3a102238845a8"
+    },
+    {
+      "id": "F-017",
+      "name": "TChat Messaging Tool",
+      "status": "active",
+      "description": "Outbound messaging transport (tchat contract v0 / Telegram-style): config loading, sendMessage client, auth check, message formatting, and sendTchatMessage used by both schedulers for notifications",
+      "fileCount": 2,
+      "files": [
+        "tools/tchat/client.mjs",
+        "tools/tchat/handler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "tools/tchat/client.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "tools/tchat/handler.mjs",
+          "kind": null
+        },
+        {
+          "file": "tools/tchat/handler.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 10,
+      "changeCount": 3,
+      "lastChangeAt": "2026-08-16T16:30:11+08:00",
+      "knowledgeGaps": [
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "2f14c15888192a7f"
+    },
+    {
+      "id": "F-018",
+      "name": "Conversation Persistence",
+      "status": "active",
+      "description": "Conversation store with load/save, archive and list/load of archives, ID sanitization, and directory bootstrapping",
+      "fileCount": 1,
+      "files": [
+        "server/conversation.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "server/conversation.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 0,
+      "changeCount": 2,
+      "lastChangeAt": "2026-08-16T11:30:15+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "e17e97ab005a87cb"
+    },
+    {
+      "id": "F-019",
+      "name": "Agent Management (Store & API)",
+      "status": "active",
+      "description": "Agent CRUD store with cron validation, tool selection, and filename-safe IDs; exposed via the agents API including manual run trigger (TASK-006)",
+      "fileCount": 2,
+      "files": [
+        "server/agent-store.mjs",
+        "server/routes.mjs"
+      ],
+      "apis": [
+        "GET /api/agents",
+        "POST /api/agents",
+        "POST /api/agents",
+        "POST /api/agents",
+        "PUT /api/agents/agent-001/*",
+        "POST /api/chat",
+        "GET /api/crews",
+        "GET /api/datasources",
+        "POST /api/datasources",
+        "GET /api/health",
+        "GET /api/runs",
+        "GET /api/tasks",
+        "POST /api/tasks",
+        "GET /api/tools"
+      ],
+      "apiCount": 14,
+      "tests": [
+        {
+          "file": "server/agent-store.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "server/routes.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "server/scheduler.mjs",
+          "kind": null
+        }
+      ],
+      "testCount": 27,
+      "changeCount": 17,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "0ae50b66797e71c5"
+    },
+    {
+      "id": "F-020",
+      "name": "Agent Cron Scheduler",
+      "status": "active",
+      "description": "node-cron scheduling engine for agents: register/reschedule agents, executeScheduledRun with crew building and trigger messages, run timeout resolution, tchat notification delivery, and active schedule introspection",
+      "fileCount": 1,
+      "files": [
+        "server/scheduler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "server/scheduler.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 3,
+      "changeCount": 6,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "b79cc9a246f60948"
+    },
+    {
+      "id": "F-021",
+      "name": "Task Store & API",
+      "status": "active",
+      "description": "In-memory TaskStore (id generation via crypto) backing the tasks API for create and list",
+      "fileCount": 2,
+      "files": [
+        "server/task-store.mjs",
+        "server/routes.mjs"
+      ],
+      "apis": [
+        "GET /api/agents",
+        "POST /api/agents",
+        "POST /api/chat",
+        "GET /api/crews",
+        "GET /api/datasources",
+        "POST /api/datasources",
+        "GET /api/health",
+        "GET /api/runs",
+        "GET /api/tasks",
+        "POST /api/tasks",
+        "GET /api/tools"
+      ],
+      "apiCount": 11,
+      "tests": [
+        {
+          "file": "server/routes.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "server/task-store.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 9,
+      "changeCount": 13,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "856a8287f56ca4f4"
+    },
+    {
+      "id": "F-022",
+      "name": "Datasource Management",
+      "status": "active",
+      "description": "Datasource CRUD with URL/token/settings validation, token masking, atomic writes, and syncToolConfig that projects datasource settings into tool config files",
+      "fileCount": 2,
+      "files": [
+        "server/datasource-store.mjs",
+        "server/routes.mjs"
+      ],
+      "apis": [
+        "GET /api/agents",
+        "POST /api/agents",
+        "POST /api/chat",
+        "GET /api/crews",
+        "GET /api/datasources",
+        "POST /api/datasources",
+        "GET /api/health",
+        "GET /api/runs",
+        "GET /api/tasks",
+        "POST /api/tasks",
+        "GET /api/tools"
+      ],
+      "apiCount": 11,
+      "tests": [
+        {
+          "file": "server/datasource-store.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "server/routes.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 11,
+      "changeCount": 13,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "ba5ae7f5084ebdc1"
+    },
+    {
+      "id": "F-023",
+      "name": "Run History & Retention",
+      "status": "active",
+      "description": "Run recording store: startRun/finishRun lifecycle, tool-call normalization, deterministic sorted listing (tie-break on run id, TASK-004), getRun lookup, and retention-based pruning of old runs",
+      "fileCount": 2,
+      "files": [
+        "server/run-store.mjs",
+        "server/routes.mjs"
+      ],
+      "apis": [
+        "GET /api/agents",
+        "POST /api/agents",
+        "POST /api/chat",
+        "GET /api/crews",
+        "GET /api/datasources",
+        "POST /api/datasources",
+        "GET /api/health",
+        "GET /api/runs",
+        "GET /api/tasks",
+        "POST /api/tasks",
+        "GET /api/tools"
+      ],
+      "apiCount": 11,
+      "tests": [
+        {
+          "file": "server/routes.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "server/run-store.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 10,
+      "changeCount": 14,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "836e5eb8ea995b94"
+    },
+    {
+      "id": "F-024",
+      "name": "Chat API",
+      "status": "active",
+      "description": "POST /api/chat endpoint running the agent loop against a selected crew with tool-call callbacks, conversation persistence, and task interaction",
+      "fileCount": 1,
+      "files": [
+        "server/routes.mjs"
+      ],
+      "apis": [
+        "GET /api/agents",
+        "POST /api/agents",
+        "POST /api/chat",
+        "GET /api/crews",
+        "GET /api/datasources",
+        "POST /api/datasources",
+        "GET /api/health",
+        "GET /api/runs",
+        "GET /api/tasks",
+        "POST /api/tasks",
+        "GET /api/tools"
+      ],
+      "apiCount": 11,
+      "tests": [
+        {
+          "file": "server/routes.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 8,
+      "changeCount": 13,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "86a13523fcebc990"
+    },
+    {
+      "id": "F-025",
+      "name": "Monitor Flow Templates",
+      "status": "active",
+      "description": "Library of monitoring flow templates (STANDARD_SRE_FLOW, ALERT_TRIAGE_FLOW, RELEASE_WATCH_FLOW) with default monitor prompts, rules, skills, and template lookup/listing",
+      "fileCount": 1,
+      "files": [
+        "server/monitor-flows.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 1,
+      "lastChangeAt": "2026-08-22T00:14:48+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "920af8b4bed7de8c"
+    },
+    {
+      "id": "F-026",
+      "name": "Monitor Store & Monitor API",
+      "status": "active",
+      "description": "Monitor CRUD with schedule presets (presetToCron), source/output normalization, and the monitor routes handler dispatching monitor workspace endpoints (meta, list, create) with chat crew building and run summaries",
+      "fileCount": 2,
+      "files": [
+        "server/monitor-store.mjs",
+        "server/monitor-routes.mjs"
+      ],
+      "apis": [
+        "GET /api/monitor-meta",
+        "GET /api/monitors",
+        "POST /api/monitors"
+      ],
+      "apiCount": 3,
+      "tests": [
+        {
+          "file": "server/monitor-routes.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/monitor-routes.test.mjs",
+          "kind": "unit"
+        },
+        {
+          "file": "server/monitor-scheduler.mjs",
+          "kind": null
+        },
+        {
+          "file": "server/monitor-store.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 19,
+      "changeCount": 1,
+      "lastChangeAt": "2026-08-22T00:14:48+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "505463ae3c8e356b"
+    },
+    {
+      "id": "F-027",
+      "name": "Monitor Instance State",
+      "status": "active",
+      "description": "Per-monitor persistent instance state: getInstance/peek/update, run recording, incident append, knowledge setting, destroy, and state file listing with disk persistence",
+      "fileCount": 1,
+      "files": [
+        "server/monitor-instance.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "server/monitor-instance.test.mjs",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 0,
+      "changeCount": 1,
+      "lastChangeAt": "2026-08-22T00:14:48+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "6e78c1dc8a21d02b"
+    },
+    {
+      "id": "F-028",
+      "name": "Monitor Scheduler & Run Execution",
+      "status": "active",
+      "description": "Monitor execution engine: executeMonitorRun with monitor crew building, per-source tool reads, signal detection, conversation + run recording, tchat notification, and cron-based rescheduling with next-run computation",
+      "fileCount": 1,
+      "files": [
+        "server/monitor-scheduler.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 3,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "713ac8b4d1cef20e"
+    },
+    {
+      "id": "F-029",
+      "name": "Monitor Workspace UI",
+      "status": "active",
+      "description": "SRE Agentic Monitoring workspace page with monitor list, create-monitor modal, model settings modal, status pills, and live run/last-run display (MVP per spec)",
+      "fileCount": 1,
+      "files": [
+        "ui/src/pages/MonitorWorkspace.tsx"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 2,
+      "lastChangeAt": "2026-08-23T21:20:16+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "5581f45dd18a8e18"
+    },
+    {
+      "id": "F-030",
+      "name": "Agents Page UI",
+      "status": "active",
+      "description": "Agent management page (upgraded from TaskManagementPage, TASK-003): agent list, create/edit form with cron and tool picker, enabled switch, and status banners",
+      "fileCount": 1,
+      "files": [
+        "ui/src/pages/AgentsPage.tsx"
+      ],
+      "apis": [
+        "POST /api/agents",
+        "POST /api/agents",
+        "PUT /api/agents/agent-001/*"
+      ],
+      "apiCount": 3,
+      "tests": [
+        {
+          "file": "ui/src/pages/AgentsPage.test.tsx",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 4,
+      "changeCount": 3,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-runbook"
+      ],
+      "_h": "818d8d6ed4a6b4de"
+    },
+    {
+      "id": "F-031",
+      "name": "Console Page UI",
+      "status": "active",
+      "description": "Console chat page with markdown (react-markdown + remark-gfm) rendering for agent conversation output",
+      "fileCount": 1,
+      "files": [
+        "ui/src/pages/ConsolePage.tsx"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 4,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "cccebf4dadecf893"
+    },
+    {
+      "id": "F-032",
+      "name": "Home Dashboard UI",
+      "status": "active",
+      "description": "Landing dashboard page with stat cards summarizing system state via fetched API data",
+      "fileCount": 1,
+      "files": [
+        "ui/src/pages/HomePage.tsx"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "ui/src/pages/HomePage.test.tsx",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 2,
+      "changeCount": 5,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "5c7f61943d35d8fb"
+    },
+    {
+      "id": "F-033",
+      "name": "Tools Directory UI",
+      "status": "active",
+      "description": "Tools listing page showing available agent tools and their metadata",
+      "fileCount": 1,
+      "files": [
+        "ui/src/pages/ToolsPage.tsx"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 3,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "0df666f0eb5469f2"
+    },
+    {
+      "id": "F-034",
+      "name": "App Shell & Navigation",
+      "status": "active",
+      "description": "React app entry and shell: App routing across pages, Sidebar navigation with StatusBadge, Placeholder page for unbuilt routes, and Vite build config (pinned 5.4.21)",
+      "fileCount": 6,
+      "files": [
+        "ui/src/App.tsx",
+        "ui/src/main.tsx",
+        "ui/src/components/Sidebar.tsx",
+        "ui/src/components/StatusBadge.tsx",
+        "ui/src/pages/Placeholder.tsx",
+        "ui/vite.config.ts"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "ui/src/App.tsx",
+          "kind": null
+        },
+        {
+          "file": "ui/src/components/Sidebar.test.tsx",
+          "kind": "unit"
+        },
+        {
+          "file": "ui/src/components/StatusBadge.test.tsx",
+          "kind": "unit"
+        },
+        {
+          "file": "ui/src/main.tsx",
+          "kind": null
+        }
+      ],
+      "testCount": 3,
+      "changeCount": 8,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "c78025ae39e3a1ec"
+    },
+    {
+      "id": "F-035",
+      "name": "UI Shared Types & Helpers",
+      "status": "active",
+      "description": "Shared frontend types and helpers: empty agent draft, client-side cron validation, lines/text conversion, provider lookup, and uptime formatting",
+      "fileCount": 1,
+      "files": [
+        "ui/src/types.ts"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "ui/src/components/Sidebar.tsx",
+          "kind": null
+        },
+        {
+          "file": "ui/src/pages/AgentsPage.tsx",
+          "kind": null
+        },
+        {
+          "file": "ui/src/pages/ConsolePage.tsx",
+          "kind": null
+        },
+        {
+          "file": "ui/src/pages/HomePage.tsx",
+          "kind": null
+        },
+        {
+          "file": "ui/src/pages/ToolsPage.tsx",
+          "kind": null
+        },
+        {
+          "file": "ui/src/types.test.ts",
+          "kind": "unit"
+        }
+      ],
+      "testCount": 12,
+      "changeCount": 5,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "d2681d342b5c1186"
+    },
+    {
+      "id": "F-036",
+      "name": "Test Infrastructure",
+      "status": "active",
+      "description": "Vitest configuration for the monorepo and React Testing Library setup for UI tests",
+      "fileCount": 2,
+      "files": [
+        "vitest.config.mjs",
+        "ui/src/test/setup.ts"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 3,
+      "lastChangeAt": "2026-08-16T16:30:11+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "f4dcdb61bc32b9b1"
+    },
+    {
+      "id": "F-037",
+      "name": "Grafana Mock Server",
+      "status": "active",
+      "description": "Development fixture Grafana server (TASK-008) serving health, search, dashboard, ds/query, rules, alerts, and datasources endpoints with generated series/rule data",
+      "fileCount": 1,
+      "files": [
+        "dev/mocks/grafana-mock.mjs"
+      ],
+      "apis": [
+        "GET /api/alerts",
+        "GET /api/datasources",
+        "POST /api/ds/query",
+        "GET /api/health",
+        "GET /api/prometheus/grafana/api/v1/rules",
+        "GET /api/search"
+      ],
+      "apiCount": 6,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 1,
+      "lastChangeAt": "2026-08-16T13:04:13+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-runbook"
+      ],
+      "_h": "aea402348a1dbd96"
+    },
+    {
+      "id": "F-038",
+      "name": "TChat Mock Server",
+      "status": "active",
+      "description": "Development tchat mock server (port 3002, TASK-009) implementing contract v0 POST /api/messages with scenario switching, reset, sent-log inspection, and jsonl persistence via TCHAT_SENT_LOG",
+      "fileCount": 1,
+      "files": [
+        "dev/mocks/tchat-mock.mjs"
+      ],
+      "apis": [
+        "POST /__reset",
+        "GET /__scenario",
+        "POST /__scenario",
+        "GET /__sent",
+        "POST /api/messages"
+      ],
+      "apiCount": 5,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 2,
+      "lastChangeAt": "2026-08-16T20:27:19+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-runbook"
+      ],
+      "_h": "0c8c5ea82ed82fee"
+    },
+    {
+      "id": "F-039",
+      "name": "Watchdog E2E Test",
+      "status": "active",
+      "description": "End-to-end watchdog test (TASK-010) that boots the stack against the tchat mock with a scripted LLM responder, drives monitoring/alert flow, and asserts sent messages from the jsonl log; also exercises Grafana handler and task-state sync",
+      "fileCount": 1,
+      "files": [
+        "dev/e2e/watchdog-e2e.mjs"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [],
+      "testCount": 0,
+      "changeCount": 2,
+      "lastChangeAt": "2026-08-23T22:01:24+08:00",
+      "knowledgeGaps": [
+        "no-tests",
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "508d26afa08d32f8"
+    },
+    {
+      "id": "F-040",
+      "name": "Legacy SRE Console & Dashboard",
+      "status": "deprecated",
+      "description": "Standalone SREConsole and SREDashboard views (provider card, alert card, quick-query panel) composing AgentConsole — not wired into the current ui/src App router; superseded by the page-based shell (AgentsPage upgrade, TASK-003)",
+      "fileCount": 2,
+      "files": [
+        "ui/SREConsole.tsx",
+        "ui/SREDashboard.tsx"
+      ],
+      "apis": [],
+      "apiCount": 0,
+      "tests": [
+        {
+          "file": "ui/SREConsole.tsx",
+          "kind": null
+        }
+      ],
+      "testCount": 1,
+      "changeCount": 1,
+      "lastChangeAt": "2026-07-31T21:32:24+08:00",
+      "knowledgeGaps": [
+        "no-api-mapped",
+        "no-runbook"
+      ],
+      "_h": "26a84cc91c68bd4a"
+    }
+  ],
+  "apis": [
+    {
+      "method": "POST",
+      "path": "/__reset",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-038"
+      ],
+      "_h": "e0e4e40b08972889"
+    },
+    {
+      "method": "GET",
+      "path": "/__scenario",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-038"
+      ],
+      "_h": "9e179ea961629a31"
+    },
+    {
+      "method": "POST",
+      "path": "/__scenario",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-038"
+      ],
+      "_h": "55f5a09e631372de"
+    },
+    {
+      "method": "GET",
+      "path": "/__sent",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-038"
+      ],
+      "_h": "baa9b9c792e55728"
+    },
+    {
+      "method": "GET",
+      "path": "/api/agents",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "469d9d3bd3e01dec"
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "7c1e3b12dc9dde56"
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents",
+      "file": "ui/src/pages/AgentsPage.test.tsx",
+      "handler": null,
+      "featureIds": [
+        "F-019",
+        "F-030"
+      ],
+      "_h": "3c38a1044acc91b2"
+    },
+    {
+      "method": "POST",
+      "path": "/api/agents",
+      "file": "ui/src/pages/AgentsPage.test.tsx",
+      "handler": null,
+      "featureIds": [
+        "F-019",
+        "F-030"
+      ],
+      "_h": "3c38a1044acc91b2"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/agents/agent-001/*",
+      "file": "ui/src/pages/AgentsPage.test.tsx",
+      "handler": null,
+      "featureIds": [
+        "F-019",
+        "F-030"
+      ],
+      "_h": "c83e171ed0e3cc51"
+    },
+    {
+      "method": "GET",
+      "path": "/api/alerts",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-037"
+      ],
+      "_h": "3e39bfb220bef6bf"
+    },
+    {
+      "method": "POST",
+      "path": "/api/chat",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "ae1f72cb80283f05"
+    },
+    {
+      "method": "GET",
+      "path": "/api/crews",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "97be427088e19239"
+    },
+    {
+      "method": "GET",
+      "path": "/api/datasources",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-037"
+      ],
+      "_h": "63e3228b336a5732"
+    },
+    {
+      "method": "GET",
+      "path": "/api/datasources",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "9ec51715e265603c"
+    },
+    {
+      "method": "POST",
+      "path": "/api/datasources",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "98647afdad1ebeba"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ds/query",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-037"
+      ],
+      "_h": "2f1abc34d25e3993"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-037"
+      ],
+      "_h": "ceb14ea6e13982e6"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "7f9ac99b870a16db"
+    },
+    {
+      "method": "POST",
+      "path": "/api/messages",
+      "file": "dev/mocks/tchat-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-038"
+      ],
+      "_h": "2f1548df77c923c0"
+    },
+    {
+      "method": "GET",
+      "path": "/api/monitor-meta",
+      "file": "server/monitor-routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-026"
+      ],
+      "_h": "4561dd10b193afaf"
+    },
+    {
+      "method": "GET",
+      "path": "/api/monitors",
+      "file": "server/monitor-routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-026"
+      ],
+      "_h": "32e4f7603efe4b40"
+    },
+    {
+      "method": "POST",
+      "path": "/api/monitors",
+      "file": "server/monitor-routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-026"
+      ],
+      "_h": "359802e8a4291182"
+    },
+    {
+      "method": "GET",
+      "path": "/api/prometheus/grafana/api/v1/rules",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-037"
+      ],
+      "_h": "339181ab72c00ea0"
+    },
+    {
+      "method": "GET",
+      "path": "/api/runs",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "c7e56e61c7248fab"
+    },
+    {
+      "method": "GET",
+      "path": "/api/search",
+      "file": "dev/mocks/grafana-mock.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-037"
+      ],
+      "_h": "cd392c911d116ce8"
+    },
+    {
+      "method": "GET",
+      "path": "/api/tasks",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "f42324a050c47c94"
+    },
+    {
+      "method": "POST",
+      "path": "/api/tasks",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "ae2bbe4a91f34c24"
+    },
+    {
+      "method": "GET",
+      "path": "/api/tools",
+      "file": "server/routes.mjs",
+      "handler": null,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "518eecb01cc05d07"
+    }
+  ],
+  "tests": [
+    {
+      "testFile": "server/agent-loop.mjs",
+      "productionFile": "server/llm.mjs",
+      "testCount": 6,
+      "kind": null,
+      "featureIds": [
+        "F-005"
+      ],
+      "_h": "35b8d5513285a534"
+    },
+    {
+      "testFile": "server/agent-store.mjs",
+      "productionFile": "server/config.mjs",
+      "testCount": 14,
+      "kind": null,
+      "featureIds": [
+        "F-004"
+      ],
+      "_h": "5b24a710a4027b2e"
+    },
+    {
+      "testFile": "server/agent-store.test.mjs",
+      "productionFile": "server/agent-store.mjs",
+      "testCount": 2,
+      "kind": "unit",
+      "featureIds": [
+        "F-019"
+      ],
+      "_h": "c07d9e4581792c4b"
+    },
+    {
+      "testFile": "server/config.test.mjs",
+      "productionFile": "server/config.mjs",
+      "testCount": 0,
+      "kind": "unit",
+      "featureIds": [
+        "F-004"
+      ],
+      "_h": "e34941c7a41367c7"
+    },
+    {
+      "testFile": "server/conversation.test.mjs",
+      "productionFile": "server/conversation.mjs",
+      "testCount": 0,
+      "kind": "unit",
+      "featureIds": [
+        "F-018"
+      ],
+      "_h": "6f5cdc70a2bd347d"
+    },
+    {
+      "testFile": "server/datasource-store.mjs",
+      "productionFile": "server/config.mjs",
+      "testCount": 18,
+      "kind": null,
+      "featureIds": [
+        "F-004"
+      ],
+      "_h": "63a5fca2f04d32fb"
+    },
+    {
+      "testFile": "server/datasource-store.test.mjs",
+      "productionFile": "server/datasource-store.mjs",
+      "testCount": 3,
+      "kind": "unit",
+      "featureIds": [
+        "F-022"
+      ],
+      "_h": "fb53b40c7bc8b7a1"
+    },
+    {
+      "testFile": "server/index.mjs",
+      "productionFile": "server/config.mjs",
+      "testCount": 1,
+      "kind": null,
+      "featureIds": [
+        "F-004"
+      ],
+      "_h": "b71bb7de3ae40744"
+    },
+    {
+      "testFile": "server/llm.mjs",
+      "productionFile": "server/config.mjs",
+      "testCount": 5,
+      "kind": null,
+      "featureIds": [
+        "F-004"
+      ],
+      "_h": "5dcd328e59f7da89"
+    },
+    {
+      "testFile": "server/llm.test.mjs",
+      "productionFile": "server/llm.mjs",
+      "testCount": 2,
+      "kind": "unit",
+      "featureIds": [
+        "F-005"
+      ],
+      "_h": "4da949006ccc3485"
+    },
+    {
+      "testFile": "server/monitor-instance.mjs",
+      "productionFile": "server/config.mjs",
+      "testCount": 12,
+      "kind": null,
+      "featureIds": [
+        "F-004"
+      ],
+      "_h": "bafa8b896ca0c9fd"
+    },
+    {
+      "testFile": "server/monitor-instance.test.mjs",
+      "productionFile": "server/monitor-instance.mjs",
+      "testCount": 0,
+      "kind": "unit",
+      "featureIds": [
+        "F-027"
+      ],
+      "_h": "daa593be4db0ff79"
+    },
+    {
+      "testFile": "server/monitor-routes.mjs",
+      "productionFile": "server/monitor-store.mjs",
+      "testCount": 5,
+      "kind": null,
+      "featureIds": [
+        "F-026"
+      ],
+      "_h": "ab8c94372a202ee2"
+    },
+    {
+      "testFile": "server/monitor-routes.test.mjs",
+      "productionFile": "server/monitor-routes.mjs",
+      "testCount": 1,
+      "kind": "unit",
+      "featureIds": [
+        "F-026"
+      ],
+      "_h": "a24dabe5e76e39ac"
+    },
+    {
+      "testFile": "server/monitor-scheduler.mjs",
+      "productionFile": "server/monitor-store.mjs",
+      "testCount": 12,
+      "kind": null,
+      "featureIds": [
+        "F-026"
+      ],
+      "_h": "952f1f22abaf9b0a"
+    },
+    {
+      "testFile": "server/monitor-store.mjs",
+      "productionFile": "server/config.mjs",
+      "testCount": 15,
+      "kind": null,
+      "featureIds": [
+        "F-004"
+      ],
+      "_h": "01166fa1ff31958d"
+    },
+    {
+      "testFile": "server/monitor-store.test.mjs",
+      "productionFile": "server/monitor-store.mjs",
+      "testCount": 1,
+      "kind": "unit",
+      "featureIds": [
+        "F-026"
+      ],
+      "_h": "fd83ecf39d12ef84"
+    },
+    {
+      "testFile": "server/routes.mjs",
+      "productionFile": "server/crew-loader.mjs",
+      "testCount": 9,
+      "kind": null,
+      "featureIds": [
+        "F-008"
+      ],
+      "_h": "0b50400bf13cc476"
+    },
+    {
+      "testFile": "server/routes.test.mjs",
+      "productionFile": "server/routes.mjs",
+      "testCount": 8,
+      "kind": "unit",
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "f94935ed263c376f"
+    },
+    {
+      "testFile": "server/run-store.mjs",
+      "productionFile": "server/config.mjs",
+      "testCount": 17,
+      "kind": null,
+      "featureIds": [
+        "F-004"
+      ],
+      "_h": "69c6c708db4715b2"
+    },
+    {
+      "testFile": "server/run-store.test.mjs",
+      "productionFile": "server/run-store.mjs",
+      "testCount": 2,
+      "kind": "unit",
+      "featureIds": [
+        "F-023"
+      ],
+      "_h": "aebf89da9aa8891d"
+    },
+    {
+      "testFile": "server/scheduler.mjs",
+      "productionFile": "server/agent-store.mjs",
+      "testCount": 17,
+      "kind": null,
+      "featureIds": [
+        "F-019"
+      ],
+      "_h": "3a2c607aa170cd72"
+    },
+    {
+      "testFile": "server/scheduler.test.mjs",
+      "productionFile": "server/scheduler.mjs",
+      "testCount": 3,
+      "kind": "unit",
+      "featureIds": [
+        "F-020"
+      ],
+      "_h": "32bcf5086c99dac6"
+    },
+    {
+      "testFile": "server/task-store.test.mjs",
+      "productionFile": "server/task-store.mjs",
+      "testCount": 1,
+      "kind": "unit",
+      "featureIds": [
+        "F-021"
+      ],
+      "_h": "c19fced8e283bbb1"
+    },
+    {
+      "testFile": "server/tool-loader.mjs",
+      "productionFile": "server/tool-registry.mjs",
+      "testCount": 3,
+      "kind": null,
+      "featureIds": [
+        "F-009"
+      ],
+      "_h": "7ffc28051bc96545"
+    },
+    {
+      "testFile": "server/tool-loader.test.mjs",
+      "productionFile": "server/tool-loader.mjs",
+      "testCount": 0,
+      "kind": "unit",
+      "featureIds": [
+        "F-009"
+      ],
+      "_h": "10d812fba19153f0"
+    },
+    {
+      "testFile": "server/tool-registry.test.mjs",
+      "productionFile": "server/tool-registry.mjs",
+      "testCount": 2,
+      "kind": "unit",
+      "featureIds": [
+        "F-009"
+      ],
+      "_h": "4a6ef85b09c022cb"
+    },
+    {
+      "testFile": "tools/tchat/client.test.mjs",
+      "productionFile": "tools/tchat/client.mjs",
+      "testCount": 1,
+      "kind": "unit",
+      "featureIds": [
+        "F-017"
+      ],
+      "_h": "d66f1832b0322526"
+    },
+    {
+      "testFile": "tools/tchat/handler.mjs",
+      "productionFile": "tools/tchat/client.mjs",
+      "testCount": 7,
+      "kind": null,
+      "featureIds": [
+        "F-017"
+      ],
+      "_h": "b9d6b07d0319fe78"
+    },
+    {
+      "testFile": "tools/tchat/handler.test.mjs",
+      "productionFile": "tools/tchat/handler.mjs",
+      "testCount": 2,
+      "kind": "unit",
+      "featureIds": [
+        "F-017"
+      ],
+      "_h": "066d09f4bd1b28a3"
+    },
+    {
+      "testFile": "ui/src/App.tsx",
+      "productionFile": "ui/src/components/Sidebar.tsx",
+      "testCount": 2,
+      "kind": null,
+      "featureIds": [
+        "F-034"
+      ],
+      "_h": "185819f466088c0b"
+    },
+    {
+      "testFile": "ui/src/components/Sidebar.test.tsx",
+      "productionFile": "ui/src/components/Sidebar.tsx",
+      "testCount": 1,
+      "kind": "unit",
+      "featureIds": [
+        "F-034"
+      ],
+      "_h": "725b232905a78169"
+    },
+    {
+      "testFile": "ui/src/components/Sidebar.tsx",
+      "productionFile": "ui/src/types.ts",
+      "testCount": 1,
+      "kind": null,
+      "featureIds": [
+        "F-035"
+      ],
+      "_h": "83b988b013e8a689"
+    },
+    {
+      "testFile": "ui/src/components/StatusBadge.test.tsx",
+      "productionFile": "ui/src/components/StatusBadge.tsx",
+      "testCount": 0,
+      "kind": "unit",
+      "featureIds": [
+        "F-034"
+      ],
+      "_h": "fb75a731188e02a3"
+    },
+    {
+      "testFile": "ui/src/main.tsx",
+      "productionFile": "ui/src/App.tsx",
+      "testCount": 0,
+      "kind": null,
+      "featureIds": [
+        "F-034"
+      ],
+      "_h": "f90672b041ecb258"
+    },
+    {
+      "testFile": "ui/src/pages/AgentsPage.test.tsx",
+      "productionFile": "ui/src/pages/AgentsPage.tsx",
+      "testCount": 4,
+      "kind": "unit",
+      "featureIds": [
+        "F-030"
+      ],
+      "_h": "6d29b2d4de49c49c"
+    },
+    {
+      "testFile": "ui/src/pages/AgentsPage.tsx",
+      "productionFile": "ui/src/types.ts",
+      "testCount": 7,
+      "kind": null,
+      "featureIds": [
+        "F-035"
+      ],
+      "_h": "0720e4a37cb1adb1"
+    },
+    {
+      "testFile": "ui/src/pages/ConsolePage.tsx",
+      "productionFile": "ui/src/types.ts",
+      "testCount": 1,
+      "kind": null,
+      "featureIds": [
+        "F-035"
+      ],
+      "_h": "4b9005846135b876"
+    },
+    {
+      "testFile": "ui/src/pages/HomePage.test.tsx",
+      "productionFile": "ui/src/pages/HomePage.tsx",
+      "testCount": 2,
+      "kind": "unit",
+      "featureIds": [
+        "F-032"
+      ],
+      "_h": "578addc783887086"
+    },
+    {
+      "testFile": "ui/src/pages/HomePage.tsx",
+      "productionFile": "ui/src/types.ts",
+      "testCount": 2,
+      "kind": null,
+      "featureIds": [
+        "F-035"
+      ],
+      "_h": "b729693e03bf3f6b"
+    },
+    {
+      "testFile": "ui/src/pages/ToolsPage.tsx",
+      "productionFile": "ui/src/types.ts",
+      "testCount": 1,
+      "kind": null,
+      "featureIds": [
+        "F-035"
+      ],
+      "_h": "91a97677301496da"
+    },
+    {
+      "testFile": "ui/src/types.test.ts",
+      "productionFile": "ui/src/types.ts",
+      "testCount": 0,
+      "kind": "unit",
+      "featureIds": [
+        "F-035"
+      ],
+      "_h": "092a48a2d0827a68"
+    },
+    {
+      "testFile": "ui/SREConsole.tsx",
+      "productionFile": "ui/SREDashboard.tsx",
+      "testCount": 1,
+      "kind": null,
+      "featureIds": [
+        "F-040"
+      ],
+      "_h": "0ac45450fc191a11"
+    }
+  ],
+  "changes": [
+    {
+      "hash": "9aad91a",
+      "date": "2026-08-23T22:01:24+08:00",
+      "subject": "refactor(app)!: monitor workspace 是唯一介面 — 拔掉所有舊頁面與死碼",
+      "kind": "refactor",
+      "files": 42,
+      "featureIds": [
+        "F-001",
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-020",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024",
+        "F-028",
+        "F-030",
+        "F-031",
+        "F-032",
+        "F-033",
+        "F-034",
+        "F-035",
+        "F-039"
+      ],
+      "_h": "63f8296e5f7917ad"
+    },
+    {
+      "hash": "f6a6d2c",
+      "date": "2026-08-23T21:20:16+08:00",
+      "subject": "fix(monitor): MonitorWorkspace 防護 API 失敗白屏 + data/ 全 ignore + README monitor API",
+      "kind": "fix",
+      "files": 3,
+      "featureIds": [
+        "F-029"
+      ],
+      "_h": "9c89641d565c7db4"
+    },
+    {
+      "hash": "0cfa675",
+      "date": "2026-08-22T00:14:48+08:00",
+      "subject": "feat(monitor): SRE Agentic Monitoring workspace — MVP per spec",
+      "kind": "feat",
+      "files": 18,
+      "featureIds": [
+        "F-001",
+        "F-002",
+        "F-003",
+        "F-004",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024",
+        "F-025",
+        "F-026",
+        "F-027",
+        "F-028",
+        "F-029",
+        "F-034"
+      ],
+      "_h": "5ea11372c02e4ba7"
+    },
+    {
+      "hash": "b5120c3",
+      "date": "2026-08-17T16:22:28+08:00",
+      "subject": "fix(vite): downgrade to 5.4.21 — fixes 'missing field module type' pre-transform error in vite 6",
+      "kind": "fix",
+      "files": 2,
+      "featureIds": [],
+      "_h": "e4ef21a228158927"
+    },
+    {
+      "hash": "1d51512",
+      "date": "2026-08-17T09:23:29+08:00",
+      "subject": "fix(deps): patch CVEs — vite 6.4.3 (3 high), esbuild, nanoid 3.3.18; npm audit 0 vulnerabilities",
+      "kind": "fix",
+      "files": 3,
+      "featureIds": [],
+      "_h": "bbcfc97a39aba20c"
+    },
+    {
+      "hash": "0cba7d7",
+      "date": "2026-08-17T06:35:29+08:00",
+      "subject": "feat(watchdog): e2e test + grafana handler update + coding sessions/task state sync",
+      "kind": "feat",
+      "files": 19,
+      "featureIds": [
+        "F-011",
+        "F-028",
+        "F-039"
+      ],
+      "_h": "b1977191af1f84e3"
+    },
+    {
+      "hash": "028caab",
+      "date": "2026-08-16T21:47:40+08:00",
+      "subject": "fix(server): repair block-comment parse error in datasource files",
+      "kind": "fix",
+      "files": 3,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "59e383bedd1c1582"
+    },
+    {
+      "hash": "e31af3d",
+      "date": "2026-08-16T20:29:17+08:00",
+      "subject": "save",
+      "kind": "other",
+      "files": 8,
+      "featureIds": [],
+      "_h": "bb23ac41c0e95cc2"
+    },
+    {
+      "hash": "1a024e2",
+      "date": "2026-08-16T20:27:19+08:00",
+      "subject": "chore(mocks): make sent log path configurable via TCHAT_SENT_LOG",
+      "kind": "chore",
+      "files": 1,
+      "featureIds": [
+        "F-038"
+      ],
+      "_h": "a608915e30b162d0"
+    },
+    {
+      "hash": "25dce80",
+      "date": "2026-08-16T19:36:23+08:00",
+      "subject": "[TASK-009：開發 tchat mock server（port 3002），實作契約 v0 POST /api/messages，訊息落檔 tchat-sent.jsonl 供 TASK-010 watchdog 驗收] - dev/mocks/tchat-mock.mjs: TASK-009 新檔：契約 v0",
+      "kind": "other",
+      "files": 7,
+      "featureIds": [
+        "F-019",
+        "F-020",
+        "F-038"
+      ],
+      "_h": "a1d2551dced35cd9"
+    },
+    {
+      "hash": "c076fb2",
+      "date": "2026-08-16T18:13:52+08:00",
+      "subject": "chore(.paaw): TASK-007 平反結案（git 81fbe64）",
+      "kind": "chore",
+      "files": 3,
+      "featureIds": [],
+      "_h": "448320384af37e2b"
+    },
+    {
+      "hash": "81fbe64",
+      "date": "2026-08-16T16:30:11+08:00",
+      "subject": "refactor(tchat): extract transport layer with contract v0 (TASK-007, ADR-004)",
+      "kind": "refactor",
+      "files": 22,
+      "featureIds": [
+        "F-017",
+        "F-019",
+        "F-020",
+        "F-030",
+        "F-032",
+        "F-036"
+      ],
+      "_h": "d9ed08e7be3e6937"
+    },
+    {
+      "hash": "e933c2d",
+      "date": "2026-08-16T15:58:04+08:00",
+      "subject": "chore(.paaw): reconcile task 狀態 — 8 task 依 git 證據結案",
+      "kind": "chore",
+      "files": 10,
+      "featureIds": [],
+      "_h": "3b0bf0c98be5ccf3"
+    },
+    {
+      "hash": "c287bbb",
+      "date": "2026-08-16T15:57:41+08:00",
+      "subject": "feat(ui): TaskManagementPage 升級為 AgentsPage (TASK-003)",
+      "kind": "feat",
+      "files": 5,
+      "featureIds": [
+        "F-019",
+        "F-030",
+        "F-034",
+        "F-035"
+      ],
+      "_h": "632a299d2a54d809"
+    },
+    {
+      "hash": "eb5ca05",
+      "date": "2026-08-16T14:02:05+08:00",
+      "subject": "chore(.paaw): 任務遷移短版 pipeline（bootstrap 結案規則）",
+      "kind": "chore",
+      "files": 1,
+      "featureIds": [],
+      "_h": "4150fc55d872e979"
+    },
+    {
+      "hash": "5ffe7b1",
+      "date": "2026-08-16T13:46:39+08:00",
+      "subject": "chore(.paaw): reconcile 2026-08-16 dispatch — 4 個 subtask 平反 + 假 resolved 修正",
+      "kind": "chore",
+      "files": 2,
+      "featureIds": [],
+      "_h": "3b20329a2e563170"
+    },
+    {
+      "hash": "4a13b24",
+      "date": "2026-08-16T13:04:13+08:00",
+      "subject": "feat(mocks): add Grafana mock server dev fixture (TASK-008)",
+      "kind": "feat",
+      "files": 2,
+      "featureIds": [
+        "F-037"
+      ],
+      "_h": "97da4117ac089c5b"
+    },
+    {
+      "hash": "48b42f2",
+      "date": "2026-08-16T12:58:04+08:00",
+      "subject": "feat(routes): add POST /api/agents/:id/run manual trigger (TASK-006)",
+      "kind": "feat",
+      "files": 7,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-020",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "4e82856107d1effe"
+    },
+    {
+      "hash": "e648486",
+      "date": "2026-08-16T12:43:15+08:00",
+      "subject": "test(scheduler): consolidate invalid-schedule case, assert empty expertise (TASK-005)",
+      "kind": "chore",
+      "files": 1,
+      "featureIds": [
+        "F-020"
+      ],
+      "_h": "0e141648761bd475"
+    },
+    {
+      "hash": "089ff88",
+      "date": "2026-08-16T12:41:16+08:00",
+      "subject": "feat(scheduler): add node-cron scheduling engine with run recording (TASK-005)",
+      "kind": "feat",
+      "files": 5,
+      "featureIds": [
+        "F-001",
+        "F-020"
+      ],
+      "_h": "d6dbd677e3d14ab8"
+    },
+    {
+      "hash": "bbdf738",
+      "date": "2026-08-16T12:31:18+08:00",
+      "subject": "fix(runs): deterministic sort tie-break on run id (TASK-004)",
+      "kind": "fix",
+      "files": 1,
+      "featureIds": [
+        "F-023"
+      ],
+      "_h": "5c03219958be2831"
+    },
+    {
+      "hash": "b43f07f",
+      "date": "2026-08-16T12:16:22+08:00",
+      "subject": "chore(.paaw): sync api-samples, changelog and task metadata for TASK-004",
+      "kind": "chore",
+      "files": 8,
+      "featureIds": [],
+      "_h": "d444fdf3d729a9dd"
+    },
+    {
+      "hash": "424c430",
+      "date": "2026-08-16T12:16:22+08:00",
+      "subject": "feat(runs): add fingerprint/notifyError fields, notified tri-state, limit param, retention (TASK-004)",
+      "kind": "feat",
+      "files": 4,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "a8307b9baa523457"
+    },
+    {
+      "hash": "9ce9281",
+      "date": "2026-08-16T12:06:18+08:00",
+      "subject": "feat(runs): add run-store + /api/runs query endpoints (TASK-004)",
+      "kind": "feat",
+      "files": 6,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "c24aaa448a6e9a81"
+    },
+    {
+      "hash": "e9333a9",
+      "date": "2026-08-16T11:56:28+08:00",
+      "subject": "chore(.paaw): sync task metadata and changelog for TASK-015",
+      "kind": "chore",
+      "files": 3,
+      "featureIds": [],
+      "_h": "b9ef98b53c637af8"
+    },
+    {
+      "hash": "dca65ae",
+      "date": "2026-08-16T11:55:27+08:00",
+      "subject": "chore(.paaw): sync task status and action log for TASK-015",
+      "kind": "chore",
+      "files": 4,
+      "featureIds": [],
+      "_h": "8d637cb38e523836"
+    },
+    {
+      "hash": "060f0b2",
+      "date": "2026-08-16T11:54:34+08:00",
+      "subject": "feat(routes): enforce X-API-Token auth on /api/* endpoints (TASK-015)",
+      "kind": "feat",
+      "files": 11,
+      "featureIds": [
+        "F-001",
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "56608ba1ea7ec7d4"
+    },
+    {
+      "hash": "aa3fb2b",
+      "date": "2026-08-16T11:43:14+08:00",
+      "subject": "chore(.paaw): sync task status and session log for TASK-002",
+      "kind": "chore",
+      "files": 3,
+      "featureIds": [],
+      "_h": "529e9188fe7bf66e"
+    },
+    {
+      "hash": "aa558e7",
+      "date": "2026-08-16T11:42:54+08:00",
+      "subject": "chore(.paaw): changelog and metadata sync for TASK-002",
+      "kind": "chore",
+      "files": 3,
+      "featureIds": [],
+      "_h": "b3689561d295f376"
+    },
+    {
+      "hash": "26c8cb7",
+      "date": "2026-08-16T11:42:41+08:00",
+      "subject": "feat(routes): add /api/agents CRUD endpoints with scheduler hook (TASK-002)",
+      "kind": "feat",
+      "files": 8,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "aa4968621cfe6eb9"
+    },
+    {
+      "hash": "a97ffa9",
+      "date": "2026-08-16T11:30:33+08:00",
+      "subject": "chore: ignore nul file (Windows shell redirect artifact)",
+      "kind": "chore",
+      "files": 1,
+      "featureIds": [],
+      "_h": "87730304d60b1523"
+    },
+    {
+      "hash": "a4a3517",
+      "date": "2026-08-16T11:30:21+08:00",
+      "subject": "chore(.paaw): sync metadata after workspace cleanup",
+      "kind": "chore",
+      "files": 64,
+      "featureIds": [],
+      "_h": "91d0bab3cc08b3d9"
+    },
+    {
+      "hash": "c7e19b4",
+      "date": "2026-08-16T11:30:15+08:00",
+      "subject": "fix(server): harden path traversal guards and add unit tests",
+      "kind": "fix",
+      "files": 9,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-004",
+        "F-005",
+        "F-008",
+        "F-009",
+        "F-018",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "45bc4599edca6c7e"
+    },
+    {
+      "hash": "9de054a",
+      "date": "2026-08-16T00:26:40+08:00",
+      "subject": "chore(.paaw): sync crew snapshots — 沈書桓→Zofia, 林方正→Greta, 趙威霆→Piotr",
+      "kind": "chore",
+      "files": 3,
+      "featureIds": [],
+      "_h": "397aedb7a2297523"
+    },
+    {
+      "hash": "f3e68fc",
+      "date": "2026-08-15T22:06:12+08:00",
+      "subject": "feat(agent-store): add file-based Agent Registry with atomic writes and traversal guards",
+      "kind": "feat",
+      "files": 3,
+      "featureIds": [
+        "F-019"
+      ],
+      "_h": "aa4ac0f76ace95b1"
+    },
+    {
+      "hash": "b655bc1",
+      "date": "2026-08-02T22:41:11+08:00",
+      "subject": "feat(ui): add Task management page with CRUD UI",
+      "kind": "feat",
+      "files": 3,
+      "featureIds": [
+        "F-034",
+        "F-035"
+      ],
+      "_h": "65b50c00190b3e04"
+    },
+    {
+      "hash": "80b15a1",
+      "date": "2026-08-02T22:34:51+08:00",
+      "subject": "feat(server): add Task management CRUD API endpoints",
+      "kind": "feat",
+      "files": 29,
+      "featureIds": [
+        "F-001",
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024",
+        "F-032",
+        "F-033",
+        "F-036"
+      ],
+      "_h": "3b903dba2a4ab446"
+    },
+    {
+      "hash": "c895498",
+      "date": "2026-08-02T18:16:15+08:00",
+      "subject": "fix(security): resolve json-stable-stringify warnings in llm.mjs and provider.mjs",
+      "kind": "fix",
+      "files": 2,
+      "featureIds": [
+        "F-005",
+        "F-006"
+      ],
+      "_h": "10538b83cad246bf"
+    },
+    {
+      "hash": "f072911",
+      "date": "2026-08-02T18:08:45+08:00",
+      "subject": "fix(security): block path traversal in tool-loader fs operations",
+      "kind": "fix",
+      "files": 1,
+      "featureIds": [
+        "F-009"
+      ],
+      "_h": "3d1a972f4e6a822c"
+    },
+    {
+      "hash": "dd893ba",
+      "date": "2026-08-02T15:27:48+08:00",
+      "subject": "staged changes json",
+      "kind": "other",
+      "files": 1,
+      "featureIds": [],
+      "_h": "db66b1782d3ba11b"
+    },
+    {
+      "hash": "6c5dec0",
+      "date": "2026-08-02T15:26:04+08:00",
+      "subject": "docs(paaw): add ADR-002 for multi-agent orchestration architecture",
+      "kind": "chore",
+      "files": 30,
+      "featureIds": [
+        "F-031",
+        "F-032",
+        "F-034",
+        "F-035",
+        "F-036"
+      ],
+      "_h": "733e02e6719d7730"
+    },
+    {
+      "hash": "edf2daa",
+      "date": "2026-08-01T22:11:51+08:00",
+      "subject": "fix(console): chat send no response + error not displayed",
+      "kind": "fix",
+      "files": 2,
+      "featureIds": [
+        "F-007",
+        "F-031"
+      ],
+      "_h": "cd2ac80fb61883df"
+    },
+    {
+      "hash": "aa12aa1",
+      "date": "2026-08-01T22:03:35+08:00",
+      "subject": "add paaw files and package-lock.json",
+      "kind": "other",
+      "files": 44,
+      "featureIds": [],
+      "_h": "bbb8705d8d43f285"
+    },
+    {
+      "hash": "e7f7dc4",
+      "date": "2026-08-01T19:18:37+08:00",
+      "subject": "feat(ui): add 7-view navigation shell + platform home page",
+      "kind": "feat",
+      "files": 8,
+      "featureIds": [
+        "F-031",
+        "F-032",
+        "F-033",
+        "F-034",
+        "F-035"
+      ],
+      "_h": "920ca8ed7f27b170"
+    },
+    {
+      "hash": "6f00301",
+      "date": "2026-07-31T22:29:27+08:00",
+      "subject": "feat: multi-tab chat + model selector",
+      "kind": "feat",
+      "files": 1,
+      "featureIds": [
+        "F-034"
+      ],
+      "_h": "ba06faf129f5fa12"
+    },
+    {
+      "hash": "c6a0c48",
+      "date": "2026-07-31T22:27:14+08:00",
+      "subject": "feat: React + Vite + Tailwind UI (matching PAAW stack)",
+      "kind": "feat",
+      "files": 13,
+      "featureIds": [
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024",
+        "F-034"
+      ],
+      "_h": "42a1197b93e62329"
+    },
+    {
+      "hash": "1ca8dfa",
+      "date": "2026-07-31T22:22:21+08:00",
+      "subject": "feat: add web UI + tool test endpoint",
+      "kind": "feat",
+      "files": 3,
+      "featureIds": [
+        "F-001",
+        "F-002",
+        "F-003",
+        "F-008",
+        "F-009",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "5d79654b089920b9"
+    },
+    {
+      "hash": "27db224",
+      "date": "2026-07-31T22:18:38+08:00",
+      "subject": "rename: tg_* → tchat_* tool names",
+      "kind": "other",
+      "files": 4,
+      "featureIds": [
+        "F-017"
+      ],
+      "_h": "4860b7860c7336a3"
+    },
+    {
+      "hash": "017f00a",
+      "date": "2026-07-31T22:17:08+08:00",
+      "subject": "rename: telegram → tchat",
+      "kind": "other",
+      "files": 5,
+      "featureIds": [
+        "F-017"
+      ],
+      "_h": "59857af418946da6"
+    },
+    {
+      "hash": "795e8f0",
+      "date": "2026-07-31T22:14:59+08:00",
+      "subject": "feat: add Telegram MCP tool provider (3 tools)",
+      "kind": "feat",
+      "files": 5,
+      "featureIds": [],
+      "_h": "93cfbd1ab3fc9ebc"
+    },
+    {
+      "hash": "55cc035",
+      "date": "2026-07-31T22:11:42+08:00",
+      "subject": "feat: add Grafana MCP tool provider (6 tools)",
+      "kind": "feat",
+      "files": 8,
+      "featureIds": [
+        "F-011"
+      ],
+      "_h": "f21510c344918172"
+    },
+    {
+      "hash": "c936d78",
+      "date": "2026-07-31T21:46:52+08:00",
+      "subject": "feat: add MCP server + client support",
+      "kind": "feat",
+      "files": 5,
+      "featureIds": [
+        "F-001"
+      ],
+      "_h": "df8aa5a08f9226db"
+    },
+    {
+      "hash": "70820ee",
+      "date": "2026-07-31T21:42:09+08:00",
+      "subject": "feat: rewrite as fully standalone — zero PAAW dependency",
+      "kind": "feat",
+      "files": 15,
+      "featureIds": [
+        "F-001",
+        "F-002",
+        "F-003",
+        "F-004",
+        "F-005",
+        "F-007",
+        "F-008",
+        "F-009",
+        "F-018",
+        "F-019",
+        "F-021",
+        "F-022",
+        "F-023",
+        "F-024"
+      ],
+      "_h": "a3e15a86c6605e54"
+    },
+    {
+      "hash": "e95687c",
+      "date": "2026-07-31T21:32:24+08:00",
+      "subject": "feat: extract SRE agent crew into independent repo",
+      "kind": "feat",
+      "files": 38,
+      "featureIds": [
+        "F-006",
+        "F-009",
+        "F-010",
+        "F-012",
+        "F-013",
+        "F-014",
+        "F-015",
+        "F-016",
+        "F-040"
+      ],
+      "_h": "2f6207147e065cbe"
+    }
+  ],
+  "knowledgeGaps": {
+    "featuresWithoutTests": [
+      "F-001",
+      "F-006",
+      "F-007",
+      "F-010",
+      "F-011",
+      "F-012",
+      "F-013",
+      "F-014",
+      "F-015",
+      "F-016",
+      "F-018",
+      "F-025",
+      "F-027",
+      "F-028",
+      "F-029",
+      "F-031",
+      "F-033",
+      "F-036",
+      "F-037",
+      "F-038",
+      "F-039"
+    ],
+    "featuresWithoutRunbooks": [
+      "F-001",
+      "F-002",
+      "F-003",
+      "F-004",
+      "F-005",
+      "F-006",
+      "F-007",
+      "F-008",
+      "F-009",
+      "F-010",
+      "F-011",
+      "F-012",
+      "F-013",
+      "F-014",
+      "F-015",
+      "F-016",
+      "F-017",
+      "F-018",
+      "F-019",
+      "F-020",
+      "F-021",
+      "F-022",
+      "F-023",
+      "F-024",
+      "F-025",
+      "F-026",
+      "F-027",
+      "F-028",
+      "F-029",
+      "F-030",
+      "F-031",
+      "F-032",
+      "F-033",
+      "F-034",
+      "F-035",
+      "F-036",
+      "F-037",
+      "F-038",
+      "F-039",
+      "F-040"
+    ],
+    "apisWithoutFeature": [],
+    "filesWithoutFeature": 1,
+    "hotUnmappedFiles": [
+      {
+        "file": ".gitignore",
+        "commits": 8
+      },
+      {
+        "file": "package.json",
+        "commits": 8
+      },
+      {
+        "file": "README.md",
+        "commits": 6
+      },
+      {
+        "file": "ui/package-lock.json",
+        "commits": 5
+      },
+      {
+        "file": "ui/package.json",
+        "commits": 5
+      },
+      {
+        "file": "package-lock.json",
+        "commits": 4
+      },
+      {
+        "file": "agents/README.md",
+        "commits": 3
+      },
+      {
+        "file": "ui/index.html",
+        "commits": 3
+      },
+      {
+        "file": "ui/src/index.css",
+        "commits": 3
+      },
+      {
+        "file": "agents/watchdog-patrol.json",
+        "commits": 2
+      },
+      {
+        "file": "config/mcp-servers.example.json",
+        "commits": 2
+      },
+      {
+        "file": "config/providers.example.json",
+        "commits": 2
+      },
+      {
+        "file": "crews/sre.commander.json",
+        "commits": 2
+      },
+      {
+        "file": "crews/sre.logs.json",
+        "commits": 2
+      },
+      {
+        "file": "crews/sre.metrics.json",
+        "commits": 2
+      }
+    ]
+  }
+}

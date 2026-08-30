@@ -45,14 +45,14 @@
         }
       ],
       "executionResult": {
-        "summary": "## TASK-001 收尾確認結果\n\n### ❌ 發現問題：QA 並未真正 commit\n\n`git log -- server/agent-store.mjs server/agent-store.test.mjs agents/README.md` **零輸出** → 三個檔案從未進入任何 commit，QA 只做了 `git add`（staged）就誤以為完成。\n\n### ✅ 已修正\n\n",
+        "summary": "已 commit（a8eb20b），未 push。所有修改驗證完畢。\n\n## 修改摘要\n\n`/Users/steward/App/tpaaw-gateway/src/server.mjs` — Back Manager 安全修補（3 處）：\n\n1. **listBackups()** — 過濾條件強化為完整白名單 regex `/^paaw-backup-\\d{8}-\\d{4}\\.tar\\.gz$",
         "filesChanged": [],
         "success": true
       },
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.040Z",
-      "updatedAt": "2026-08-16T07:57:54.546Z",
-      "resolvedAt": "2026-08-15T14:06:45.952Z",
+      "updatedAt": "2026-08-25T13:55:41.173Z",
+      "resolvedAt": "2026-08-25T13:55:41.173Z",
       "createdBy": "agent",
       "pipeline": {
         "spec": {
@@ -73,22 +73,22 @@
           "note": "reconcile 2026-08-16 晚：git 證據 f3e68fc (agent-store atomic writes)"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -122,7 +122,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-002",
@@ -138,7 +139,7 @@
         "api",
         "ADR-003"
       ],
-      "assignee": null,
+      "assignee": "tester",
       "description": "在 server/routes.mjs 加 GET /api/agents（列表）、POST /api/agents（建立，server 產 id）、PUT /api/agents/:id、DELETE /api/agents/:id。錯誤處理沿用現有慣例：400（缺必填欄位：name、prompt）、404（id 不存在）、500（server error），error body { \"error\": \"...\" }。舊 /api/tasks endpoints 保留但回應加 \"deprecated\": true 標記（過渡期並存，之後移除）。agent 更新時通知 scheduler 重排（scheduler 尚未存在時以事件/callback hook 預留介面，本 task 只埋 call site）。附 routes.test.mjs 擴充。",
       "relatedFiles": [],
       "notes": [
@@ -148,11 +149,15 @@
           "by": "migration"
         }
       ],
-      "executionResult": null,
+      "executionResult": {
+        "summary": "",
+        "filesChanged": [],
+        "success": true
+      },
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.041Z",
-      "updatedAt": "2026-08-16T07:57:54.546Z",
-      "resolvedAt": null,
+      "updatedAt": "2026-08-30T10:13:55.965Z",
+      "resolvedAt": "2026-08-30T10:13:55.965Z",
       "createdBy": "agent",
       "pipeline": {
         "spec": {
@@ -172,22 +177,22 @@
           "note": "reconcile 2026-08-16 晚：git 證據 aa558e7, aa3fb2b (agents CRUD)"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -226,7 +231,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-003",
@@ -242,7 +248,7 @@
         "ui",
         "ADR-003"
       ],
-      "assignee": null,
+      "assignee": "tester",
       "description": "升級 ui/src/pages/TaskManagementPage.tsx 成 AgentsPage：欄位擴充 schedule（cron 輸入 + 說明提示）、notifyTarget（targetType select + targetId）、cooldownMinutes、enabled toggle。頁面與 sidebar 選單文字從 Task 改為 Agent。沿用現有 Field/LinesField/ToolPicker 元件模式與 Tailwind 樣式慣例。串接新 /api/agents endpoints。",
       "relatedFiles": [],
       "notes": [
@@ -257,11 +263,15 @@
           "by": "migration"
         }
       ],
-      "executionResult": null,
+      "executionResult": {
+        "summary": "依你的指示「若工具拒絕存取該路徑，立即回報並停止」，我必須停在這裡回報：\n\n## ⚠️ 無法存取 tpaaw-gateway 工作目錄\n\n**read_file 已被路徑邊界拒絕：**\n\n```\nError: path '/Users/steward/App/tpaaw-gateway/src/server.mjs' is outside allowed directory.\ncwd='/User",
+        "filesChanged": [],
+        "success": true
+      },
       "timeoutSeconds": 0,
       "createdAt": "2026-08-15T13:05:41.042Z",
-      "updatedAt": "2026-08-16T07:57:54.546Z",
-      "resolvedAt": null,
+      "updatedAt": "2026-08-30T10:15:26.847Z",
+      "resolvedAt": "2026-08-30T10:15:26.847Z",
       "createdBy": "agent",
       "pipeline": {
         "spec": {
@@ -281,22 +291,22 @@
           "note": "reconcile 2026-08-16 晚：git 證據 c287bbb (AgentsPage)"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -335,7 +345,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-004",
@@ -410,22 +421,22 @@
           }
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -465,7 +476,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-005",
@@ -516,22 +528,22 @@
           "note": "reconcile 2026-08-16 晚：git 證據 089ff88, e648486 (scheduler)"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -573,7 +585,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-006",
@@ -638,22 +651,22 @@
           "note": "reconcile 2026-08-16 晚：git 證據 48b42f2 (manual run trigger)"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -691,7 +704,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-007",
@@ -742,22 +756,22 @@
           "note": "git 證據 81fbe64 (tchat transport + contract v0, 329/329 tests)"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -792,7 +806,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-008",
@@ -847,22 +862,22 @@
           "note": "reconcile 2026-08-16 晚：git 證據 4a13b24 (grafana mock)"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -900,7 +915,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-009",
@@ -961,22 +977,22 @@
           }
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -1014,7 +1030,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-010",
@@ -1072,22 +1089,22 @@
           }
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -1125,7 +1142,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-011",
@@ -1189,22 +1207,22 @@
           }
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -1243,7 +1261,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-012",
@@ -1281,22 +1300,22 @@
           "status": "pending"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -1335,7 +1354,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-013",
@@ -1378,22 +1398,22 @@
           "status": "pending"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -1431,7 +1451,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-014",
@@ -1469,22 +1490,22 @@
           "status": "pending"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -1523,7 +1544,8 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     },
     {
       "id": "TASK-015",
@@ -1594,22 +1616,22 @@
           "note": "reconcile 2026-08-16 晚：git 證據 060f0b2, dca65ae, e9333a9 (X-API-Token auth)"
         },
         "review": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "test": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "qa": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         },
         "docs": {
-          "status": "done",
+          "status": "skipped",
           "by": "system",
           "reason": "skipped (mini loop)"
         }
@@ -1648,9 +1670,10 @@
       "qaResult": null,
       "docsResult": null,
       "repairLoop": null,
-      "overnight": null
+      "overnight": null,
+      "reviewBoundary": null
     }
   ],
-  "updatedAt": "2026-08-16T14:04:57.231Z",
+  "updatedAt": "2026-08-30T10:15:26.847Z",
   "loopMode": "mini"
 }

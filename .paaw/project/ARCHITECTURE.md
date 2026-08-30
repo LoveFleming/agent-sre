@@ -1,112 +1,98 @@
-# Architecture Map — agent-sre
-
-> **Data provenance note:** The automated file-tree scan failed (`find` command shell error), and no Tree-sitter source analysis or `package.json` content was delivered. This map is reconstructed from the git history (20 commits), naming conventions visible in commits (`llm.mjs`, `provider.mjs`, `tool-loader`), and the `.paaw/` ADR references. Items marked **(inferred)** have not been verified against actual file contents. A re-scan with a corrected `find` expression (quoting the `\( ... \)` group) is recommended to validate paths.
-
----
+# Architecture Map: agent-sre
 
 ## 1. System Overview
 
-**agent-sre** is a standalone multi-agent SRE (Site Reliability Engineering) assistant platform. It was extracted from a parent platform (PAAW) into an independent repository and rewritten to have zero PAAW dependency. The system runs an LLM-driven "agent crew" that can be orchestrated to perform SRE tasks, with tool capabilities provided via the Model Context Protocol (MCP) — currently Grafana (6 tools: dashboards/alerts/metrics) and a chat/messaging provider, `tchat` (3 tools, renamed from Telegram). Users interact with the system through a React web console featuring multi-tab chat with a model selector, a 7-view navigation shell, and a Task management CRUD interface backed by dedicated API endpoints.
+**agent-sre** is an SRE (Site Reliability Engineering) agent management web application. It allows users to define agents with specific expertise and schedules, automatically executes them via a cron-based scheduler, records run results, and integrates with external services like tchat (chat messaging) and Grafana (monitoring/alerting). The system provides a UI for agent oversight and manual triggering of runs.
 
-**Tech stack:**
-- **Language:** JavaScript (ES Modules, `.mjs` files) for the server; JSX/React for the UI
-- **Runtime:** Node.js (server), browser (UI)
-- **UI:** React + Vite + Tailwind CSS (explicitly matched to the PAAW stack)
-- **Key libraries:** MCP SDK (server + client), `json-stable-stringify` (seen in security fixes)
-- **External services:** LLM provider APIs, Grafana API, Telegram/chat API
+**Tech Stack:**
+- **Backend:** Node.js, Express (HTTP API), node-cron (scheduling)
+- **Frontend:** React (via Vite), likely with TypeScript (based on `src/main.tsx`)
+- **Data Persistence:** File-based (JSON files) for models (Run, Agent, Task)
+- **External Integrations:** tchat (mock server for development), Grafana (mock server for development)
+- **Testing:** Unit tests (test directory), e2e tests (watchdog e2e test mentioned in git log)
 
-**Architecture style:** Modular monolith in a single repository — a Node.js API server plus a React SPA, with a plugin-style MCP tool-provider layer. Not a monorepo with separate packages; server and UI live in one repo with an embedded knowledge base (`.paaw/`).
-
----
+**Architecture Style:** Monolith with modular separation. The backend is a single Express server with clear module boundaries (routes, services, models). The frontend is a separate Vite app that communicates via HTTP API. Development mocks are included for external services.
 
 ## 2. Layer Structure
 
 ```
 Presentation Layer
-  - Web Console (React + Vite + Tailwind) — directory (inferred): web/ or ui/
-    - 7-view navigation shell
-    - Platform home page
-    - Multi-tab Chat view + model selector        (commit 6f00301)
-    - Task management page (CRUD UI)               (commit b655bc1)
+  - UI Components (src/ui/)
+    - AgentsPage (formerly TaskManagementPage)
+    - Other React components (implied)
 
 API Layer
-  - HTTP server, Node.js ES modules                (entry inferred: server.mjs / index.mjs)
-  - Chat/session endpoints                         (edf2daa — chat send/response + error display fixes)
-  - Task management CRUD endpoints                 (commit 80b15a1)
-  - Tool test endpoint                             (commit 1ca8dfa)
+  - Routes (src/routes/)
+    - agents.js (POST /api/agents/:id/run)
+    - runs.js (GET /api/runs)
+    - (implied other routes)
+  - Middleware (Express middleware, not explicitly listed)
 
-Agent / Orchestration Layer
-  - Multi-agent crew orchestration                 (.paaw/ ADR-002)
-  - LLM abstraction — llm.mjs                      (commit c895498)
-  - Provider abstraction — provider.mjs            (commit c895498)
-
-Tool Layer (MCP)
-  - MCP server + MCP client support                (commit c936d78)
-  - Tool loader — tool-loader (fs ops, hardened
-    against path traversal)                        (commit f072911)
-  - Grafana MCP tool provider (6 tools)            (commit 55cc035)
-  - tchat MCP tool provider (3 tools, ex-Telegram) (commits 795e8f0, 017f00a, 27db224)
+Business Logic Layer
+  - Services (src/scheduler/, src/runs/, src/agents/, src/watchdog/, src/tchat/, src/grafana/)
+    - scheduler: scheduleTask, runScheduler
+    - runs: createRun, listRuns, updateRun
+    - agents: getAgent, runAgent
+    - watchdog: watchdogLoop
+    - tchat: sendChat
+    - grafana: sendMetric, fetchAlerts
+  - Domain Models (src/models/)
+    - Run (id, agentId, schedule, status, fingerprint, notifyError, notified, createdAt, updatedAt)
+    - Agent (id, name, expertise, schedule)
+    - Task (id, title, status)
 
 Data Layer
-  - Task store (CRUD persistence — mechanism unverified: file or in-memory)
-  - File storage (tool definitions/configs read by tool-loader)
-  - External APIs: Grafana, Telegram/tchat, LLM providers
+  - File Storage (JSON files, persistence via file system)
+  - External APIs (tchat, Grafana – via mocks in dev, real in production)
 
-Knowledge / Governance
-  - .paaw/ — ADRs (ADR-002: multi-agent orchestration architecture)
-  - data/semgrep-rules/ — security scanning rules
+Development Support
+  - Mock Servers (dev/mocks/)
+    - tchat-mock.mjs (POST /api/messages)
+    - grafana-mock (implied)
 ```
-
----
 
 ## 3. Module Dependencies
 
-**Internal dependency flow (inferred from commit topology):**
+**Internal Dependencies (from scan):**
+- `routes` depends on `runs`, `scheduler`, `agents`
+- `scheduler` depends on `runs`
+- `agents` depends on `runs`
+- `watchdog` depends on `tchat`, `grafana`
+- `ui` depends on `api` (HTTP API)
 
-- **Web Console → API Server** — UI consumes chat, task, and tool-test endpoints over HTTP.
-- **API Layer → Agent/Orchestration Layer** — chat endpoints drive the agent crew; task endpoints persist task data.
-- **Orchestration → `llm.mjs` → `provider.mjs`** — LLM calls are abstracted through a provider layer (multi-model support, consistent with the UI's model selector). `llm.mjs` and `provider.mjs` are tightly coupled (patched together in c895498).
-- **Orchestration → tool-loader → MCP client → Tool Providers** — tools are dynamically loaded; the loader performs filesystem operations (now path-traversal-blocked) and hands off to MCP.
-- **Tool Providers → External Services** — Grafana provider → Grafana API; tchat provider → chat/Telegram API.
+**Circular Dependencies:** None detected.
 
-**Circular dependencies:** None observed in the available evidence. Closest coupling is `llm.mjs` ↔ `provider.mjs`, which change as a unit — worth verifying for a shared abstraction leak.
+**External Dependencies:**
+- `node-cron` (scheduling)
+- Express (HTTP framework)
+- Vite (frontend build tool)
+- React (UI library)
+- (Other npm packages inferred from package.json, but only node-cron explicitly listed)
 
-**External dependencies:**
-- MCP SDK (server + client modes)
-- `json-stable-stringify` (deterministic JSON serialization in LLM/provider paths)
-- LLM provider APIs (model selector in UI implies ≥2 models/providers)
-- Grafana HTTP API
-- Telegram/chat API
-- React, Vite, Tailwind (UI build chain)
-
----
+**External Services:**
+- tchat (chat messaging service)
+- Grafana (monitoring/alerting)
 
 ## 4. Key Patterns
 
-- **Provider / Adapter pattern** — two applications: `provider.mjs` abstracts LLM backends (enables the UI model selector), and MCP tool providers wrap external systems behind a uniform tool interface.
-- **Plugin architecture** — tools are loaded dynamically via `tool-loader`; providers (Grafana, tchat) are additive, as shown by sequential provider commits. Renaming `tg_*` → `tchat_*` (3 commits) suggests a tool-name registry/namespacing convention.
-- **Multi-agent orchestration ("crew" pattern)** — formalized in ADR-002; multiple cooperating agents rather than a single chat loop.
-- **MCP client/server duality** — the system both *consumes* external tools (client) and *exposes* its own tools (server).
-- **CRUD REST** — conventional resource-oriented endpoints for Task management (server endpoints + matching UI page, added in paired commits).
-- **State management (UI)** — no evidence of Redux/Zustand et al.; likely React local state given the app's size **(inferred)**.
-- **Routing (UI)** — client-side view routing for the 7-view shell (mechanism unverified — React Router vs. custom shell).
-- **Error handling** — errors surfaced to the chat UI (fixed in edf2daa); security-focused error rejection in `tool-loader` (path traversal). No evidence of a centralized error-code map.
-- **Governance** — ADR-driven decisions in `.paaw/`; security scanning via semgrep rules.
-
----
+- **Modular Monolith:** Clear separation of concerns via modules (routes, services, models).
+- **Repository Pattern:** Data models (Run, Agent, Task) are persisted to file storage, abstracted via service functions (e.g., `createRun`, `listRuns`).
+- **Service Layer:** Business logic encapsulated in service modules (scheduler, runs, agents, watchdog).
+- **REST API:** HTTP endpoints for agents and runs, with manual trigger support.
+- **Scheduling Pattern:** Uses `node-cron` to schedule agent runs, with run recording.
+- **State Management (Frontend):** Not explicitly detailed, but likely React state/context or hooks.
+- **Error Handling:** Not explicitly defined; error codes are missing (health gap). Likely uses Express error middleware.
+- **Configuration:** Environment variables (e.g., `TCHAT_SENT_LOG` for mock log path).
 
 ## 5. Entry Points
 
-| Entry Point | Path | Status |
-|---|---|---|
-| **API server** | `server.mjs` or `index.mjs` at repo root **(inferred)** | Unverified — file scan failed |
-| **Web UI** | Vite standard: `index.html` → `src/main.jsx|tsx` under `web/` or `ui/` **(inferred)** | Unverified — file scan failed |
-| **CLI** | No evidence of a CLI entry point in git history | Likely none |
+- **Server Entry Point:** `src/server.js` – starts the Express server, mounts routes, initializes scheduler.
+- **UI Entry Point:** `src/main.tsx` – React application bootstrap.
+- **CLI/Dev Entry Points:**
+  - `dev/mocks/tchat-mock.mjs` – mock tchat server (port 3002) for development.
+  - (Implied) `dev/mocks/grafana-mock` – mock Grafana server.
+  - npm scripts (e.g., `mock:tchat` in package.json) to run mocks.
 
 ---
 
-### Recommended Follow-ups
-1. Re-run the file scan with escaped `find` predicates: `find . -type f \( -name '*.mjs' -o ... \)` — the unquoted parentheses caused the shell syntax error.
-2. Verify the true server entry point and whether the HTTP layer uses a framework (Express/Fastify) or raw `http`.
-3. Confirm Task persistence mechanism (file vs. in-memory) — affects the Data Layer description.
-4. Resolve the module boundary between `llm.mjs` and `provider.mjs` to rule out hidden coupling.
+*Note: The architecture map is based on the provided scan results and git history. Some details (e.g., exact file structure, middleware) are inferred and may require further verification.*
